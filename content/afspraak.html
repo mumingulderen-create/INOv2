@@ -1,0 +1,57 @@
+<!--
+{
+  "slug": "afspraak",
+  "title": "Afspraak of schouw inplannen | Elektricien Utrecht | INO",
+  "description": "Plan een afspraak of schouw met INO Techniek en Installatie in Utrecht e.o. Geef je voorkeursdatum en -tijd door, wij bevestigen de afspraak persoonlijk.",
+  "nav": "afspraak"
+}
+-->
+<section class="lp-hero">
+    <div class="container">
+      <div class="badge">Afspraak aanvragen</div>
+      <h1>Plan je afspraak met INO.</h1>
+      <p>De gekozen datum en tijd zijn een voorkeur; de definitieve afspraak bevestigen we persoonlijk.</p>
+      <div class="page-purpose"><strong>Waarvoor deze pagina?</strong><span>Geef je voorkeursdatum en -tijd door voor een schouw of klus. Wij nemen contact op om de afspraak te bevestigen.</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="afspraak">
+    <div class="container appointment">
+      <div>
+        <span class="eyebrow">AFSPRAAK AANVRAGEN</span>
+        <h2>Wanneer komt het je uit?</h2>
+        <p>Kies een datum en tijdvak en laat je gegevens achter, zodat we je kunnen bereiken.</p>
+        <ul class="include-items">
+          <li>✓ Schouw op locatie: € 90 incl. btw, volledig verrekend bij opdracht</li>
+          <li>✓ Geen voorrijkosten binnen Utrecht</li>
+          <li>✓ Definitieve afspraak bevestigen we persoonlijk</li>
+        </ul>
+      </div>
+      <form id="appointmentForm" class="appointment-form" action="https://formsubmit.co/d0d9de6bb2a30083d92c3fe4775b9ce6" method="POST">
+        <input type="hidden" name="_subject" value="Nieuwe afspraakvoorkeur via de website">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <label>Naam<input name="name" required placeholder="Voor- en achternaam"></label>
+        <label>Telefoon<input name="phone" required placeholder="06 ..."></label>
+        <label>Gewenste datum<input type="date" id="date" name="datum" required></label>
+        <label>Voorkeurstijd<select name="tijd" required><option value="">Kies een tijd</option><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 16:00</option><option>16:00 – 18:00</option></select></label>
+        <label class="span-2">Waar gaat het om? (optioneel)<textarea name="message" rows="3" placeholder="Bijv. schouw voor een nieuwe groepenkast"></textarea></label>
+        <button class="btn btn-primary" type="submit">Voorkeur aanvragen</button>
+        <div id="formResult" class="form-result" hidden></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="contact-cta">
+    <div class="container">
+      <span class="eyebrow">LIEVER EERST EEN OFFERTE?</span>
+      <h2>Vraag een vaste prijs aan.</h2>
+      <p>Stuur foto's mee, dan weet je vooraf wat het kost.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="/offerte">Offerte aanvragen</a>
+        <a class="btn btn-outline-light" href="tel:{{tel_e164}}">Bel {{tel}}</a>
+        <a class="btn btn-outline-light" href="https://wa.me/{{whatsapp}}?text=Hallo%20INO%2C%20ik%20wil%20graag%20een%20afspraak%20plannen." target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-outline-light" href="mailto:{{email}}">{{email}}</a>
+      </div>
+    </div>
+  </section>

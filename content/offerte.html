@@ -1,0 +1,73 @@
+<!--
+{
+  "slug": "offerte",
+  "title": "Offerte elektricien Utrecht: vaste prijs vooraf | INO Techniek",
+  "description": "Vraag een offerte aan bij INO, elektricien in Utrecht. Beschrijf je klus, stuur foto's mee en ontvang vooraf een vaste prijs, meestal binnen 24 uur.",
+  "nav": "offerte"
+}
+-->
+<section class="lp-hero">
+    <div class="container">
+      <div class="badge">Offerte aanvragen</div>
+      <h1>Vertel wat er moet gebeuren.</h1>
+      <p>Je kunt foto's van de situatie meesturen. Dat helpt om vooraf een beter beeld van de klus te krijgen.</p>
+      <div class="page-purpose"><strong>Waarvoor deze pagina?</strong><span>Beschrijf je klus, voeg foto's toe en ontvang een vaste prijs vooraf. Geschikt voor alles wat niet met spoed hoeft.</span></div>
+    </div>
+  </section>
+
+  <section class="section soft" id="offerte">
+    <div class="container form-layout">
+      <div>
+        <span class="eyebrow">OFFERTE / AANVRAAG</span>
+        <h2>Stuur je aanvraag in.</h2>
+        <p>Vul het formulier in. We bekijken je aanvraag en komen met een vaste prijs.</p>
+        <div class="form-benefits"><div>✓ Foto's meesturen</div><div>✓ Gewenste datum aangeven</div><div>✓ Dienst selecteren</div><div>✓ Offerte binnen 24 uur</div></div>
+        <p class="form-note" style="margin-top:22px">Is het een storing? Bel dan direct: <a class="mini-link" href="tel:{{tel_e164}}">{{tel}}</a></p>
+      </div>
+      <form id="quoteForm" class="quote-form" action="https://formsubmit.co/d0d9de6bb2a30083d92c3fe4775b9ce6" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_subject" value="Nieuwe offerteaanvraag via de website">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <label>Soort werkzaamheden
+          <select name="service" required>
+            <option value="">Kies een dienst</option>
+            <option>Meterkast vernieuwen</option><option>Nieuwe groep</option><option>Elektra / bekabeling</option>
+            <option>Stopcontact / schakelaar</option><option>Montage / installatie</option><option>Storing</option><option>Anders</option>
+          </select>
+        </label>
+        <label>Naam<input name="name" required placeholder="Voor- en achternaam"></label>
+        <div class="two-col">
+          <label>Telefoon<input name="phone" required placeholder="06 ..."></label>
+          <label>E-mail<input name="email" type="email" required placeholder="naam@email.nl"></label>
+        </div>
+        <div class="two-col">
+          <label>Postcode<input name="postcode" placeholder="1234 AB"></label>
+          <label>Huisnummer<input name="number" placeholder="12"></label>
+        </div>
+        <label>Omschrijving<textarea name="message" id="message" rows="5" required placeholder="Wat moet er gebeuren?"></textarea></label>
+        <label>Foto's toevoegen (zeer aanbevolen)
+          <span style="font-weight:400;font-size:12px;color:var(--muted)">Voeg 1 of meerdere foto's toe van je huidige meterkast / aardlekschakelaar. Zo kunnen we direct zien of uitbreiding mogelijk is en ontvang je direct een vaste prijs!</span>
+          <input id="photos" name="photos" type="file" accept="image/*" multiple>
+        </label>
+        <div id="photoList" class="photo-list"></div>
+        <label class="check"><input type="checkbox" required> Ik ga akkoord dat INO mijn gegevens gebruikt om contact op te nemen over deze aanvraag.</label>
+        <button class="btn btn-primary full" type="submit">Aanvraag voorbereiden</button>
+        <p class="form-note">Je aanvraag, inclusief eventuele foto's, komt rechtstreeks binnen op {{email}}.</p>
+        <div id="formResult" class="form-result" hidden></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="contact-cta">
+    <div class="container">
+      <span class="eyebrow">LIEVER EERST OVERLEGGEN?</span>
+      <h2>Bel of app gerust.</h2>
+      <p>Je krijgt direct een inschatting. Wil je dat we langskomen? Dan plan je een afspraak.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="/afspraak">Afspraak aanvragen</a>
+        <a class="btn btn-outline-light" href="tel:{{tel_e164}}">Bel {{tel}}</a>
+        <a class="btn btn-outline-light" href="https://wa.me/{{whatsapp}}?text=Hallo%20INO%2C%20ik%20heb%20een%20vraag%20over%20een%20offerte." target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-outline-light" href="mailto:{{email}}">{{email}}</a>
+      </div>
+    </div>
+  </section>
