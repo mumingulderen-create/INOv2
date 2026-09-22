@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 230" width="540" height="230">
+  <defs>
+    <style>
+      .icon-stroke { stroke: #181818; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .bulb-fill { fill: #ffffff; }
+      .ino-letter {
+        fill: #72cf39;
+        stroke: #1b6311;
+        stroke-width: 6;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+      }
+      .subtext {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 800;
+        font-size: 19px;
+        fill: #4b5258;
+        letter-spacing: 2px;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. GEAR (Top left behind head) -->
+  <g class="icon-stroke" stroke-width="5">
+    <!-- Gear teeth around center (88, 72) -->
+    <path d="
+      M 70 38 L 74 26 L 86 26 L 90 38
+      M 104 44 L 115 36 L 123 44 L 118 56
+      M 125 72 L 137 75 L 135 87 L 123 88
+      M 56 50 L 46 43 L 38 52 L 47 62
+      M 43 76 L 31 79 L 33 91 L 45 90
+      M 52 104 L 43 113 L 51 121 L 62 114
+    " />
+    <!-- Outer rim connecting teeth -->
+    <circle cx="88" cy="74" r="38" />
+    <!-- Inner gear hole -->
+    <circle cx="88" cy="74" r="15" stroke-width="4.5" />
+  </g>
+
+  <!-- 2. LIGHTBULB (Center-right of icon) -->
+  <!-- Glass bulb body (white fill to cover gear lines) -->
+  <path class="icon-stroke bulb-fill" stroke-width="6" d="
+    M 148 140
+    C 134 126 124 108 124 84
+    C 124 50 152 24 186 24
+    C 220 24 248 50 248 84
+    C 248 108 238 126 224 140
+    Z
+  " />
+
+  <!-- Brain inside bulb -->
+  <g class="icon-stroke" stroke-width="4">
+    <!-- Left lobe puffs -->
+    <path d="
+      M 182 50
+      C 168 48 156 56 156 68
+      C 150 72 148 80 152 86
+      C 148 92 152 100 158 102
+      C 164 106 174 104 180 98
+    " />
+    <!-- Right lobe puffs -->
+    <path d="
+      M 190 50
+      C 204 48 216 56 216 68
+      C 222 72 224 80 220 86
+      C 224 92 220 100 214 102
+      C 208 106 198 104 192 98
+    " />
+    <!-- Brain details / folds -->
+    <path d="M 164 74 C 170 70 176 76 182 72" />
+    <path d="M 166 88 C 172 84 176 90 180 86" />
+    <path d="M 208 74 C 202 70 196 76 190 72" />
+    <path d="M 206 88 C 200 84 196 90 192 86" />
+    <path d="M 186 52 L 186 98" />
+
+    <!-- S-curve filament wire from brain down to base -->
+    <path stroke-width="4.5" d="
+      M 186 98
+      C 186 112 174 114 174 122
+      C 174 130 196 128 196 136
+      L 196 142
+    " />
+  </g>
+
+  <!-- Bulb Base / Fitting (3 rounded rings + contact) -->
+  <g class="icon-stroke" stroke-width="5.5">
+    <path d="M 148 144 C 148 140 224 140 224 144 C 224 148 148 148 148 144 Z" fill="#ffffff" />
+    <path d="M 152 154 C 152 150 220 150 220 154 C 220 158 152 158 152 154 Z" fill="#ffffff" />
+    <path d="M 158 164 C 158 160 214 160 214 164 C 214 168 158 168 158 164 Z" fill="#ffffff" />
+    <!-- Bottom contact -->
+    <path d="M 172 170 C 172 176 200 176 200 170 Z" fill="#181818" stroke="#181818" stroke-width="3" />
+  </g>
+
+  <!-- 3. HUMAN HEAD PROFILE (Facing LEFT, in front) -->
+  <g class="icon-stroke" stroke-width="5.5">
+    <!-- Profile outline: top skull, forehead, nose, lips, chin, neck, chest -->
+    <path d="
+      M 104 76
+      C 86 76 72 84 64 94
+      C 56 104 54 112 44 116
+      C 40 118 40 122 46 124
+      C 50 125 50 129 44 133
+      C 40 136 42 142 46 144
+      C 52 146 56 152 56 160
+      L 56 168
+      C 48 174 38 184 34 196
+      L 100 196
+      C 100 184 94 174 86 168
+      L 86 156
+      C 94 150 102 140 104 128
+      C 106 116 106 88 104 76
+    " fill="#ffffff" />
+
+    <!-- Chest / shoulder division lines -->
+    <path d="M 66 196 L 66 168" stroke-width="5" />
+    <path d="M 34 196 L 100 196" stroke-width="6" />
+  </g>
+
+  <!-- 4. INO TEXT (Bubble style) -->
+  <g>
+    <!-- Letter 'I' -->
+    <rect class="ino-letter" x="244" y="38" width="38" height="104" rx="19" ry="19" />
+
+    <!-- Letter 'N' -->
+    <path class="ino-letter" d="
+      M 302 57
+      C 302 46.5 310.5 38 321 38
+      C 331.5 38 340 46.5 340 57
+      L 340 85
+      L 378 43
+      C 384 39 392 38 398 38
+      C 408 38 416 46 416 57
+      L 416 123
+      C 416 133.5 407.5 142 397 142
+      C 386.5 142 378 133.5 378 123
+      L 378 95
+      L 340 137
+      C 334 141 326 142 320 142
+      C 310 142 302 134 302 123
+      Z
+    " />
+
+    <!-- Letter 'O' -->
+    <path class="ino-letter" d="
+      M 480 38
+      C 514 38 538 61 538 90
+      C 538 119 514 142 480 142
+      C 446 142 422 119 422 90
+      C 422 61 446 38 480 38
+      Z
+      M 480 66
+      C 494 66 504 77 504 90
+      C 504 103 494 114 480 114
+      C 466 114 456 103 456 90
+      C 456 77 466 66 480 66
+      Z
+    " />
+  </g>
+
+  <!-- 5. SUBTITLE: TECHNIEK EN INSTALLATIE -->
+  <text class="subtext" x="244" y="182" textLength="292" lengthAdjust="spacingAndGlyphs">
+    TECHNIEK EN INSTALLATIE
+  </text>
+</svg>
