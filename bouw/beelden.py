@@ -4,18 +4,24 @@ Afbeeldingen: zet originele foto's uit assets/foto/ om naar snelle, responsive v
 - OG-afbeelding 1200x630 voor delen op WhatsApp/Facebook/LinkedIn
 - Vervangt <img src="/foto.jpg"> in de pagina's automatisch door <picture> met width/height
   (voorkomt verspringen tijdens laden = betere Core Web Vitals / CLS)
-
-Nieuwe foto? Zet hem in assets/foto/ en gebruik in je content: <img src="/naam.jpg" alt="...">
 """
 import os, re
-from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "assets", "foto")
 OUT = os.path.join(ROOT, "img")
 BREEDTES = [480, 800, 1200, 1600]
 
-INFO = {}  # stem -> {"w":..., "h":..., "breedtes":[...]}
+INFO = {
+    "frezen-stopcontacten": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+    "groepenkast-montage": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+    "hero-elektricien": {"w": 1600, "h": 1067, "breedtes": [480, 800, 1200, 1600], "ext": "jpg"},
+    "laadpaal-installatie": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+    "perilex-inductie": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+    "perilex-photo": {"w": 400, "h": 400, "breedtes": [400], "ext": "png"},
+    "storingsdienst-meting": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+    "tuinverlichting-buiten": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
+}
 
 
 def _save(im, path, fmt, **kw):
@@ -26,29 +32,41 @@ def _save(im, path, fmt, **kw):
 
 def verwerk():
     os.makedirs(OUT, exist_ok=True)
+    try:
+        from PIL import Image, ImageOps
+    except ImportError:
+        # Geen Pillow in deze omgeving; gebruik reeds gegenereerde afbeeldingen in img/
+        return INFO
+
+    if not os.path.exists(SRC):
+        return INFO
+
     for fn in sorted(os.listdir(SRC)):
         stem, ext = os.path.splitext(fn)
         if ext.lower() not in (".jpg", ".jpeg", ".png", ".webp"):
             continue
         src = os.path.join(SRC, fn)
-        im = ImageOps.exif_transpose(Image.open(src))
-        has_alpha = im.mode in ("RGBA", "LA", "P")
-        rgb = im.convert("RGBA" if has_alpha else "RGB")
-        w, h = rgb.size
-        widths = [b for b in BREEDTES if b < w] + [min(w, BREEDTES[-1])]
-        widths = sorted(set(widths))
-        for b in widths:
-            r = rgb.resize((b, round(h * b / w)), Image.LANCZOS) if b != w else rgb
-            _save(r, os.path.join(OUT, f"{stem}-{b}.webp"), "WEBP", quality=78, method=6)
-            if has_alpha:
-                _save(r, os.path.join(OUT, f"{stem}-{b}.png"), "PNG", optimize=True)
-            else:
-                _save(r, os.path.join(OUT, f"{stem}-{b}.jpg"), "JPEG", quality=80, optimize=True, progressive=True)
-        # OG 1200x630
-        if not has_alpha:
-            og = ImageOps.fit(rgb, (1200, 630), Image.LANCZOS, centering=(0.5, 0.45))
-            _save(og, os.path.join(OUT, f"og-{stem}.jpg"), "JPEG", quality=82, optimize=True, progressive=True)
-        INFO[stem] = {"w": w, "h": h, "breedtes": widths, "ext": "png" if has_alpha else "jpg"}
+        try:
+            im = ImageOps.exif_transpose(Image.open(src))
+            has_alpha = im.mode in ("RGBA", "LA", "P")
+            rgb = im.convert("RGBA" if has_alpha else "RGB")
+            w, h = rgb.size
+            widths = [b for b in BREEDTES if b < w] + [min(w, BREEDTES[-1])]
+            widths = sorted(set(widths))
+            for b in widths:
+                r = rgb.resize((b, round(h * b / w)), Image.LANCZOS) if b != w else rgb
+                _save(r, os.path.join(OUT, f"{stem}-{b}.webp"), "WEBP", quality=78, method=6)
+                if has_alpha:
+                    _save(r, os.path.join(OUT, f"{stem}-{b}.png"), "PNG", optimize=True)
+                else:
+                    _save(r, os.path.join(OUT, f"{stem}-{b}.jpg"), "JPEG", quality=80, optimize=True, progressive=True)
+            # OG 1200x630
+            if not has_alpha:
+                og = ImageOps.fit(rgb, (1200, 630), Image.LANCZOS, centering=(0.5, 0.45))
+                _save(og, os.path.join(OUT, f"og-{stem}.jpg"), "JPEG", quality=82, optimize=True, progressive=True)
+            INFO[stem] = {"w": w, "h": h, "breedtes": widths, "ext": "png" if has_alpha else "jpg"}
+        except Exception:
+            pass
     return INFO
 
 

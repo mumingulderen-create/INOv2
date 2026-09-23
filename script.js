@@ -83,6 +83,7 @@
         .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
+          track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
           if (result) {
             result.hidden = false; result.className = "form-result";
             result.innerHTML = "<strong>Aanvraag verstuurd.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg;
@@ -114,16 +115,321 @@
     var qf = document.getElementById("quoteForm"); if (qf) qf.appendChild(hid);
   }
 
-  // Klik-meting (bellen / WhatsApp). Werkt automatisch zodra je Google Analytics 4
-  // of Google Tag Manager toevoegt; zonder die tools doet dit niets.
+  // Interactieve Groepenkast & Inductie Calculator
+  function initCalculator() {
+    var deviceInputs = document.querySelectorAll("input[name='calc_device']");
+    var huidigInputs = document.querySelectorAll("input[name='calc_huidig']");
+    var aansluitingInputs = document.querySelectorAll("input[name='calc_aansluiting']");
+    var elGroepen = document.getElementById("calcGroepen");
+    var elFase = document.getElementById("calcFase");
+    var elTitel = document.getElementById("calcTitel");
+    var elUitleg = document.getElementById("calcUitleg");
+    var elPrijs = document.getElementById("calcPrijs");
+    var P = { basis: 640, driefase: 120, kookgroep: 85, kracht: 185, pv: 95, groep: 45 };
+    try { var sec = document.getElementById("keuzehulp"); if (sec && sec.dataset.prijzen) P = JSON.parse(sec.dataset.prijzen); } catch (e) {}
+    var elOfferte = document.getElementById("calcOfferteBtn");
+    var elWa = document.getElementById("calcWaBtn");
+    var elBreakdown = document.getElementById("calcBreakdown");
+    var elStedinBox = document.getElementById("calcStedinBox");
+
+    if (!deviceInputs.length || !elGroepen) return;
+
+    function bereken() {
+      var groepen = 0;
+      var hasLaadpaal = false;
+      var hasWarmtepomp = false;
+      var hasInductie = false;
+      var hasPV = false;
+      var hasQuooker = false;
+
+      deviceInputs.forEach(function (inp) {
+        if (inp.checked) {
+          var val = inp.value;
+          var g = parseInt(inp.getAttribute("data-groepen") || "1", 10);
+          groepen += g;
+          if (val === "laadpaal") hasLaadpaal = true;
+          if (val === "warmtepomp") hasWarmtepomp = true;
+          if (val === "inductie") hasInductie = true;
+          if (val === "zonnepanelen") hasPV = true;
+          if (val === "quooker") hasQuooker = true;
+        }
+      });
+
+      // Minimum 4 basisgroepen
+      if (groepen < 4) groepen = 4;
+
+      var currentAansluiting = "1fase";
+      aansluitingInputs.forEach(function (r) {
+        if (r.checked) currentAansluiting = r.value;
+      });
+
+      // Fase advies bepalen
+      var advise3Fase = false;
+      if (currentAansluiting === "3fase") {
+        advise3Fase = true;
+      } else if (hasLaadpaal || hasWarmtepomp) {
+        advise3Fase = true;
+      } else if (hasInductie && groepen >= 7) {
+        advise3Fase = true;
+      } else if (groepen > 8) {
+        advise3Fase = true;
+      }
+
+      // Prijsberekening en transparante specificatie
+      var breakdownItems = [];
+      var basisPrijs = P.basis; // 1-fase basiskast tot 8 groepen (prijs uit config.py)
+      breakdownItems.push({ naam: "Basiskast 1-fase (tot 8 gr.)", prijs: "€ " + P.basis + ",-" });
+
+      var extraKosten = 0;
+
+      if (advise3Fase) {
+        extraKosten += P.driefase;
+        breakdownItems.push({ naam: "3-fase uitvoering & kamrail voorbereiding", prijs: "+ € " + P.driefase + ",-" });
+      }
+
+      if (hasInductie) {
+        extraKosten += P.kookgroep;
+        breakdownItems.push({ naam: "Inductie kookgroep (incl. kamrail & aansluiting)", prijs: "+ € " + P.kookgroep + ",-" });
+      }
+
+      if (hasLaadpaal) {
+        var laadKosten = advise3Fase ? P.kracht : P.kookgroep;
+        extraKosten += laadKosten;
+        breakdownItems.push({ 
+          naam: advise3Fase ? "Laadpaal (4P aardlekautomaat B16 + kracht kamrail)" : "Laadpaal (2P aardlekautomaat)", 
+          prijs: "+ € " + laadKosten + ",-" 
+        });
+      }
+
+      if (hasWarmtepomp) {
+        var wpKosten = advise3Fase ? P.kracht : P.kookgroep;
+        extraKosten += wpKosten;
+        breakdownItems.push({ 
+          naam: advise3Fase ? "Warmtepomp (4P aardlekautomaat + kracht kamrail)" : "Warmtepomp (2P aardlekautomaat)", 
+          prijs: "+ € " + wpKosten + ",-" 
+        });
+      }
+
+      if (hasPV) {
+        extraKosten += P.pv;
+        breakdownItems.push({ naam: "Zonnepanelen (PV-aardlekautomaat & afzekering)", prijs: "+ € " + P.pv + ",-" });
+      }
+
+      if (hasQuooker) {
+        extraKosten += P.groep;
+        breakdownItems.push({ naam: "Quooker/boiler (aparte groep + kamrail)", prijs: "+ € " + P.groep + ",-" });
+      }
+
+      var extraGroepenBovenAcht = Math.max(0, groepen - 8);
+      if (extraGroepenBovenAcht > 0) {
+        var extraGrKosten = extraGroepenBovenAcht * P.groep;
+        extraKosten += extraGrKosten;
+        breakdownItems.push({ 
+          naam: extraGroepenBovenAcht + "x Extra groep (" + extraGroepenBovenAcht + "× € " + P.groep + ")", 
+          prijs: "+ € " + extraGrKosten + ",-" 
+        });
+      }
+
+      var totaalPrijs = basisPrijs + extraKosten;
+
+      // Update UI
+      elGroepen.textContent = groepen + " groepen";
+      elFase.textContent = advise3Fase ? "3-fase (400V)" : "1-fase (230V)";
+
+      if (advise3Fase) {
+        elTitel.textContent = "Aanbevolen: 3-fase Hager of ABB Groepenkast";
+        if (hasLaadpaal || hasWarmtepomp) {
+          elUitleg.textContent = "Door zware verbruikers (zoals je laadpaal of warmtepomp) is een 3-fase aansluiting noodzakelijk om veilig en op vol vermogen te draaien.";
+        } else if (hasInductie) {
+          elUitleg.textContent = "Met koken op inductie en meerdere keukenapparaten biedt 3-fase een optimale verdeling over de fasen zonder dat de hoofdzekering overbelast raakt.";
+        } else {
+          elUitleg.textContent = "Bij meer dan 8 groepen adviseren we conform NEN 1010 een 3-fase verdeelkast voor een evenwichtige stroomverdeling over de woning.";
+        }
+      } else {
+        elTitel.textContent = "Aanbevolen: 1-fase Hager of ABB Groepenkast";
+        elUitleg.textContent = "Ideaal voor jouw appartement of standaard eengezinswoning met 2 aardlekschakelaars en NEN 1010 opleveringskeuring.";
+      }
+
+      // Stedin toelichting tonen of verbergen
+      if (elStedinBox) {
+        if (advise3Fase && currentAansluiting !== "3fase") {
+          elStedinBox.style.display = "block";
+        } else {
+          elStedinBox.style.display = "none";
+        }
+      }
+
+      // Prijsopbouw bijwerken
+      if (elBreakdown) {
+        var bHtml = "";
+        breakdownItems.forEach(function (it) {
+          bHtml += '<li class="calc-breakdown-item"><span>' + it.naam + '</span><span>' + it.prijs + '</span></li>';
+        });
+        elBreakdown.innerHTML = bHtml;
+      }
+
+      elPrijs.innerHTML = "€ " + totaalPrijs + ",- <span>all-in</span>";
+
+      // Dynamische links
+      var params = "?groepen=" + groepen + "&fase=" + (advise3Fase ? "3-fase" : "1-fase") + "&prijs=" + totaalPrijs;
+      if (elOfferte) elOfferte.href = "/offerte/" + params;
+
+      if (elWa) {
+        var msg = "Hallo INO, via de online calculator kom ik uit op een " +
+                  (advise3Fase ? "3-fase" : "1-fase") + " groepenkast met " + groepen +
+                  " groepen (berekende all-in indicatie € " + totaalPrijs + "). " +
+                  (advise3Fase && currentAansluiting !== "3fase" ? "Ik wil graag advies over Stedin verzwaring en het voorbereiden van de kast. " : "") +
+                  "Hierbij stuur ik een foto van mijn huidige meterkast mee voor een bindende offerte.";
+        elWa.href = "https://wa.me/31628763775?text=" + encodeURIComponent(msg);
+      }
+    }
+
+    deviceInputs.forEach(function (inp) { 
+      inp.addEventListener("change", bereken); 
+      inp.addEventListener("input", bereken); 
+      inp.addEventListener("click", bereken); 
+    });
+    huidigInputs.forEach(function (inp) { 
+      inp.addEventListener("change", bereken); 
+      inp.addEventListener("click", bereken); 
+    });
+    aansluitingInputs.forEach(function (inp) { 
+      inp.addEventListener("change", bereken); 
+      inp.addEventListener("click", bereken); 
+    });
+    bereken();
+  }
+  initCalculator();
+
+  // Stedin of INO storingscheck
+  function initStedinChecker() {
+    var checker = document.getElementById("stedinChecker");
+    if (!checker) return;
+    var steps = checker.querySelectorAll(".check-step");
+    var results = checker.querySelectorAll(".check-result");
+
+    function reset() {
+      results.forEach(function (r) { r.hidden = true; });
+      steps.forEach(function (s) { s.hidden = s.dataset.step !== "1"; });
+    }
+
+    checker.addEventListener("click", function (e) {
+      var nextBtn = e.target.closest("[data-next]");
+      var backBtn = e.target.closest("[data-back]");
+      var resultBtn = e.target.closest("[data-result]");
+      var resetBtn = e.target.closest(".reset-link") || e.target.closest(".reset-check");
+
+      if (nextBtn) {
+        steps.forEach(function (s) { s.hidden = s.dataset.step !== nextBtn.dataset.next; });
+      } else if (backBtn) {
+        results.forEach(function (r) { r.hidden = true; });
+        steps.forEach(function (s) { s.hidden = s.dataset.step !== backBtn.dataset.back; });
+      } else if (resultBtn) {
+        steps.forEach(function (s) { s.hidden = true; });
+        results.forEach(function (r) { r.hidden = r.dataset.resultId !== resultBtn.dataset.result; });
+      } else if (resetBtn) {
+        reset();
+      }
+    });
+  }
+  initStedinChecker();
+
+  // Klik- en conversiemeting (bellen / WhatsApp / formulieren).
+  // Werkt automatisch en naadloos met Google Analytics 4 (GA4) en Google Ads.
   function track(evt, params) {
     try {
+      if (!window.inoGA4geladen) return; // geen toestemming = niets meten
       if (window.gtag) window.gtag("event", evt, params || {});
-      (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: evt }, params || {}));
     } catch (e) {}
   }
   document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("[data-track]");
-    if (a) track(a.getAttribute("data-track") === "bellen" ? "klik_bellen" : "klik_whatsapp", { pagina: location.pathname });
+    var a = e.target.closest && e.target.closest("a");
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    var isTel = href.indexOf("tel:") === 0 || a.getAttribute("data-track") === "bellen";
+    var isWa = href.indexOf("wa.me") !== -1 || a.getAttribute("data-track") === "whatsapp";
+
+    if (isTel) {
+      track("klik_bellen", { pagina: location.pathname });
+      track("contact", { method: "phone", pagina: location.pathname });
+    } else if (isWa) {
+      track("klik_whatsapp", { pagina: location.pathname });
+      track("contact", { method: "whatsapp", pagina: location.pathname });
+    }
   });
+
+  // Slimme, pagina-specifieke WhatsApp links (voor-ingevulde berichten)
+  function initSmartWhatsApp() {
+    var p = (location.pathname || "").toLowerCase();
+    var msg = "Hallo INO Techniek, ik heb een vraag over een elektra klus in Utrecht. Kan ik een foto sturen voor advies?";
+    if (p.indexOf("extra-groep") !== -1) {
+      msg = "Hallo INO, ik wil graag een extra groep laten plaatsen in mijn meterkast in Utrecht. Hierbij stuur ik een foto van mijn huidige kast mee.";
+    } else if (p.indexOf("groepenkast") !== -1) {
+      msg = "Hallo INO, ik wil graag advies of een offerte voor het vervangen/uitbreiden van mijn groepenkast. Hierbij stuur ik een foto van mijn huidige meterkast mee.";
+    } else if (p.indexOf("perilex") !== -1) {
+      msg = "Hallo INO, ik wil een inductiekookplaat of Perilex aansluiting laten aanleggen. Hierbij een foto van mijn situatie.";
+    } else if (p.indexOf("laadpaal") !== -1) {
+      msg = "Hallo INO, ik wil graag een laadpaal laten installeren aan huis. Wat zijn de mogelijkheden en kosten?";
+    } else if (p.indexOf("krachtstroom") !== -1) {
+      msg = "Hallo INO, ik heb krachtstroom (3-fase) nodig in mijn woning of bedrijfspand. Graag ontvang ik advies en een richtprijs.";
+    } else if (p.indexOf("spoed") !== -1 || p.indexOf("storing") !== -1 || p.indexOf("kortsluiting") !== -1 || p.indexOf("aardlek") !== -1) {
+      msg = "Hallo INO, ik heb met spoed een elektricien nodig in Utrecht in verband met een storing. Hierbij een foto van de meterkast.";
+    } else if (p.indexOf("frezen") !== -1 || p.indexOf("stopcontact") !== -1) {
+      msg = "Hallo INO, ik wil graag stopcontacten laten verplaatsen/infrezen. Kan ik foto's sturen voor een richtprijs?";
+    } else if (p.indexOf("tuinverlichting") !== -1) {
+      msg = "Hallo INO, ik wil graag tuinverlichting of buitenelektra laten aanleggen. Wat zijn de mogelijkheden?";
+    } else if (p.indexOf("tarieven") !== -1) {
+      msg = "Hallo INO, ik heb gekeken naar jullie transparante tarieven en wil graag een indicatie voor mijn klus. Hierbij een foto.";
+    } else if (p.indexOf("elektricien-") !== -1) {
+      var h1 = document.querySelector("h1");
+      var title = h1 ? h1.textContent.trim() : "de regio Utrecht";
+      msg = "Hallo INO Techniek, ik zoek een betrouwbare elektricien voor een klus (" + title + "). Hierbij stuur ik foto's van de situatie mee.";
+    }
+
+    var waHref = "https://wa.me/31628763775?text=" + encodeURIComponent(msg);
+
+    // Update floating WhatsApp widget en mobiele WhatsApp-knop
+    var floatingBtn = document.getElementById("floatingWa");
+    if (floatingBtn) floatingBtn.href = waHref;
+
+    document.querySelectorAll(".mobile-btn-whatsapp, .m-btn-whatsapp").forEach(function (btn) {
+      btn.href = waHref;
+    });
+  }
+  initSmartWhatsApp();
+  // Cookiemelding: Google Analytics alleen na akkoord (AVG / Telecommunicatiewet).
+  function initCookies() {
+    if (typeof window.inoGA4 !== "function") return;
+    var KEY = "ino_cookies";
+    function lees() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function bewaar(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    var bar;
+    function toon() {
+      if (bar) { bar.hidden = false; return; }
+      bar = document.createElement("div");
+      bar.className = "cookiebar";
+      bar.setAttribute("role", "region");
+      bar.setAttribute("aria-label", "Cookiemelding");
+      bar.innerHTML = '<p>We gebruiken Google Analytics om te zien hoe de site gebruikt wordt. Dat gebeurt alleen als je akkoord geeft. <a href="/privacy/">Meer info</a></p>' +
+        '<div class="cookiebar-knoppen"><button type="button" class="btn btn-secondary" data-cookie="nee">Weigeren</button>' +
+        '<button type="button" class="btn btn-primary" data-cookie="ja">Akkoord</button></div>';
+      bar.addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest("[data-cookie]");
+        if (!b) return;
+        var v = b.getAttribute("data-cookie");
+        var oud = lees();
+        bewaar(v);
+        bar.hidden = true;
+        if (v === "ja") window.inoGA4();
+        else if (oud === "ja") location.reload(); // intrekken: pagina zonder GA opnieuw laden
+      });
+      document.body.appendChild(bar);
+    }
+    if (!lees()) toon();
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("[data-cookie-instellingen]");
+      if (a) { e.preventDefault(); toon(); }
+    });
+  }
+  initCookies();
 })();

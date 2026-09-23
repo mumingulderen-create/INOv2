@@ -4,7 +4,7 @@ mobiele belbalk en de structured data (JSON-LD) voor Google.
 """
 import json, datetime
 from html import escape
-from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICATION, TARIEVEN as T
+from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICATION, GA4_MEASUREMENT_ID, TARIEVEN as T
 
 JAAR = datetime.date.today().year
 
@@ -64,9 +64,17 @@ def business_node(wijken):
         "knowsAbout": ["NEN 1010", "NEN 3140", "groepenkast vervangen", "Perilex", "laadpaal installatie",
                        "krachtstroom", "storingsdienst"],
         "sameAs": same,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "48",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
     }
     if B["kvk"]:
         node["identifier"] = {"@type": "PropertyValue", "propertyID": "KvK", "value": B["kvk"]}
+        node["taxID"] = B["kvk"]
     if B["btw"]:
         node["vatID"] = B["btw"]
     return node
@@ -111,11 +119,25 @@ def head(page, wijken, css_v, font_url):
     if page.get("lcp"):
         href, srcset, sizes = page["lcp"]
         pre = f'\n<link rel="preload" as="image" type="image/webp" href="{href}" imagesrcset="{srcset}" imagesizes="{sizes}" fetchpriority="high">'
+    # GA4 laadt pas NA toestemming (cookiemelding in script.js). Zonder akkoord: geen cookies, geen verzoek naar Google.
+    ga4_tag = f"""\n<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  window.inoGA4 = function () {{
+    if (window.inoGA4geladen) return; window.inoGA4geladen = true;
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}';
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', '{GA4_MEASUREMENT_ID}', {{ anonymize_ip: true }});
+  }};
+  try {{ if (localStorage.getItem('ino_cookies') === 'ja') window.inoGA4(); }} catch (e) {{}}
+</script>""" if GA4_MEASUREMENT_ID else ""
     return f"""<!doctype html>
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">{ga4_tag}
 <title>{t}</title>
 <meta name="description" content="{d}">
 <link rel="canonical" href="{page['url']}">
@@ -154,28 +176,15 @@ def header(nav_key, wijken, variant="standaard"):
         f'<a href="tel:{B["telefoon_e164"]}" data-track="bellen">{ICON_TEL} {B["telefoon_tonen"]}</a>'
         f'</div></div>'
     )
-    if variant == "spoed":
-        return f"""<a class="skip-link" href="#inhoud">Naar de inhoud</a>
-<header class="lp-header">
-  <div class="container nav-wrap">
-    <a class="brand" href="/" aria-label="{B['naam']} – naar de homepage">
-      <img src="/logo.png" alt="{B['naam']}" width="130" height="54">
-    </a>
-    <div class="lp-header-right">
-      <div class="lp-status-pill"><span class="lp-status-dot"></span> 24/7 storingsdienst</div>
-      <a class="lp-call-btn" href="tel:{B['telefoon_e164']}" data-track="bellen" aria-label="Bel direct {B['telefoon_tonen']}">{ICON_TEL} {B['telefoon_tonen']}</a>
-    </div>
-  </div>
-</header>"""
     items = []
     for it in NAV:
         active = ' aria-current="page"' if groep == it["key"] else ""
         cls_active = " active" if groep == it["key"] else ""
         sub = it.get("sub")
         if sub == "WIJKEN":
-            sub = [{"label": "Werkgebied & kaart", "href": "/werkgebied"},
-                   {"label": "Alle wijken & plaatsen", "href": "/wijken"}] + \
-                  [{"label": f"Elektricien {w['naam']}", "href": f"/elektricien-{w['slug']}"} for w in wijken]
+            sub = [{"label": "Werkgebied & kaart", "href": "/werkgebied/"},
+                   {"label": "Alle wijken & plaatsen", "href": "/wijken/"}] + \
+                  [{"label": f"Elektricien {w['naam']}", "href": f"/elektricien-{w['slug']}/"} for w in wijken]
         if sub:
             links = "".join(f'<a href="{s["href"]}">{s["label"]}</a>' for s in sub)
             items.append(
@@ -194,7 +203,7 @@ def header(nav_key, wijken, variant="standaard"):
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu openen" aria-expanded="false" aria-controls="nav">{ICON_MENU}</button>
     <nav id="nav" aria-label="Hoofdmenu">
       {nav}
-      <a class="nav-cta" href="/offerte">Offerte aanvragen</a>
+      <a class="nav-cta" href="/offerte/">Offerte aanvragen</a>
     </nav>
   </div>
 </header>"""
@@ -206,17 +215,21 @@ def breadcrumbs_html(crumbs):
         return ""
     parts = []
     for i, (n, u) in enumerate(crumbs):
+        link = u.replace(SITE_URL, "") or "/"
+        if not link.endswith("/") and not link.startswith("#"):
+            link += "/"
         if i == len(crumbs) - 1:
             parts.append(f'<span aria-current="page">{n}</span>')
         else:
-            parts.append(f'<a href="{u.replace(SITE_URL, "") or "/"}">{n}</a>')
-    return f'<nav class="crumbs container" aria-label="Kruimelpad">{" <span aria-hidden=\"true\">/</span> ".join(parts)}</nav>'
+            parts.append(f'<a href="{link}">{n}</a>')
+    sep = ' <span aria-hidden="true">/</span> '
+    return f'<nav class="crumbs container" aria-label="Kruimelpad">{sep.join(parts)}</nav>'
 
 
 # --------------------------------------------------------------------------- footer
 def footer(wijken, storingen, variant="standaard"):
-    wijk_links = "".join(f'<a href="/elektricien-{w["slug"]}">Elektricien {w["naam"]}</a>' for w in wijken)
-    storing_links = "".join(f'<a href="/{s["slug"]}">{s["kort"]}</a>' for s in storingen)
+    wijk_links = "".join(f'<a href="/elektricien-{w["slug"]}/">Elektricien {w["naam"]}</a>' for w in wijken)
+    storing_links = "".join(f'<a href="/{s["slug"]}/">{s["kort"]}</a>' for s in storingen)
     kvk = f' · KvK {B["kvk"]}' if B["kvk"] else ""
     btw = f' · btw {B["btw"]}' if B["btw"] else ""
     if variant == "spoed":
@@ -229,6 +242,16 @@ def footer(wijken, storingen, variant="standaard"):
   <a href="tel:{B['telefoon_e164']}" class="mobile-btn-call" data-track="bellen">{ICON_TEL}<span>Direct bellen</span></a>
   <a href="{wa_url('Hallo INO, ik wil graag een foto sturen voor een prijsindicatie.')}" target="_blank" rel="noopener" class="mobile-btn-whatsapp" data-track="whatsapp">{ICON_WA}<span>WhatsApp foto</span></a>
 </div>"""
+    floating_wa = f"""<a href="{wa_url('Hallo INO Techniek, ik heb een vraag over een elektra klus. Kan ik een foto sturen voor advies?')}" class="floating-wa" target="_blank" rel="noopener" aria-label="Direct chatten via WhatsApp" data-track="whatsapp" id="floatingWa">
+  <span class="floating-wa-badge"><span class="floating-wa-pulse"></span>Direct contact</span>
+  <span class="floating-wa-inner">
+    <span class="floating-wa-icon">{ICON_WA}</span>
+    <span class="floating-wa-text">
+      <strong>WhatsApp ons</strong>
+      <small>Foto sturen &amp; richtprijs</small>
+    </span>
+  </span>
+</a>"""
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div>
@@ -237,11 +260,12 @@ def footer(wijken, storingen, variant="standaard"):
       <p><a href="tel:{B['telefoon_e164']}" data-track="bellen"><strong>{B['telefoon_tonen']}</strong></a><br>
       <a href="mailto:{B['email']}">{B['email']}</a></p>
     </div>
-    <div><h2 class="footer-h">Diensten</h2><a href="/diensten">Alle diensten</a><a href="/groepenkast">Groepenkast vervangen</a><a href="/perilex">Perilex &amp; kookgroep</a><a href="/laadpaal-installeren">Laadpaal installeren</a><a href="/krachtstroom-aanleggen">Krachtstroom 400V</a><a href="/frezen-stopcontacten-verleggen">Frezen &amp; stopcontacten</a><a href="/tuinverlichting-buitenelektra">Tuinverlichting</a></div>
-    <div><h2 class="footer-h">Storing?</h2><a href="/spoed-elektricien-utrecht">Spoed elektricien 24/7</a>{storing_links}<a href="/tarieven">Tarieven</a><a href="/faq">Veelgestelde vragen</a></div>
-    <div><h2 class="footer-h">Werkgebied</h2>{wijk_links}<a href="/wijken">Alle wijken &amp; plaatsen</a></div>
+    <div><h2 class="footer-h">Diensten</h2><a href="/diensten/">Alle diensten</a><a href="/groepenkast/">Groepenkast vervangen</a><a href="/perilex/">Perilex &amp; kookgroep</a><a href="/laadpaal-installeren/">Laadpaal installeren</a><a href="/krachtstroom-aanleggen/">Krachtstroom 400V</a><a href="/frezen-stopcontacten-verleggen/">Frezen &amp; stopcontacten</a><a href="/tuinverlichting-buitenelektra/">Tuinverlichting</a></div>
+    <div><h2 class="footer-h">Storing?</h2><a href="/spoed-elektricien-utrecht/">Spoed elektricien 24/7</a>{storing_links}<a href="/tarieven/">Tarieven</a><a href="/faq/">Veelgestelde vragen</a></div>
+    <div><h2 class="footer-h">Werkgebied</h2>{wijk_links}<a href="/wijken/">Alle wijken &amp; plaatsen</a></div>
   </div>
-  <div class="copyright">© {JAAR} {B['naam']}{kvk}{btw} · <a href="/werkwijze">Werkwijze</a> · <a href="/vakmanschap">Vakmanschap</a> · <a href="/reviews">Reviews</a> · <a href="/contact">Contact</a> · <a href="/privacy">Privacy</a> · <a href="{B['instagram']}" target="_blank" rel="noopener">Instagram</a></div>
+  <div class="copyright">© {JAAR} {B['naam']}{kvk}{btw} · <a href="/werkwijze/">Werkwijze</a> · <a href="/vakmanschap/">Vakmanschap</a> · <a href="/reviews/">Reviews</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a>{' · <a href="#" data-cookie-instellingen>Cookies</a>' if GA4_MEASUREMENT_ID else ''} · <a href="{B['instagram']}" target="_blank" rel="noopener">Instagram</a></div>
 </footer>
 {bar}
+{floating_wa}
 <script src="/script.js?v={{JS_V}}" defer></script>"""

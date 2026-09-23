@@ -158,6 +158,8 @@
   box-shadow: 0 16px 40px rgba(0,0,0,0.12);
   border: 1px solid var(--line);
   background: #f8faf9;
+  aspect-ratio: 16 / 10;
+  min-height: 280px;
 }
 .showcase-img {
   width: 100%;
@@ -165,6 +167,7 @@
   max-height: 420px;
   object-fit: cover;
   display: block;
+  aspect-ratio: 16 / 10;
 }
 .hero-badge-floating {
   position: absolute;
@@ -457,3 +460,186 @@ a.alert-banner:hover{border-color:#e0334f}
 @media(max-width:520px){h1{font-size:clamp(32px,9vw,44px);letter-spacing:-1.2px}.lp-hero h1{font-size:clamp(28px,8vw,38px)}h2{font-size:clamp(24px,7vw,32px);letter-spacing:-.8px}.section{padding:56px 0}}
 .h3{font-size:19px;letter-spacing:0;line-height:1.3;margin:9px 0}
 .safety-note{font-size:14px;color:var(--muted);border-left:3px solid var(--line);padding-left:14px}
+
+/* --- Interactieve Groepenkast & Inductie Calculator --- */
+.calc-section{padding:60px 0}
+.calc-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:0 12px 36px rgba(16,34,13,.04)}
+.calc-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:start}
+.calc-step-header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.calc-step-num{width:32px;height:32px;background:var(--green);color:#10220d;font-weight:800;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.calc-step-header h3{margin:0;font-size:19px}
+.calc-step-header p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.calc-device-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-device-item{cursor:pointer;position:relative;display:block}
+.calc-device-item input{position:absolute;opacity:0}
+.calc-device-box{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .18s ease;background:#fafbfa}
+.calc-device-item:hover .calc-device-box{border-color:var(--green);background:#fff}
+.calc-device-item input:checked + .calc-device-box{border-color:var(--green);background:rgba(30,215,96,.06);box-shadow:0 0 0 1px var(--green)}
+.calc-icon{font-size:22px;flex-shrink:0}
+.calc-device-info{flex:1;min-width:0}
+.calc-device-info strong{display:block;font-size:14px;color:var(--ink);line-height:1.25}
+.calc-device-info span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.calc-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:transparent;transition:all .15s}
+.calc-device-item input:checked + .calc-device-box .calc-check{background:var(--green);border-color:var(--green);color:#10220d}
+.calc-type-selector{display:grid;grid-template-columns:1fr;gap:8px}
+.calc-radio{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:14px;background:#fafbfa;transition:all .15s}
+.calc-radio:hover{background:#fff;border-color:var(--green)}
+.calc-radio input{accent-color:var(--green)}
+.calc-summary-card{background:linear-gradient(145deg,#132813 0%,#0c1b0d 100%);color:#fff;border-radius:18px;padding:28px 24px;position:sticky;top:90px;box-shadow:0 14px 40px rgba(12,27,13,.2)}
+.calc-badge{display:inline-block;background:rgba(30,215,96,.18);color:var(--green);font-size:11px;font-weight:800;letter-spacing:1px;padding:5px 11px;border-radius:999px;margin-bottom:18px;text-transform:uppercase}
+.calc-kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:18px}
+.calc-kpi-label{display:block;font-size:12px;color:rgba(255,255,255,.7);margin-bottom:4px}
+.calc-kpi strong{display:block;font-size:18px;font-weight:800;color:#fff}
+.calc-explanation{margin-bottom:20px}
+.calc-explain-title{font-size:16px;font-weight:700;color:var(--green);margin-bottom:6px}
+.calc-explanation p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.45;margin:0}
+.calc-price-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center}
+.calc-price-label{display:block;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:4px}
+.calc-price-val{font-size:32px;font-weight:900;color:#fff;line-height:1}
+.calc-price-val span{font-size:14px;font-weight:400;color:var(--green);margin-left:4px}
+.calc-price-sub{display:block;font-size:11px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.3}
+.calc-actions{display:grid;gap:10px;margin-bottom:14px}
+.calc-guarantee-note{display:grid;gap:4px;font-size:11px;color:rgba(255,255,255,.65);border-top:1px solid rgba(255,255,255,.08);padding-top:12px}
+@media(max-width:960px){.calc-grid{grid-template-columns:1fr}.calc-summary-card{position:static;margin-top:20px}}
+@media(max-width:600px){.calc-device-grid{grid-template-columns:1fr}.calc-card{padding:20px}}
+
+/* Stedin vs INO 2-Koloms Vergelijkend Overzicht */
+.stedin-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 980px; margin: 0 auto; }
+.stedin-col-card { background: #fff; border: 1.5px solid var(--line); border-radius: 20px; padding: 28px 26px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,.03); transition: transform .2s ease, box-shadow .2s ease; }
+.stedin-col-card:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(0,0,0,.06); }
+.stedin-col-net { border-top: 5px solid #fd7e14; }
+.stedin-col-ino { border-top: 5px solid var(--green); }
+.stedin-col-header { margin-bottom: 16px; }
+.stedin-col-badge { display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+.badge-stedin { background: #fff4e6; color: #d9480f; border: 1px solid #ffd8a8; }
+.badge-ino { background: #eef7ee; color: #1e6b18; border: 1px solid #bce2b6; }
+.stedin-col-header h3 { font-size: 21px; font-weight: 800; margin: 0 0 6px; color: var(--ink); line-height: 1.3; }
+.stedin-col-sub { font-size: 13.5px; color: var(--muted); line-height: 1.45; margin: 0; }
+.stedin-col-body { flex: 1; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.stedin-list-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--ink); margin: 0 0 12px; }
+.stedin-check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.stedin-check-list li { font-size: 13.5px; color: var(--ink); display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
+.stedin-check-list li span { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px; background: #fff0e6; color: #d9480f; }
+.list-ino li span { background: #eef7ee; color: #1e6b18; }
+.stedin-col-footer { display: flex; flex-direction: column; }
+.stedin-action-box { display: flex; flex-direction: column; gap: 9px; }
+.stedin-action-box .btn.full { width: 100%; text-align: center; justify-content: center; padding: 13px 18px; }
+.stedin-action-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+.stedin-fast-note { font-size: 12px; font-weight: 700; color: var(--green-dark); text-align: center; margin-top: 2px; }
+.stedin-price-sub { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.35; margin-top: 2px; }
+.hero-price-hint { font-size: 12px; color: #4b6354; margin-top: 8px; line-height: 1.4; background: rgba(39,138,29,.06); border: 1px solid rgba(39,138,29,.15); padding: 7px 12px; border-radius: 8px; }
+.hero-price-hint strong { color: var(--ink); font-weight: 700; }
+.stedin-official-link { display: inline-block; font-size: 12.5px; font-weight: 700; color: #b75500; text-decoration: underline; text-align: center; margin-top: 4px; }
+.stedin-official-link:hover { color: #873800; }
+
+/* Brede Hulpbalk */
+.stedin-helper-banner { max-width: 980px; margin: 26px auto 0; background: linear-gradient(135deg, #f4faf2 0%, #f0f7fb 100%); border: 1.5px solid #d4ebd2; border-radius: 18px; padding: 22px 28px; display: flex; align-items: center; gap: 20px; box-shadow: 0 6px 20px rgba(0,0,0,.02); }
+.stedin-helper-icon { font-size: 34px; line-height: 1; flex-shrink: 0; }
+.stedin-helper-text { flex: 1; }
+.stedin-helper-text h4 { margin: 0 0 4px; font-size: 17px; font-weight: 800; color: var(--ink); }
+.stedin-helper-text p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+.stedin-helper-action { flex-shrink: 0; }
+
+@media(max-width:840px){
+  .stedin-compare-grid { grid-template-columns: 1fr; gap: 18px; }
+  .stedin-helper-banner { flex-direction: column; text-align: center; padding: 22px 20px; }
+  .stedin-helper-action { width: 100%; }
+  .stedin-helper-action .btn { width: 100%; justify-content: center; }
+}
+
+/* ===== Floating WhatsApp Widget (Desktop / Tablet) ===== */
+.floating-wa {
+  display: none;
+}
+@media (min-width: 769px) {
+  .floating-wa {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    text-decoration: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .floating-wa:hover {
+    transform: translateY(-3px) scale(1.02);
+  }
+  .floating-wa-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    letter-spacing: 0.2px;
+  }
+  .floating-wa-pulse {
+    width: 7px;
+    height: 7px;
+    background: #25d366;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.4);
+    animation: wa-pulse 1.8s infinite;
+  }
+  @keyframes wa-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+  }
+  .floating-wa-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #25d366;
+    color: #0b2e17 !important;
+    padding: 12px 20px;
+    border-radius: 999px;
+    box-shadow: 0 10px 28px rgba(37, 211, 102, 0.38);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+  }
+  .floating-wa:hover .floating-wa-inner {
+    background: #20ba5a;
+  }
+  .floating-wa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .floating-wa-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.3;
+  }
+  .floating-wa-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.25;
+  }
+  .floating-wa-text strong {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0b2e17;
+  }
+  .floating-wa-text small {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(11, 46, 23, 0.85);
+  }
+}
+
+
+
+/* Cookiemelding */
+.cookiebar{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;max-width:560px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.15);padding:16px 18px;font-size:14px}
+.cookiebar p{margin:0 0 12px}.cookiebar a{color:var(--green-dark);font-weight:700;text-decoration:underline}
+.cookiebar-knoppen{display:flex;gap:10px;justify-content:flex-end}.cookiebar .btn{padding:10px 16px}
+@media(max-width:800px){.cookiebar{bottom:84px}}

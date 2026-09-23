@@ -25,7 +25,7 @@ BEDRIJF = {
     "werkspot": "",                            # VUL_IN: volledige URL van je Werkspot-profiel
     "actief_sinds": "2021",
     # --- Wettelijk verplicht op je website (Handelsregisterwet): KvK-nummer ---
-    "kvk": "",                                 # VUL_IN: bijv. "12345678"
+    "kvk": "86669346",
     "btw": "",                                 # VUL_IN (optioneel)
     # Adres: alleen invullen als je dit ook in Google Bedrijfsprofiel toont.
     # Werk je vanuit huis als servicegebied-bedrijf? Laat straat/postcode leeg.
@@ -39,16 +39,27 @@ BEDRIJF = {
 
 GOOGLE_SITE_VERIFICATION = "xHeZ_iY8KLYVB6SQZzxa5C9qnocjO7YkzjrELzLSXWw"
 
+# Google Analytics 4 (GA4) Meet-ID (bijv. "G-XXXXXXXXXX" of leeg laten)
+GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
+
 # FormSubmit endpoint (formulieren -> je mailbox)
 FORM_ENDPOINT = "https://formsubmit.co/ajax/d0d9de6bb2a30083d92c3fe4775b9ce6"
+
+# ---------------------------------------------------------------------------
+# AANRIJTIJDEN bij spoed (vertrek vanuit Overvecht). Gebruik {{aanrijtijd_utrecht}} / {{aanrijtijd_regio}}.
+# ---------------------------------------------------------------------------
+AANRIJTIJD = {
+    "aanrijtijd_utrecht": "5–30",   # gemeente Utrecht
+    "aanrijtijd_regio": "15–40",    # plaatsen buiten de gemeente Utrecht
+}
 
 # ---------------------------------------------------------------------------
 # TARIEVEN — alle bedragen incl. 21% btw. Eén bron voor de hele site.
 # ---------------------------------------------------------------------------
 TARIEVEN = {
     "uur_dag": 90,            # ma-vr 08:00-18:00
-    "uur_avond": 120,         # ma-vr 18:00-22:00 en zaterdag
-    "uur_nacht": 145,         # 22:00-08:00, zondag en feestdagen
+    "uur_avond": 120,         # ma-vr 18:00-22:00
+    "uur_nacht": 145,         # 22:00-08:00, zaterdag, zondag en feestdagen
     "kwartier_dag": "22,50",
     "kwartier_avond": "30,00",
     "kwartier_nacht": "36,25",
@@ -63,13 +74,33 @@ TARIEVEN = {
     "stopcontact_verleggen": 120,
     "frezen_per_meter": 10,
     "garantie_maanden": 12,
+    # Extra groep (pagina /extra-groep-aanleggen)
+    "extra_groep_leiding": 165,        # aparte groep + leiding trekken (richtprijs vanaf)
+    "extra_groep_leiding_max": 220,    # meestal tussen .._leiding en dit bedrag
+    "extra_krachtgroep_3fase": 185,    # 3-fase krachtgroep 400V
+    # Frezen & stopcontacten
+    "frezen_steen_per_meter": 15,      # baksteen / kalkzandsteen
+    "frezen_beton_per_meter": 30,      # (gewapend) beton
+    "stopcontact_complex_min": 130,    # lastige locatie / grotere afstand
+    "stopcontact_complex_max": 250,
+    # Groepenkast: opties bij vervangen (ook gebruikt door de calculator)
+    "optie_kookgroep": 85,
+    "optie_pv": 95,
+    "optie_kracht_4p": 185,
+    "optie_automaat": 45,
+    "optie_din_stopcontact": 39,
+    "optie_beltrafo": 49,
+    "optie_spd": 169,
+    # Groepenkast-calculator (zelfde bedragen als op de live site)
+    "calc_basis_1f": 640,              # basiskast 1-fase tot 8 groepen
+    "calc_meer_3f": 120,               # meerprijs 3-fase uitvoering
 }
 
 # Tekstblokjes die op meerdere plekken terugkomen (automatisch consistent)
 T = TARIEVEN
 TARIEF_ZIN = (
-    f"Ma–vr 08:00–18:00 € {T['uur_dag']}, ma–vr 18:00–22:00 en zaterdag € {T['uur_avond']}, "
-    f"22:00–08:00, zondag en feestdagen € {T['uur_nacht']} (eerste uur, incl. btw)"
+    f"Ma–vr 08:00–18:00 € {T['uur_dag']}, ma–vr 18:00–22:00 € {T['uur_avond']}, "
+    f"22:00–08:00 en zaterdag & zondag € {T['uur_nacht']} (eerste uur incl. diagnose en btw)"
 )
 VOORRIJ_ZIN = (
     f"Binnen de gemeente Utrecht rekenen we € {T['voorrijkosten_utrecht']},- voorrijkosten. "
@@ -80,34 +111,35 @@ VOORRIJ_ZIN = (
 # NAVIGATIE (header). 'sub' = uitklapmenu.
 # ---------------------------------------------------------------------------
 NAV = [
-    {"label": "Spoed 24/7", "href": "/spoed-elektricien-utrecht", "key": "spoed", "sub": [
-        {"label": "Spoed elektricien 24/7", "href": "/spoed-elektricien-utrecht"},
-        {"label": "Geen stroom in huis", "href": "/stroomstoring-utrecht"},
-        {"label": "Aardlekschakelaar springt eruit", "href": "/aardlekschakelaar-springt-eruit"},
-        {"label": "Kortsluiting / groep valt uit", "href": "/kortsluiting-utrecht"},
-        {"label": "Stopcontact werkt niet of wordt warm", "href": "/stopcontact-werkt-niet"},
+    {"label": "Spoed 24/7", "href": "/spoed-elektricien-utrecht/", "key": "spoed", "sub": [
+        {"label": "Spoed elektricien 24/7", "href": "/spoed-elektricien-utrecht/"},
+        {"label": "Geen stroom in huis", "href": "/stroomstoring-utrecht/"},
+        {"label": "Aardlekschakelaar springt eruit", "href": "/aardlekschakelaar-springt-eruit/"},
+        {"label": "Kortsluiting / groep valt uit", "href": "/kortsluiting-utrecht/"},
+        {"label": "Stopcontact werkt niet of wordt warm", "href": "/stopcontact-werkt-niet/"},
     ]},
-    {"label": "Diensten", "href": "/diensten", "key": "diensten", "sub": [
-        {"label": "Alle diensten", "href": "/diensten"},
-        {"label": "Groepenkast vervangen", "href": "/groepenkast"},
-        {"label": "Perilex & kookgroep", "href": "/perilex"},
-        {"label": "Laadpaal installeren", "href": "/laadpaal-installeren"},
-        {"label": "Krachtstroom 400V", "href": "/krachtstroom-aanleggen"},
-        {"label": "Frezen & stopcontacten", "href": "/frezen-stopcontacten-verleggen"},
-        {"label": "Tuinverlichting", "href": "/tuinverlichting-buitenelektra"},
+    {"label": "Diensten", "href": "/diensten/", "key": "diensten", "sub": [
+        {"label": "Alle diensten", "href": "/diensten/"},
+        {"label": "Groepenkast vervangen", "href": "/groepenkast/"},
+        {"label": "Perilex & kookgroep", "href": "/perilex/"},
+        {"label": "Laadpaal installeren", "href": "/laadpaal-installeren/"},
+        {"label": "Krachtstroom 400V", "href": "/krachtstroom-aanleggen/"},
+        {"label": "Frezen & stopcontacten", "href": "/frezen-stopcontacten-verleggen/"},
+        {"label": "Extra groep aanleggen", "href": "/extra-groep-aanleggen/"},
+        {"label": "Tuinverlichting", "href": "/tuinverlichting-buitenelektra/"},
     ]},
-    {"label": "Tarieven", "href": "/tarieven", "key": "tarieven"},
-    {"label": "Werkgebied", "href": "/werkgebied", "key": "werkgebied", "sub": "WIJKEN"},  # automatisch gevuld
-    {"label": "Werkwijze", "href": "/werkwijze", "key": "werkwijze"},
-    {"label": "Reviews", "href": "/reviews", "key": "reviews"},
-    {"label": "Contact", "href": "/contact", "key": "contact"},
+    {"label": "Tarieven", "href": "/tarieven/", "key": "tarieven"},
+    {"label": "Werkgebied", "href": "/werkgebied/", "key": "werkgebied", "sub": "WIJKEN"},  # automatisch gevuld
+    {"label": "Werkwijze", "href": "/werkwijze/", "key": "werkwijze"},
+    {"label": "Reviews", "href": "/reviews/", "key": "reviews"},
+    {"label": "Contact", "href": "/contact/", "key": "contact"},
 ]
 
 # Welke pagina-sleutel hoort bij welk hoofdmenu-item (voor 'actief' markeren)
 NAV_GROEP = {
     "groepenkast": "diensten", "perilex": "diensten", "laadpaal-installeren": "diensten",
     "krachtstroom-aanleggen": "diensten", "frezen-stopcontacten-verleggen": "diensten",
-    "tuinverlichting-buitenelektra": "diensten", "diensten": "diensten",
+    "extra-groep-aanleggen": "diensten", "tuinverlichting-buitenelektra": "diensten", "diensten": "diensten",
     "spoed-elektricien-utrecht": "spoed", "stroomstoring-utrecht": "spoed",
     "aardlekschakelaar-springt-eruit": "spoed", "kortsluiting-utrecht": "spoed",
     "stopcontact-werkt-niet": "spoed",

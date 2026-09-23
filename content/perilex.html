@@ -1,8 +1,8 @@
 <!--
 {
   "slug": "perilex",
-  "title": "Perilex aansluiten Utrecht | kookgroep vanaf € 120 | INO",
-  "description": "Perilex stopcontact of kookgroep aansluiten in Utrecht &amp; omstreken voor inductiekookplaat of fornuis. Vaste prijs vanaf € 120 all-in. NEN 1010 gecertificeerd.",
+  "title": "Perilex aansluiten Utrecht | kookgroep vanaf € {{perilex_aansluiten}} | INO",
+  "description": "Perilex stopcontact of kookgroep aansluiten in Utrecht &amp; omstreken voor inductie of fornuis. Vaste prijs vanaf € {{perilex_aansluiten}} all-in, NEN 1010.",
   "og_image": "hero-elektricien.jpg",
   "schema": [
     {
@@ -41,20 +41,25 @@
       <div class="perilex-intro">
         <div class="section-heading no-margin">
           <span class="eyebrow">PERILEX / KOOKGROEP UTRECHT</span>
-          <span class="price-pill">€ 120 all-in, vaste prijs vooraf</span>
+          <span class="price-pill">€ {{perilex_aansluiten}} all-in, vaste prijs vooraf</span>
           <h1>Perilex Aansluiten &amp; Kookgroep Aanleggen in Utrecht</h1>
           <p>Overstappen op inductie of een nieuw fornuis? INO sluit je perilex stopcontact of kookgroep veilig aan volgens NEN 1010 — met een vaste prijs die je al kent voordat we beginnen.</p>
         </div>
         <div class="perilex-visual hero-image-wrapper" style="padding:0">
           <img src="/perilex-inductie.jpg" alt="Vakkundige Perilex aansluiting voor inductie kookplaat door elektricien in Utrecht" class="showcase-img" loading="eager">
-          <div class="hero-badge-floating">Vaste all-in prijs: € 120 · NEN 1010</div>
+          <div class="hero-badge-floating">Vaste all-in prijs: € {{perilex_aansluiten}} · NEN 1010</div>
         </div>
       </div>
 
-      <div class="price-grid package-grid">
+      <div class="section-heading" style="margin-top:36px;margin-bottom:28px">
+      <h2>Vaste pakketprijzen Perilex &amp; inductie aansluiten</h2>
+      <p>Veilige montage volgens fabrikantvoorschriften en NEN 1010 met meetrapport.</p>
+    </div>
+
+    <div class="price-grid package-grid">
         <div class="price-card package-card highlight">
           <h3>Perilex stekker aansluiten</h3>
-          <div class="price-amount">€ 120</div>
+          <div class="price-amount">€ {{perilex_aansluiten}}</div>
           <p class="package-meta">All-in vaste prijs</p>
           <p>Alleen het aansluiten van de perilex stekker en het apparaat (inductiekookplaat of fornuis) op een al bestaande, werkende perilex wandcontactdoos.</p>
           <ul class="include-items compact">
@@ -68,7 +73,7 @@
         </div>
         <div class="price-card package-card">
           <h3>Perilex leiding & groep trekken</h3>
-          <div class="price-amount">vanaf € 150</div>
+          <div class="price-amount">vanaf € {{perilex_kookgroep}}</div>
           <p class="package-meta">Vanaf meterkast</p>
           <p>Complete perilex leiding en kabel trekken vanaf de groepenkast naar de keuken of zolder (voor inductie kookplaat of mechanische ventilatie).</p>
           <ul class="include-items compact">
@@ -83,9 +88,9 @@
         </div>
         <div class="price-card package-card">
           <h3>Schouw op locatie?</h3>
-          <div class="price-amount">€ 90</div>
+          <div class="price-amount">€ {{schouw}}</div>
           <p class="package-meta">Volledig verrekend bij opdracht</p>
-          <p>Wil je dat we vooraf ter plaatse komen kijken naar de kabelroute, doorvoeren en groepenkast? Voor € 90 komen we langs, wat we 100% verrekenen bij uitvoering van de klus.</p>
+          <p>Wil je dat we vooraf ter plaatse komen kijken naar de kabelroute, doorvoeren en groepenkast? Voor € {{schouw}} komen we langs, wat we 100% verrekenen bij uitvoering van de klus.</p>
           <a class="btn btn-secondary full" href="/offerte">Schouw aanvragen</a>
         </div>
       </div>
@@ -106,9 +111,30 @@
           <p class="schouw-note">Indicatie. Volg altijd het typeplaatje en aansluitschema van de fabrikant — wij controleren dit bij je thuis.</p>
         </div>
         <div class="addon-includes">
-          <h3>2-fase of 3-fase?</h3>
-          <p>Bij <strong>2-fase</strong> verdelen we het vermogen over twee fasen — genoeg voor de meeste inductiekookplaten. Bij <strong>3-fase</strong> (krachtstroom) spreiden we de belasting over drie fasen, ideaal voor zware toestellen of meerdere zware apparaten samen.</p>
-          <p>Twijfel je of je aansluiting geschikt is, of wil je inductie combineren met een laadpaal? Bekijk dan ook onze <a class="mini-link" href="/groepenkast">groepenkast-opties →</a>.</p>
+          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+            <div style="width:110px;flex-shrink:0">
+              <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustratie van een perilex stopcontact" style="width:100%;height:auto;display:block">
+                <rect x="10" y="10" width="300" height="300" rx="28" fill="#ffffff" stroke="#e4e9e5" stroke-width="2"/>
+                <circle cx="160" cy="160" r="118" fill="#f5f8f4"/>
+                <circle cx="110" cy="110" r="26" fill="#101712"/>
+                <circle cx="110" cy="110" r="10" fill="#c9d3cb"/>
+                <circle cx="210" cy="110" r="26" fill="#101712"/>
+                <circle cx="210" cy="110" r="10" fill="#c9d3cb"/>
+                <circle cx="110" cy="210" r="26" fill="#101712"/>
+                <circle cx="110" cy="210" r="10" fill="#c9d3cb"/>
+                <circle cx="210" cy="210" r="26" fill="#101712"/>
+                <circle cx="210" cy="210" r="10" fill="#c9d3cb"/>
+                <rect x="140" y="150" width="40" height="20" rx="4" fill="#1ed760" stroke="#169c46" stroke-width="2"/>
+                <text x="160" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#65707d" letter-spacing="2">PERILEX</text>
+                <circle cx="160" cy="160" r="118" fill="none" stroke="#27a9ef" stroke-width="3" stroke-dasharray="6 8" opacity=".5"/>
+              </svg>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <h3 style="margin-top:0">2-fase of 3-fase?</h3>
+              <p style="margin:0">Bij <strong>2-fase</strong> (kookgroep 2x230V) verdelen we het vermogen over twee fasen — genoeg voor de meeste inductiekookplaten tot 7,4 kW. Bij <strong>3-fase</strong> (krachtstroom 400V) spreiden we de belasting over drie fasen voor zware kookplaten en fornuizen met oven.</p>
+            </div>
+          </div>
+          <p style="margin-top:14px">Twijfel je of je aansluiting geschikt is, of wil je inductie combineren met een laadpaal? Bekijk dan ook onze <a class="mini-link" href="/groepenkast">groepenkast-opties →</a>.</p>
         </div>
       </div>
 
@@ -129,7 +155,7 @@
       </div>
       <div class="faq">
         <button class="faq-q">Wat kost een perilex aansluiten?<span>+</span></button>
-        <div class="faq-a">€ 120 all-in bij een bestaande, geschikte groep. Moet er een nieuwe kookgroep bij in de groepenkast, dan begint het vanaf € 275. Beide incl. btw, materiaal en garantie op het werk.</div>
+        <div class="faq-a">€ {{perilex_aansluiten}} all-in bij een bestaande, geschikte groep. Moet er een nieuwe kookgroep vanuit de meterkast naar een perilex worden aangelegd, dan is dat vanaf € {{perilex_kookgroep}}. Beide incl. btw, materiaal en garantie op het werk.</div>
         <button class="faq-q">Wat is het verschil tussen 2-fase en 3-fase?<span>+</span></button>
         <div class="faq-a">Bij 2-fase verdelen we het vermogen over twee fasen, genoeg voor de meeste inductiekookplaten. Bij 3-fase wordt de belasting over drie fasen gespreid — nodig voor zware kookplaten of fornuizen.</div>
         <button class="faq-q">Heb ik perilex nodig voor mijn inductiekookplaat?<span>+</span></button>

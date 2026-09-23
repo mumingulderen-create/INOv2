@@ -17,7 +17,19 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Geen verzonnen claims, aantallen of reviews.
 - Veiligheid: nooit instructies geven om zelf aan de groepenkast of leidingen te werken.
 
-## Nog open (door eigenaar in te vullen)
-- `BEDRIJF["kvk"]` (wettelijk verplicht op de website), eventueel `btw`, `werkspot`.
-- Aanrijtijden Vianen en Breukelen in `bouw/wijken.py`.
-- Claims op `content/spoed-elektricien-utrecht.html` controleren (familiebedrijf/werkplaats/bussen/85%).
+## Nog open (door eigenaar in te vullen/te bevestigen)
+- `BEDRIJF["werkspot"]` (URL). Het blok "5.0 op Werkspot" is verborgen tot dit is ingevuld. Eventueel `btw`.
+- NEN 3140: staat als "gecertificeerd" op /vakmanschap en de spoedpagina. Nog bevestigen.
+- Veilige eerste stappen op storingspagina's (aardlek omhoog zetten): blijft voorlopig staan, later herzien.
+- Echte foto's (assets/foto/) en echte praktijkvoorbeelden per wijk (`"praktijk"` in wijken.py).
+
+## Bevestigd door eigenaar
+- Prijzen van de live site (Ino-elektra) kloppen; v2 volgt die.
+- Kookgroep meterkast → perilex: `perilex_kookgroep` (€ 150). Alleen perilex-stekker plaatsen: `perilex_aansluiten` (€ 120). € 275 bestaat niet.
+- Niet NEN 1010-gecertificeerd, wel alles volgens NEN 1010. Nooit "NEN 1010 gecertificeerd" schrijven.
+- Aanrijtijden (vanuit Overvecht): gemeente Utrecht 5–30 min, daarbuiten 15–40 min. Staat in `AANRIJTIJD` in config.py.
+
+## Afspraken
+- Google Analytics laadt alleen na akkoord in de cookiemelding (`bouw/layout.py` + `initCookies` in `assets/script.js`).
+- Conditioneel blok in content: `<!--ALS sleutel-->…<!--/ALS-->` toont alleen als `BEDRIJF[sleutel]` gevuld is.
+- De groepenkast-calculator haalt zijn prijzen uit `config.py` (data-prijzen).
