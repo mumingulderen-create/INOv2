@@ -48,6 +48,13 @@ REVIEWS = [
     {"naam": "Hasan Demir", "tekst": "Geweldige klusbedrijf, zeker aan te raden! Heel netjes en snel afgehandeld."},
 ]
 
+# Collega-partners (SEO-kruisbestuiving & netwerk)
+PARTNER_VOLTFIX = {
+    "naam": "Voltfix Elektrotechniek",
+    "url": "https://www.voltfix.nl/",
+    "regio": "Amsterdam",
+}
+
 GOOGLE_SITE_VERIFICATION = "xHeZ_iY8KLYVB6SQZzxa5C9qnocjO7YkzjrELzLSXWw"
 
 # Google Analytics 4 (GA4) Meet-ID (bijv. "G-XXXXXXXXXX" of leeg laten)

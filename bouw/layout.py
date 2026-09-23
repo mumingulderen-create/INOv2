@@ -4,14 +4,14 @@ mobiele belbalk en de structured data (JSON-LD) voor Google.
 """
 import json, datetime
 from html import escape
-from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICATION, GA4_MEASUREMENT_ID, TARIEVEN as T
+from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICATION, GA4_MEASUREMENT_ID, TARIEVEN as T, PARTNER_VOLTFIX
 
 JAAR = datetime.date.today().year
 
 ICON_MENU = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
-ICON_MAIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>'
 ICON_TEL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
 ICON_WA = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>'
+ICON_MAIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>'
 
 
 def tel_link(cls="", label=None):
@@ -105,16 +105,13 @@ def schema_graph(page, wijken):
 
 
 # --------------------------------------------------------------------------- head
-def head(page, wijken, css_v):
+def head(page, wijken, css_v, font_url=None):
     t, d = page["title"], page["description"]
     robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
     og_img = page.get("og_image_url") or f"{SITE_URL}/img/og-hero-elektricien.jpg"
-    # 404 krijgt geen canonical (anders wijst hij naar een niet-bestaande /404/)
     canon = "" if page.get("slug") == "404" else f'<link rel="canonical" href="{page["url"]}">'
     pre = ""
     if page.get("lcp"):
-        # Alleen op desktop voorladen: onder 800px staat de heroafbeelding ONDER de
-        # vouw (de kolommen stapelen), daar is de H1-tekst het LCP-element.
         href, srcset, sizes = page["lcp"]
         pre = (f'\n<link rel="preload" as="image" type="image/webp" href="{href}" imagesrcset="{srcset}"'
                f' imagesizes="{sizes}" fetchpriority="high" media="(min-width: 801px)">')
@@ -178,10 +175,25 @@ def header(nav_key, wijken, variant="standaard"):
         cls_active = " active" if groep == it["key"] else ""
         sub = it.get("sub")
         if sub == "WIJKEN":
-            sub = [{"label": "Werkgebied & kaart", "href": "/werkgebied/"},
-                   {"label": "Alle wijken & plaatsen", "href": "/wijken/"}] + \
-                  [{"label": f"Elektricien {w['naam']}", "href": f"/elektricien-{w['slug']}/"} for w in wijken]
-        if sub:
+            top_links = (
+                f'<div class="nav-dd-top">'
+                f'  <a href="/werkgebied/" class="nav-dd-featured">'
+                f'    <strong>Werkgebied &amp; kaart</strong>'
+                f'    <span>Overzicht actieradius &amp; aanrijtijden</span>'
+                f'  </a>'
+                f'  <a href="/wijken/" class="nav-dd-all">'
+                f'    <span>Alle 18 wijken</span> →'
+                f'  </a>'
+                f'</div>'
+                f'<div class="nav-dd-divider"></div>'
+                f'<div class="nav-dd-caption">Direct naar wijk:</div>'
+            )
+            wijk_links = "".join(f'<a href="/elektricien-{w["slug"]}/" class="nav-dd-wijk-link">{w["naam"]}</a>' for w in wijken)
+            menu_html = f'{top_links}<div class="nav-dd-scroll">{wijk_links}</div>'
+            items.append(
+                f'<div class="nav-dd nav-dd-werkgebied"><a href="{it["href"]}" class="nav-dd-toggle{cls_active}"{active}>{it["label"]} '
+                f'<span class="caret" aria-hidden="true">▾</span></a><div class="nav-dd-menu">{menu_html}</div></div>')
+        elif sub:
             links = "".join(f'<a href="{s["href"]}">{s["label"]}</a>' for s in sub)
             items.append(
                 f'<div class="nav-dd"><a href="{it["href"]}" class="nav-dd-toggle{cls_active}"{active}>{it["label"]} '
@@ -260,7 +272,7 @@ def footer(wijken, storingen, variant="standaard"):
     <div><h2 class="footer-h">Storing?</h2><a href="/spoed-elektricien-utrecht/">Spoed elektricien 24/7</a>{storing_links}<a href="/tarieven/">Tarieven</a><a href="/faq/">Veelgestelde vragen</a></div>
     <div><h2 class="footer-h">Werkgebied</h2>{wijk_links}<a href="/wijken/">Alle wijken &amp; plaatsen</a></div>
   </div>
-  <div class="copyright">© {JAAR} {B['naam']}{kvk}{btw} · <a href="/werkwijze/">Werkwijze</a> · <a href="/vakmanschap/">Vakmanschap</a> · <a href="/reviews/">Reviews</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a>{' · <a href="#" data-cookie-instellingen>Cookies</a>' if GA4_MEASUREMENT_ID else ''} · <a href="{B['instagram']}" target="_blank" rel="noopener">Instagram</a></div>
+  <div class="copyright">© {JAAR} {B['naam']}{kvk}{btw} · <a href="/werkwijze/">Werkwijze</a> · <a href="/vakmanschap/">Vakmanschap</a> · <a href="/reviews/">Reviews</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy &amp; Cookies</a>{' · <a href="#cookies" data-cookie-instellingen>Cookie-instellingen</a>' if GA4_MEASUREMENT_ID else ''} · Partner: <a href="{PARTNER_VOLTFIX['url']}" target="_blank" rel="noopener">{PARTNER_VOLTFIX['naam']} ({PARTNER_VOLTFIX['regio']})</a> · <a href="{B['instagram']}" target="_blank" rel="noopener">Instagram</a></div>
 </footer>
 {bar}
 {floating_wa}
