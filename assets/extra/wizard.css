@@ -1,0 +1,314 @@
+/* ===== Interactieve Klus-Wizard (Offerte & Aanvraag) ===== */
+.wizard-box {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: 0 12px 38px rgba(16, 34, 13, 0.05);
+  padding: 32px;
+}
+@media (max-width: 600px) {
+  .wizard-box {
+    padding: 20px 16px;
+  }
+}
+.wizard-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 32px;
+}
+.wizard-progress::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 36px;
+  right: 36px;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+.wizard-progress-bar {
+  position: absolute;
+  top: 18px;
+  left: 36px;
+  height: 2px;
+  background: var(--green);
+  z-index: 2;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+.wizard-progress-step {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  cursor: default;
+  padding: 0;
+}
+.wizard-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  color: #64748b;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+.wizard-step-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+.wizard-progress-step.active .wizard-circle {
+  background: var(--green);
+  border-color: var(--green);
+  color: #10220d;
+  box-shadow: 0 0 0 4px rgba(76, 180, 54, 0.2);
+}
+.wizard-progress-step.active .wizard-step-label {
+  color: var(--green-dark);
+  font-weight: 800;
+}
+.wizard-progress-step.completed .wizard-circle {
+  background: #25d366;
+  border-color: #25d366;
+  color: #ffffff;
+}
+.wizard-progress-step.completed .wizard-step-label {
+  color: #1e293b;
+}
+
+.wizard-step-content {
+  animation: wizardFade 0.25s ease-out;
+}
+@keyframes wizardFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.wizard-title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.wizard-subtitle {
+  margin: 0 0 22px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Service tiles */
+.wizard-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+@media (max-width: 600px) {
+  .wizard-tiles {
+    grid-template-columns: 1fr;
+  }
+}
+.wizard-tile {
+  background: #f8faf8;
+  border: 1.5px solid #e1e9e2;
+  border-radius: 14px;
+  padding: 16px 14px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.18s ease;
+  position: relative;
+  font: inherit;
+}
+.wizard-tile:hover {
+  border-color: var(--green);
+  background: #f1f8f0;
+  transform: translateY(-1px);
+}
+.wizard-tile.selected {
+  border-color: var(--green);
+  background: #eef8ec;
+  box-shadow: 0 4px 16px rgba(76, 180, 54, 0.16);
+}
+.wizard-tile-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.wizard-tile.selected .wizard-tile-icon {
+  background: var(--green);
+  color: #10220d;
+}
+.wizard-tile-body strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.wizard-tile-body span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.wizard-tile-check {
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.wizard-tile.selected .wizard-tile-check {
+  background: var(--green);
+  border-color: var(--green);
+  color: #10220d;
+  font-weight: 800;
+}
+
+/* Upload dropzone */
+.wizard-dropzone {
+  border: 2px dashed #b8d4bb;
+  background: #fbfdfb;
+  border-radius: 16px;
+  padding: 24px 18px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+.wizard-dropzone:hover, .wizard-dropzone.dragover {
+  border-color: var(--green);
+  background: #f0f8ee;
+}
+.wizard-dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.wizard-dropzone-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.wizard-dropzone strong {
+  display: block;
+  font-size: 14.5px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.wizard-dropzone span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.wizard-dropzone-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef8ec;
+  color: #1d6e16;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-top: 10px;
+}
+
+/* Pill buttons (termijn) */
+.wizard-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.wizard-pill {
+  padding: 9px 15px;
+  border: 1px solid #d1dbd2;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font: inherit;
+}
+.wizard-pill:hover {
+  border-color: var(--green);
+  background: #f5faf4;
+}
+.wizard-pill.selected {
+  background: var(--green);
+  border-color: var(--green);
+  color: #10220d;
+  font-weight: 800;
+}
+
+/* Navigation buttons */
+.wizard-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.wizard-nav .btn {
+  padding: 13px 22px;
+}
+.wizard-send-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (max-width: 600px) {
+  .wizard-send-options {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 500px) {
+  .wizard-nav {
+    flex-direction: column-reverse;
+  }
+  .wizard-nav .btn {
+    width: 100%;
+  }
+}
+

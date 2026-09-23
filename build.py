@@ -22,7 +22,6 @@ from storingen import STORINGEN
 import layout, paginas, beelden
 
 MAAK_MAPPEN = True   # /pagina/index.html schrijven voor schone SEO URLs
-FONT_URL = "https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap"
 TODAY = datetime.date.today().isoformat()
 LASTMOD_FILE = os.path.join(ROOT, "bouw", "lastmod.json")
 
@@ -33,6 +32,8 @@ PLACEHOLDERS = {
     "email": B["email"],
     "instagram": B["instagram"],
     "google_maps": B["google_maps"],
+    "google_score": B["google_score"],
+    "google_aantal": B["google_aantal"],
     "werkspot": B["werkspot"] or "https://www.werkspot.nl",
     "tarief_zin": TARIEF_ZIN,
     "tarief_zin_klein": TARIEF_ZIN[0].lower() + TARIEF_ZIN[1:],
@@ -41,6 +42,7 @@ PLACEHOLDERS = {
     "jaar": str(datetime.date.today().year),
     "icon_wa": layout.ICON_WA,
     "icon_tel": layout.ICON_TEL,
+    "icon_mail": layout.ICON_MAIL,
     **{k: str(v) for k, v in T.items()},
     **AANRIJTIJD,
 }
@@ -111,6 +113,7 @@ BLOKKEN = {
     "CTA": lambda: paginas.cta_band(),
     "CALCULATOR": lambda: paginas.groepenkast_calculator(),
     "STEDIN_CHECKER": lambda: paginas.blok_stedin_checker(),
+    "REVIEWS_CAROUSEL": lambda: paginas.blok_reviews_carousel(),
 }
 
 def lees_content():
@@ -149,6 +152,17 @@ def minify_css(css):
     css = re.sub(r"\s*([{}:;,>])\s*", r"\1", css)
     return css.replace(";}", "}").strip()
 
+def doorverwijzing(p):
+    from html import escape
+    doel = "/" + p["slug"] + "/"
+    t = escape(p["title"], quote=False)
+    return ('<!doctype html>\n<html lang="nl"><head><meta charset="utf-8">'
+            f'<title>{t}</title>'
+            f'<link rel="canonical" href="{p["url"]}">'
+            f'<meta http-equiv="refresh" content="0; url={doel}">'
+            f'<script>location.replace("{doel}"+location.search+location.hash)</script>'
+            f'</head><body><p><a href="{doel}">Ga naar {t}</a></p></body></html>\n')
+
 def schrijf(rel, content):
     # Alleen naar de root (GitHub Pages). Geen kopie in public/: dat gaf dubbele content.
     p = os.path.join(ROOT, rel)
@@ -159,8 +173,20 @@ def schrijf(rel, content):
 def main():
     print("1/6 Afbeeldingen optimaliseren…")
     beelden.verwerk()
+    beelden.verwerk_logo()
 
-    print("2/6 Assets (css/js)…")
+    print("2/6 Assets (css/js/fonts)…")
+    # Inter zelf hosten: geen verbinding meer naar fonts.googleapis.com en
+    # fonts.gstatic.com (sneller op mobiel, en geen IP-adressen naar Google).
+    fonts_in = os.path.join(ROOT, "assets", "fonts")
+    if os.path.isdir(fonts_in):
+        os.makedirs(os.path.join(ROOT, "fonts"), exist_ok=True)
+        for fn in sorted(os.listdir(fonts_in)):
+            if fn.endswith(".woff2"):
+                shutil.copyfile(os.path.join(fonts_in, fn), os.path.join(ROOT, "fonts", fn))
+    else:
+        warn("assets/fonts/ ontbreekt: Inter wordt niet meegeleverd")
+
     css = open(os.path.join(ROOT, "assets", "style.css"), encoding="utf-8").read()
     css_min = minify_css(css)
     css_v = hashlib.md5(css_min.encode()).hexdigest()[:8]
@@ -171,6 +197,18 @@ def main():
     js = js.replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
     js_v = hashlib.md5(js.encode()).hexdigest()[:8]
     schrijf("script.js", js)
+
+    # Extra css/js die alleen op bepaalde pagina's laadt (front-matter: "extra": ["wizard"])
+    extra_v = {}
+    for pad in sorted(glob.glob(os.path.join(ROOT, "assets", "extra", "*.*"))):
+        naam = os.path.basename(pad)
+        inhoud = open(pad, encoding="utf-8").read()
+        if naam.endswith(".css"):
+            inhoud = minify_css(inhoud)
+        else:
+            inhoud = inhoud.replace("__WHATSAPP__", B["whatsapp"])
+        extra_v[naam] = hashlib.md5(inhoud.encode()).hexdigest()[:8]
+        schrijf(naam, inhoud)
 
     print("3/6 Pagina's samenstellen…")
     pages = lees_content()
@@ -185,6 +223,8 @@ def main():
         p["url"] = url_of(slug)
         p["title"] = fill(p["title"])
         p["description"] = fill(p["description"])
+        if p.get("schema"):
+            p["schema"] = json.loads(fill(json.dumps(p["schema"], ensure_ascii=False)))
         body = fill(p["body"])
         # microdata weg (we gebruiken gestructureerde JSON-LD tags)
         body = re.sub(r'\s+item(prop|scope|type)(="[^"]*")?', "", body)
@@ -209,7 +249,7 @@ def main():
 
         variant = "spoed" if slug == "spoed-elektricien-utrecht" else "standaard"
         html = "\n".join([
-            layout.head(p, WIJKEN, css_v, FONT_URL),
+            layout.head(p, WIJKEN, css_v),
             "<body>",
             layout.header(p.get("nav", slug), WIJKEN, variant),
             f'<main id="inhoud">',
@@ -219,6 +259,13 @@ def main():
             layout.footer(WIJKEN, STORINGEN, variant).replace("{JS_V}", js_v),
             "</body>", "</html>", ""
         ])
+        for x in p.get("extra", []):
+            if f"{x}.css" in extra_v:
+                html = html.replace("</head>", f'<link rel="stylesheet" href="/{x}.css?v={extra_v[x + ".css"]}">\n</head>', 1)
+            if f"{x}.js" in extra_v:
+                html = html.replace("</body>", f'<script src="/{x}.js?v={extra_v[x + ".js"]}" defer></script>\n</body>', 1)
+            if f"{x}.css" not in extra_v and f"{x}.js" not in extra_v:
+                warn(f"{slug}: extra '{x}' bestaat niet in assets/extra/")
         rendered[slug] = (p, html)
 
     print("4/6 Bestanden schrijven…")
@@ -226,9 +273,12 @@ def main():
         if slug == "":
             schrijf("index.html", html)
         else:
-            schrijf(f"{slug}.html", html)
             if MAAK_MAPPEN and slug != "404":
                 schrijf(f"{slug}/index.html", html)
+                # Oude /pagina.html-adressen: korte doorverwijzing i.p.v. een dubbele kopie
+                schrijf(f"{slug}.html", doorverwijzing(p))
+            else:
+                schrijf(f"{slug}.html", html)
 
     json.dump(lastmod, open(LASTMOD_FILE, "w"), indent=1, sort_keys=True)
 

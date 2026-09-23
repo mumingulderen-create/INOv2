@@ -9,6 +9,7 @@ from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICAT
 JAAR = datetime.date.today().year
 
 ICON_MENU = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
+ICON_MAIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>'
 ICON_TEL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
 ICON_WA = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>'
 
@@ -64,13 +65,6 @@ def business_node(wijken):
         "knowsAbout": ["NEN 1010", "NEN 3140", "groepenkast vervangen", "Perilex", "laadpaal installatie",
                        "krachtstroom", "storingsdienst"],
         "sameAs": same,
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "48",
-            "bestRating": "5",
-            "worstRating": "1"
-        },
     }
     if B["kvk"]:
         node["identifier"] = {"@type": "PropertyValue", "propertyID": "KvK", "value": B["kvk"]}
@@ -111,14 +105,19 @@ def schema_graph(page, wijken):
 
 
 # --------------------------------------------------------------------------- head
-def head(page, wijken, css_v, font_url):
+def head(page, wijken, css_v):
     t, d = page["title"], page["description"]
     robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
     og_img = page.get("og_image_url") or f"{SITE_URL}/img/og-hero-elektricien.jpg"
+    # 404 krijgt geen canonical (anders wijst hij naar een niet-bestaande /404/)
+    canon = "" if page.get("slug") == "404" else f'<link rel="canonical" href="{page["url"]}">'
     pre = ""
     if page.get("lcp"):
+        # Alleen op desktop voorladen: onder 800px staat de heroafbeelding ONDER de
+        # vouw (de kolommen stapelen), daar is de H1-tekst het LCP-element.
         href, srcset, sizes = page["lcp"]
-        pre = f'\n<link rel="preload" as="image" type="image/webp" href="{href}" imagesrcset="{srcset}" imagesizes="{sizes}" fetchpriority="high">'
+        pre = (f'\n<link rel="preload" as="image" type="image/webp" href="{href}" imagesrcset="{srcset}"'
+               f' imagesizes="{sizes}" fetchpriority="high" media="(min-width: 801px)">')
     # GA4 laadt pas NA toestemming (cookiemelding in script.js). Zonder akkoord: geen cookies, geen verzoek naar Google.
     ga4_tag = f"""\n<script>
   window.dataLayer = window.dataLayer || [];
@@ -140,7 +139,7 @@ def head(page, wijken, css_v, font_url):
 <meta name="viewport" content="width=device-width, initial-scale=1">{ga4_tag}
 <title>{t}</title>
 <meta name="description" content="{d}">
-<link rel="canonical" href="{page['url']}">
+{canon}
 <meta name="robots" content="{robots}">
 <meta name="theme-color" content="#278a1d">
 <meta name="format-detection" content="telephone=yes">
@@ -158,11 +157,8 @@ def head(page, wijken, css_v, font_url):
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>{pre}
+<link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin.woff2" crossorigin>{pre}
 <link rel="stylesheet" href="/style.css?v={css_v}">
-<link rel="stylesheet" href="{font_url}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{font_url}"></noscript>
 <script type="application/ld+json">{schema_graph(page, wijken)}</script>
 </head>"""
 
@@ -198,7 +194,7 @@ def header(nav_key, wijken, variant="standaard"):
 <header class="site-header">
   <div class="container nav-wrap">
     <a class="brand" href="/" aria-label="{B['naam']} – elektricien Utrecht, naar de homepage">
-      <img src="/logo.png" alt="{B['naam']} – elektricien Utrecht" width="130" height="54">
+      <img src="/img/logo-390.png" alt="{B['naam']} – elektricien Utrecht" width="130" height="54" decoding="async">
     </a>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu openen" aria-expanded="false" aria-controls="nav">{ICON_MENU}</button>
     <nav id="nav" aria-label="Hoofdmenu">
@@ -255,7 +251,7 @@ def footer(wijken, storingen, variant="standaard"):
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <img src="/logo.png" alt="{B['naam']} logo" class="footer-logo" width="130" height="54" loading="lazy" decoding="async">
+      <img src="/img/logo-390.png" alt="{B['naam']} logo" class="footer-logo" width="130" height="54" loading="lazy" decoding="async">
       <p>Elektricien in Utrecht en omstreken. Vaste prijs vooraf, 24/7 bereikbaar bij storingen, NEN 1010.</p>
       <p><a href="tel:{B['telefoon_e164']}" data-track="bellen"><strong>{B['telefoon_tonen']}</strong></a><br>
       <a href="mailto:{B['email']}">{B['email']}</a></p>

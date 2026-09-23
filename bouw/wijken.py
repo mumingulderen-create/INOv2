@@ -170,7 +170,7 @@ WIJKEN = [
             "Máximapark"
         ],
         "aanrijtijd": "{aanrijtijd_utrecht} min",
-        "intro": "Betrouwbare elektricien gezocht in Vleuten, De Meern of Haarzuilens? INO Elektra staat klaar voor groepenkastvervanging, laadpalen, krachtstroom en 24/7 storingshulp. Geen voorrijkosten binnen Utrecht, vaste prijzen en gecertificeerd volgens NEN 1010.",
+        "intro": "Betrouwbare elektricien gezocht in Vleuten, De Meern of Haarzuilens? INO Elektra staat klaar voor groepenkastvervanging, laadpalen, krachtstroom en 24/7 storingshulp. Geen voorrijkosten binnen Utrecht, vaste prijzen en al het werk volgens NEN 1010.",
         "woningen": "In Vleuten-De Meern vind je een gevarieerde combinatie van authentieke dorpskernen, ruime eengezinswoningen en moderne nieuwbouw zoals in Haarzicht en Veldhuizen. Veel woningen beschikken over een eigen oprit en ruime tuin. Veelgevraagde klussen zijn dan ook het aanleggen van krachtstroom naar de garage of schuur, het installeren van een laadpaal, en het doortrekken van grondkabels voor tuinverlichting.",
         "klussen": [
             [
@@ -650,7 +650,7 @@ WIJKEN = [
             "Loerik"
         ],
         "aanrijtijd": "{aanrijtijd_regio} min",
-        "intro": "Elektricien in Houten gezocht? INO Elektra verzorgt complete installaties in Houten-Noord en Houten-Zuid. Specialist in groepenkasten, laadpalen met load balancing, krachtstroom en keukenelektra. Vooraf een duidelijke all-in prijs en gecertificeerd vakmanschap volgens NEN 1010.",
+        "intro": "Elektricien in Houten gezocht? INO Elektra verzorgt complete installaties in Houten-Noord en Houten-Zuid. Specialist in groepenkasten, laadpalen met load balancing, krachtstroom en keukenelektra. Vooraf een duidelijke all-in prijs en vakwerk volgens NEN 1010.",
         "woningen": "Houten is een moderne gemeente met voornamelijk naoorlogse en recente eengezinswoningen rond de twee spoorwegcentra (Het Rond en Castellum). Het autobezit en gebruik van elektrische voertuigen en zonnepanelen is hier erg hoog. We zien hier veel vraag naar laadpaalinstallaties met dynamic load balancing, krachtstroom voor warmtepompen en het uitbreiden van meterkasten met extra PV-groepen.",
         "klussen": [
             [

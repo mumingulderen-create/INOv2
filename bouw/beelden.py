@@ -30,6 +30,32 @@ def _save(im, path, fmt, **kw):
     im.save(path, fmt, **kw)
 
 
+# Logo: het origineel (410x170 RGBA, 77 kB) wordt op 130x54 getoond in de header
+# en de footer. Dat is op élke pagina boven de vouw. Een 390px brede versie met
+# een palet van 128 kleuren is visueel identiek en ~11 kB. Het origineel
+# /logo.png blijft staan: dat is de logo-URL in de structured data.
+LOGO_BRON = os.path.join(ROOT, "logo.png")
+LOGO_UIT = os.path.join(OUT, "logo-390.png")
+LOGO_BREEDTE = 390
+LOGO_KLEUREN = 128
+
+
+def verwerk_logo():
+    if not os.path.exists(LOGO_BRON):
+        return
+    if os.path.exists(LOGO_UIT) and os.path.getmtime(LOGO_UIT) >= os.path.getmtime(LOGO_BRON):
+        return
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    im = Image.open(LOGO_BRON).convert("RGBA")
+    h = round(im.height * LOGO_BREEDTE / im.width)
+    klein = im.resize((LOGO_BREEDTE, h), Image.LANCZOS)
+    os.makedirs(OUT, exist_ok=True)
+    klein.quantize(colors=LOGO_KLEUREN, method=Image.FASTOCTREE).save(LOGO_UIT, "PNG", optimize=True)
+
+
 def verwerk():
     os.makedirs(OUT, exist_ok=True)
     try:
@@ -82,7 +108,10 @@ def _picture(stem, attrs, eager):
     attrs.pop("loading", None); attrs.pop("decoding", None); attrs.pop("fetchpriority", None)
     attrs.pop("width", None); attrs.pop("height", None)
     extra = " ".join(f'{k}="{v}"' for k, v in attrs.items())
-    load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
+    # Geen fetchpriority op de <img> zelf: op mobiel staat deze afbeelding onder de
+    # vouw en zou hij bandbreedte afsnoepen van lettertype en CSS. Op desktop regelt
+    # de preload in de <head> (met media-query) de hoge prioriteit.
+    load = 'loading="eager"' if eager else 'loading="lazy"'
     return (
         f'<picture><source type="image/webp" srcset="{srcset_webp}" sizes="{sizes}">'
         f'<img src="/img/{stem}-{default_w}.{i["ext"]}" srcset="{srcset_fb}" sizes="{sizes}" '
@@ -121,3 +150,4 @@ def og_url(stem_or_file, site):
     if stem in INFO and INFO[stem]["ext"] == "jpg":
         return f"{site}/img/og-{stem}.jpg"
     return f"{site}/img/og-hero-elektricien.jpg"
+

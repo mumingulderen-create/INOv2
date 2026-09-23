@@ -3,51 +3,26 @@
   "slug": "reviews",
   "title": "Reviews elektricien Utrecht | INO Techniek en Installatie",
   "description": "Lees wat klanten over INO Techniek en Installatie zeggen op Google en Werkspot. Elektricien in Utrecht met vaste prijs vooraf en 24/7 storingsdienst.",
-  "nav": "reviews"
+  "nav": "reviews",
+  "extra": ["reviews"]
 }
 -->
 <section class="lp-hero">
     <div class="container">
       <div class="badge">Reviews</div>
-      <h1>Wat klanten op Google zeggen.</h1>
-      <p>Bekijk het volledige, geverifieerde overzicht van onze Google-reviews.</p>
+      <h1>Reviews van INO, je elektricien in Utrecht</h1>
+      <p>INO scoort een {{google_score}} uit {{google_aantal}} reviews op Google. Lees hieronder een paar ervaringen of bekijk alle reviews op ons Google-bedrijfsprofiel.</p>
       <div class="page-purpose"><strong>Waarvoor deze pagina?</strong><span>Hier lees je wat andere klanten van het werk vinden, voordat je zelf een keuze maakt.</span></div>
     </div>
   </section>
 
-  <section class="section" id="reviews">
-    <div class="container">
-      <a class="google-featured" href="{{google_maps}}" target="_blank" rel="noopener">
-        <div>
-          <h2>INO Techniek en Installatie op Google</h2>
-          <p>Klik door naar ons Google-bedrijfsprofiel voor de actuele score en alle reviews.</p>
-        </div>
-        <span class="btn btn-primary">Bekijk alle Google-reviews →</span>
-      </a>
-      <div class="review-grid google-quotes">
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p>"Zeer tevreden over de service. Professioneel, netjes gewerkt en duidelijke communicatie. Zeker een aanrader!"</p>
-          <div class="review-source">Ali · Google-review</div>
-        </div>
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p>"Geweldige klusbedrijf, zeker aan te raden! Heel netjes en snel afgehandeld."</p>
-          <div class="review-source">Hasan Demir · Google-review</div>
-        </div>
-        <a class="review-card placeholder-review" href="{{google_maps}}" target="_blank" rel="noopener">
-          <div class="review-stars">★★★★★</div>
-          <p>Bekijk alle Google-reviews →</p>
-          <div class="review-source">Meer klantervaringen op Google</div>
-        </a>
-      </div>
-      <!--ALS werkspot--><div class="werkspot-corner">
-        <span class="review-stars small">★★★★★</span>
-        <span>5.0 op <strong>Werkspot</strong></span>
-        <a href="{{werkspot}}" target="_blank" rel="noopener" class="mini-link">bekijken →</a>
-      </div><!--/ALS-->
-    </div>
-  </section>
+  {{REVIEWS_CAROUSEL}}
+
+  <!--ALS werkspot--><div class="container" style="margin:-40px auto 60px"><div class="werkspot-corner">
+    <span class="review-stars small">★★★★★</span>
+    <span>5.0 op <strong>Werkspot</strong></span>
+    <a href="{{werkspot}}" target="_blank" rel="noopener" class="mini-link">bekijken →</a>
+  </div></div><!--/ALS-->
 
   <section class="contact-cta">
     <div class="container">
