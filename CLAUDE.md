@@ -2,6 +2,10 @@
 
 Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanuit de repo-root.
 
+## Taakverdeling (afspraak eigenaar, sept 2026)
+- Claude werkt alleen in INOv2. Google AI Studio werkt alleen in v1 (Ino-elektra). Niet door elkaar heen, anders overschrijven we elkaars werk.
+- Claude deelt eerst een voorstel met de eigenaar en voert pas uit na akkoord.
+
 ## Regels
 - **Bewerk nooit** gegenereerde bestanden in de root (`*.html`, `*/index.html`, `style.css`, `script.js`, `wizard.*`, `reviews.*`, `sitemap.xml`, `robots.txt`, `img/`). Bewerk de bron: `content/`, `bouw/`, `assets/`.
 - Bedrijfsgegevens en prijzen staan **alleen** in `bouw/config.py`. Nooit prijzen hardcoden in content; gebruik placeholders (`{{uur_dag}}` e.d., zie README).
@@ -18,9 +22,7 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Veiligheid: nooit instructies geven om zelf aan de groepenkast of leidingen te werken.
 
 ## Nog open (door eigenaar in te vullen/te bevestigen)
-- Werkgebied: /werkgebied/, spoedpagina en schema noemen ook De Bilt, Woerden, Amersfoort, Veenendaal. Horen die erbij?
 - `BEDRIJF["werkspot"]` (URL). Het blok "5.0 op Werkspot" is verborgen tot dit is ingevuld. Eventueel `btw`.
-- NEN 3140: staat als "gecertificeerd" op /vakmanschap en de spoedpagina. Nog bevestigen.
 - Veilige eerste stappen op storingspagina's (aardlek omhoog zetten): blijft voorlopig staan, later herzien.
 - Echte foto's (assets/foto/) en echte praktijkvoorbeelden per wijk (`"praktijk"` in wijken.py).
 
@@ -31,8 +33,12 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Aanrijtijden (vanuit Overvecht): gemeente Utrecht 5–30 min, daarbuiten 15–40 min. Staat in `AANRIJTIJD` in config.py.
 - Groepenkast all-in: 1-fase € 640, 3-fase € 760 (sept 2026). Calculator rekent met dezelfde bedragen.
 - Google: 4,9 uit 48 reviews. KvK 86669346.
+- NEN 3140-gecertificeerd: klopt (bevestigd). NEN 1010 blijft "volgens", niet gecertificeerd.
+- Werkgebied omvat ook De Bilt, Woerden, Amersfoort en Veenendaal (bevestigd).
 
 ## Afspraken
+- Voltfix Elektrotechniek (regio Amsterdam, eigenaar Hassan) is een bevriende elektricien; we sturen elkaar klanten door. Link alleen op /werkgebied/ (#collega-netwerk) en /contact/, niet sitewide in header/footer. Geen claims over hun diensten verzinnen.
+- Mobiel: pagina mag nooit breder zijn dan het scherm (test op 390 px: scrollWidth = 390).
 - Pagina-specifieke css/js staat in `assets/extra/<naam>.css|js` en laadt alleen op pagina's met `"extra": ["<naam>"]` in de front-matter (nu: `wizard` op /offerte/, `reviews` op /reviews/).
 - `/pagina.html` is een korte doorverwijzing naar `/pagina/` (geen dubbele content). Interne links altijd `/pagina/`.
 - Reviews: alleen echte Google-reviews letterlijk in `REVIEWS` (config.py). Score/aantal in `BEDRIJF["google_score"/"google_aantal"]`, alleen zichtbaar tonen, nooit als AggregateRating-schema.

@@ -48,7 +48,8 @@ REVIEWS = [
     {"naam": "Hasan Demir", "tekst": "Geweldige klusbedrijf, zeker aan te raden! Heel netjes en snel afgehandeld."},
 ]
 
-# Collega-partners (SEO-kruisbestuiving & netwerk)
+# Bevriende collega (bevestigd door eigenaar): we sturen elkaar klanten door buiten het eigen werkgebied.
+# Alleen linken vanaf /werkgebied/ en /contact/, niet in header/footer (sitewide links ziet Google als linkruil).
 PARTNER_VOLTFIX = {
     "naam": "Voltfix Elektrotechniek",
     "url": "https://www.voltfix.nl/",
