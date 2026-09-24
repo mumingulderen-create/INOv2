@@ -35,7 +35,7 @@ def cta_band(titel="Direct hulp of een vaste prijs?", tekst="Bel, app een foto v
     <div class="hero-actions">
       <a class="btn btn-light" href="tel:{B['telefoon_e164']}" data-track="bellen">Bel {B['telefoon_tonen']}</a>
       <a class="btn btn-outline-light" href="{wa_url('Hallo INO, ik heb een vraag.')}" target="_blank" rel="noopener" data-track="whatsapp">WhatsApp</a>
-      <a class="btn btn-outline-light" href="/offerte{q}">Offerte aanvragen</a>
+      <a class="btn btn-outline-light" href="/offerte/{q}">Offerte aanvragen</a>
     </div>
   </div>
 </section>"""
@@ -769,6 +769,60 @@ def blok_reviews_carousel():
     </div>
     <div class="reviews-carousel-track" id="reviewsTrack" tabindex="0" role="region" aria-label="Google-reviews">
       {"".join(kaarten)}
+    </div>
+  </div>
+</section>"""
+
+
+# --------------------------------------------------------------------------- Rekenhulp storingskosten (alleen /tarieven/)
+def blok_storing_rekenhulp():
+    """Indicatie arbeidskosten op basis van tijdstip en duur. Alle bedragen uit config.py."""
+    def num(v):
+        return float(str(v).replace(",", "."))
+    data = json.dumps({
+        "dag": [T["uur_dag"], num(T["kwartier_dag"])],
+        "avond": [T["uur_avond"], num(T["kwartier_avond"])],
+        "nacht": [T["uur_nacht"], num(T["kwartier_nacht"])],
+    })
+    tel, tel_e = B["telefoon_tonen"], B["telefoon_e164"]
+    return f"""<section class="section rekenhulp-section" id="rekenhulp">
+  <div class="container narrow">
+    <div class="section-heading">
+      <span class="eyebrow">REKENHULP</span>
+      <h2>Wat kost een storing oplossen?</h2>
+      <p>Kies het moment en hoe lang het ongeveer duurt. Je ziet direct de arbeidskosten, inclusief btw. In ruim 85% van de gevallen is de storing binnen het eerste uur opgelost.</p>
+    </div>
+    <div class="rekenhulp" data-tarieven='{data}'>
+      <fieldset>
+        <legend>Wanneer?</legend>
+        <div class="rh-opties">
+          <label><input type="radio" name="rh_moment" value="dag"><span>Overdag<small>ma–vr 08–18 u</small></span></label>
+          <label><input type="radio" name="rh_moment" value="avond"><span>Avond<small>ma–vr 18–22 u</small></span></label>
+          <label><input type="radio" name="rh_moment" value="nacht"><span>Nacht &amp; weekend<small>22–08 u, za, zo, feestdag</small></span></label>
+        </div>
+        <p class="rh-nu" hidden></p>
+      </fieldset>
+      <fieldset>
+        <legend>Hoe lang ongeveer?</legend>
+        <div class="rh-opties rh-duur">
+          <label><input type="radio" name="rh_duur" value="1" checked><span>1 uur<small>meest voorkomend</small></span></label>
+          <label><input type="radio" name="rh_duur" value="1.5"><span>1,5 uur</span></label>
+          <label><input type="radio" name="rh_duur" value="2"><span>2 uur</span></label>
+          <label><input type="radio" name="rh_duur" value="3"><span>3 uur</span></label>
+        </div>
+      </fieldset>
+      <div class="rh-uitkomst" aria-live="polite">
+        <div><span class="rh-label">Indicatie arbeidskosten</span><strong class="rh-bedrag">€ {T['uur_dag']}</strong><span class="rh-uitleg"></span></div>
+        <ul>
+          <li>Eerste uur is inclusief diagnose en btw, daarna per kwartier.</li>
+          <li>Gemeente Utrecht: geen voorrijkosten. Daarbuiten € {T['km_tarief']} per km.</li>
+          <li>Materiaal komt erbij en bespreken we altijd eerst met je.</li>
+        </ul>
+        <div class="rh-knoppen">
+          <a class="btn btn-primary" href="tel:{tel_e}" data-track="bellen">Bel direct {tel}</a>
+          <a class="btn btn-secondary" href="/tarieven/">Alle tarieven</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>"""

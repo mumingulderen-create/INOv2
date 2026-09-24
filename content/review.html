@@ -1,0 +1,22 @@
+<!--
+{
+  "slug": "review",
+  "title": "Review schrijven voor INO Techniek en Installatie",
+  "description": "Tevreden over het werk van INO Techniek en Installatie? Laat in een minuut een review achter op Google. Dat helpt andere bewoners in Utrecht enorm.",
+  "noindex": true,
+  "sitemap": false,
+  "nav": "reviews"
+}
+-->
+<!-- Vaste link voor QR-code, visitekaartjes en WhatsApp: ino-elektra.nl/review/
+     Stuurt door naar Google. Verandert de Google-link ooit, dan pas je alleen config.py aan. -->
+<section class="lp-hero">
+  <div class="container narrow" style="text-align:center">
+    <div class="badge">Bedankt voor je vertrouwen</div>
+    <h1>Review schrijven voor INO</h1>
+    <p>Je wordt doorgestuurd naar Google. Gebeurt er niets? Klik dan op de knop.</p>
+    <p style="margin-top:22px"><a class="btn btn-primary" id="naarGoogle" href="{{google_review_url}}" rel="noopener">Review schrijven op Google →</a></p>
+    <p class="form-note" style="margin-top:14px">Vermeld gerust wat we gedaan hebben, bijvoorbeeld groepenkast, storing of laadpaal. Dat helpt andere klanten.</p>
+  </div>
+</section>
+<script>setTimeout(function(){location.replace(document.getElementById("naarGoogle").href)},600);</script>

@@ -32,11 +32,16 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Niet NEN 1010-gecertificeerd, wel alles volgens NEN 1010. Nooit "NEN 1010 gecertificeerd" schrijven.
 - Aanrijtijden (vanuit Overvecht): gemeente Utrecht 5–30 min, daarbuiten 15–40 min. Staat in `AANRIJTIJD` in config.py.
 - Groepenkast all-in: 1-fase € 640, 3-fase € 760 (sept 2026). Calculator rekent met dezelfde bedragen.
-- Google: 4,9 uit 48 reviews. KvK 86669346.
+- Google: 5,0 uit 37 reviews (gecontroleerd 24 sept 2026). KvK 86669346.
 - NEN 3140-gecertificeerd: klopt (bevestigd). NEN 1010 blijft "volgens", niet gecertificeerd.
 - Werkgebied omvat ook De Bilt, Woerden, Amersfoort en Veenendaal (bevestigd).
 
 ## Afspraken
+- Zie ook `RICHTLIJNEN-AI.md` (korte regels om aan AI Studio mee te geven).
+- `python3 build.py --test` draait een browsertest (mobiel 390 px + desktop): te brede pagina's, JS-fouten, CLS. Budgetten (CSS 55 KB, JS 30 KB, HTML 80 KB) staan bovenin build.py.
+- Interne links zonder slash worden door de build verbeterd én gemeld; pas dan de bron aan.
+- /review/ (noindex) stuurt door naar `google_review_url` in config (leeg = Maps-profiel). QR-code en A6-reviewkaart staan in assets/qr/ en komen op /qr/.
+- Rekenhulp storingskosten (`{{STORING_REKENHULP}}`, extra "rekenhulp") staat alleen op /tarieven/ (eigenaar: op de spoedpagina moet de klant direct kunnen bellen, geen rekenwerk).
 - Voltfix Elektrotechniek (regio Amsterdam, eigenaar Hassan) is een bevriende elektricien; we sturen elkaar klanten door. Link alleen op /werkgebied/ (#collega-netwerk) en /contact/, niet sitewide in header/footer. Geen claims over hun diensten verzinnen.
 - Mobiel: pagina mag nooit breder zijn dan het scherm (test op 390 px: scrollWidth = 390).
 - Pagina-specifieke css/js staat in `assets/extra/<naam>.css|js` en laadt alleen op pagina's met `"extra": ["<naam>"]` in de front-matter (nu: `wizard` op /offerte/, `reviews` op /reviews/).
