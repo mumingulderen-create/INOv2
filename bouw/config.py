@@ -12,9 +12,7 @@ SITE_URL = "https://ino-elektra.nl"
 
 BEDRIJF = {
     "naam": "INO Techniek en Installatie",
-    "korte_naam": "INO",
     "alternatieve_naam": "INO Elektra Utrecht",
-    "slogan": "Techniek · Installatie · Innovatie",
     "telefoon_e164": "+31628763775",          # voor tel:-links en schema
     "telefoon_tonen": "06 28 76 37 75",        # zoals mensen het lezen
     "whatsapp": "31628763775",
@@ -50,14 +48,6 @@ REVIEWS = [
     {"naam": "Ali", "tekst": "Zeer tevreden over de service. Professioneel, netjes gewerkt en duidelijke communicatie. Zeker een aanrader!"},
     {"naam": "Hasan Demir", "tekst": "Geweldige klusbedrijf, zeker aan te raden! Heel netjes en snel afgehandeld."},
 ]
-
-# Bevriende collega (bevestigd door eigenaar): we sturen elkaar klanten door buiten het eigen werkgebied.
-# Alleen linken vanaf /werkgebied/ en /contact/, niet in header/footer (sitewide links ziet Google als linkruil).
-PARTNER_VOLTFIX = {
-    "naam": "Voltfix Elektrotechniek",
-    "url": "https://www.voltfix.nl/",
-    "regio": "Amsterdam",
-}
 
 GOOGLE_SITE_VERIFICATION = "xHeZ_iY8KLYVB6SQZzxa5C9qnocjO7YkzjrELzLSXWw"
 

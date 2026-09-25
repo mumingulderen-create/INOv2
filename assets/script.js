@@ -338,38 +338,6 @@
   }
   initCalculator();
 
-  // Stedin of INO storingscheck
-  function initStedinChecker() {
-    var checker = document.getElementById("stedinChecker");
-    if (!checker) return;
-    var steps = checker.querySelectorAll(".check-step");
-    var results = checker.querySelectorAll(".check-result");
-
-    function reset() {
-      results.forEach(function (r) { r.hidden = true; });
-      steps.forEach(function (s) { s.hidden = s.dataset.step !== "1"; });
-    }
-
-    checker.addEventListener("click", function (e) {
-      var nextBtn = e.target.closest("[data-next]");
-      var backBtn = e.target.closest("[data-back]");
-      var resultBtn = e.target.closest("[data-result]");
-      var resetBtn = e.target.closest(".reset-link") || e.target.closest(".reset-check");
-
-      if (nextBtn) {
-        steps.forEach(function (s) { s.hidden = s.dataset.step !== nextBtn.dataset.next; });
-      } else if (backBtn) {
-        results.forEach(function (r) { r.hidden = true; });
-        steps.forEach(function (s) { s.hidden = s.dataset.step !== backBtn.dataset.back; });
-      } else if (resultBtn) {
-        steps.forEach(function (s) { s.hidden = true; });
-        results.forEach(function (r) { r.hidden = r.dataset.resultId !== resultBtn.dataset.result; });
-      } else if (resetBtn) {
-        reset();
-      }
-    });
-  }
-  initStedinChecker();
 
   // Klik- en conversiemeting (bellen / WhatsApp / formulieren).
   // Werkt automatisch en naadloos met Google Analytics 4 (GA4) en Google Ads.

@@ -1,0 +1,11 @@
+# GitHub Pages: alleen de gegenereerde website publiceren, niet de bron,
+# de bouwscripts, de formulier-backend of de documentatie.
+exclude:
+  - bouw/
+  - content/
+  - assets/
+  - worker/
+  - build.py
+  - CLAUDE.md
+  - README.md
+  - node_modules/

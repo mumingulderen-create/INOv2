@@ -18,7 +18,6 @@ INFO = {
     "hero-elektricien": {"w": 1600, "h": 1067, "breedtes": [480, 800, 1200, 1600], "ext": "jpg"},
     "laadpaal-installatie": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
     "perilex-inductie": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
-    "perilex-photo": {"w": 400, "h": 400, "breedtes": [400], "ext": "png"},
     "storingsdienst-meting": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
     "tuinverlichting-buiten": {"w": 1200, "h": 800, "breedtes": [480, 800, 1200], "ext": "jpg"},
 }
@@ -93,6 +92,14 @@ def verwerk():
             INFO[stem] = {"w": w, "h": h, "breedtes": widths, "ext": "png" if has_alpha else "jpg"}
         except Exception:
             pass
+    # Varianten van foto's die niet meer in assets/foto/ staan opruimen
+    bronnen = {os.path.splitext(fn)[0] for fn in os.listdir(SRC)}
+    for fn in os.listdir(OUT):
+        if fn == os.path.basename(LOGO_UIT):
+            continue
+        stem = re.sub(r"(-\d+)?\.(webp|jpg|png)$", "", fn[3:] if fn.startswith("og-") else fn)
+        if stem not in bronnen:
+            os.remove(os.path.join(OUT, fn))
     return INFO
 
 

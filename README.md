@@ -1,56 +1,58 @@
 # ino-elektra.nl — website v2
 
-Statische website voor INO Techniek en Installatie. Snel, zonder frameworks, gehost via GitHub Pages (`CNAME` = ino-elektra.nl).
+Statische website van INO Techniek en Installatie. Geen frameworks. Gehost via GitHub Pages (`CNAME` = ino-elektra.nl). Formulieren gaan naar een eigen Cloudflare Worker (`worker/`).
 
-## In het kort: zo pas je iets aan
+Regels en bevestigde feiten voor AI-assistenten: `CLAUDE.md`.
 
-| Wat wil je veranderen? | Waar? |
+## Wat pas je waar aan?
+
+| Wat | Waar |
 |---|---|
-| Telefoonnummer, e-mail, **KvK**, adres | `bouw/config.py` → `BEDRIJF` |
-| **Tarieven** (werken automatisch door op álle pagina's + Google-data) | `bouw/config.py` → `TARIEVEN` |
-| Tekst van een bestaande pagina | `content/<pagina>.html` |
-| Wijkpagina's (tekst, buurten, FAQ) of een **nieuwe wijk** | `bouw/wijken.py` |
-| Probleempagina's (geen stroom, aardlek, …) | `bouw/storingen.py` |
+| Telefoon, e-mail, KvK, Google-score, reviews | `bouw/config.py` → `BEDRIJF`, `REVIEWS` |
+| Tarieven en aanrijtijden (werken overal door, ook in Google-data) | `bouw/config.py` → `TARIEVEN`, `AANRIJTIJD` |
 | Menu | `bouw/config.py` → `NAV` |
-| Opmaak | `assets/style.css` |
-| Nieuwe foto | zet hem in `assets/foto/`, gebruik `<img src="/naam.jpg" alt="…">` |
-| **Formulieren** (offerte, spoed, afspraak) | frontend: `assets/script.js` (`wire`) + `assets/extra/formulier.js`; adres en Turnstile-sitekey: `bouw/config.py`; server: `worker/` (zie `worker/README.md`) |
+| Tekst van een pagina | `content/<pagina>.html` |
+| Wijkpagina's of een nieuwe wijk | `bouw/wijken.py` |
+| Storingspagina's (geen stroom, aardlek, …) | `bouw/storingen.py` |
+| Opmaak en scripts | `assets/style.css`, `assets/script.js`; alleen voor één pagina: `assets/extra/` |
+| Foto's | `assets/foto/` (de build maakt WebP-varianten in `img/`) |
+| Formulieren | frontend: `assets/script.js` (`wire`) en `assets/extra/formulier.js`; adres en Turnstile-sitekey: `bouw/config.py`; server: `worker/` (zie `worker/README.md`) |
 
-Daarna altijd:
-
-```bash
-pip install pillow beautifulsoup4     # alleen de eerste keer
-python3 build.py
-```
-
-De build schrijft alle pagina's, `sitemap.xml`, `robots.txt`, `style.css`, `script.js` en `img/`, en **controleert** op kapotte links, dubbele of te lange titels, ontbrekende alt-teksten en ongeldige structured data. Staat er "Geen fouten gevonden"? Dan committen en pushen:
+## Bouwen
 
 ```bash
-git add -A && git commit -m "Update site" && git push
+pip install pillow beautifulsoup4     # eenmalig (optioneel: playwright voor --test)
+python3 build.py                      # of: python3 build.py --test  (browsertest mobiel + desktop)
 ```
 
-## Placeholders in content-bestanden
+De build schrijft alle pagina's, `sitemap.xml`, `robots.txt`, `style.css`, `script.js`, `img/` en `qr/`. Daarna controleert hij op:
+- kapotte links;
+- titels en descriptions (lengte, dubbel);
+- H1;
+- alt-teksten;
+- structured data;
+- budgetten voor paginagrootte;
+- achtergebleven placeholders.
 
-In `content/*.html` kun je dit gebruiken; de build vult het in vanuit `config.py`:
+Staat er "Geen fouten gevonden"? Dan committen en pushen.
 
-- `{{tel}}` `{{tel_e164}}` `{{whatsapp}}` `{{email}}` `{{instagram}}` `{{google_maps}}`
-- Tarieven: `{{uur_dag}}` `{{uur_avond}}` `{{uur_nacht}}` `{{groepenkast_1f}}` `{{perilex_aansluiten}}` … (alle sleutels uit `TARIEVEN`)
+## Placeholders in `content/*.html`
+
+- Contact: `{{tel}}` `{{tel_e164}}` `{{whatsapp}}` `{{email}}` `{{instagram}}` `{{google_maps}}` `{{google_review_url}}` `{{google_score}}` `{{google_aantal}}`
+- Tarieven en aanrijtijden: elke sleutel uit `TARIEVEN` en `AANRIJTIJD`, bijvoorbeeld `{{uur_dag}}`, `{{groepenkast_1f}}` of `{{aanrijtijd_utrecht}}`
 - Zinnen: `{{tarief_zin}}` `{{voorrij_zin}}`
-- Blokken: `{{STORING_KAARTEN}}` `{{WIJK_CHIPS}}` `{{WIJKEN_HUB}}` `{{TARIEF_KAARTEN}}` `{{CTA}}`
+- Blokken: `{{STORING_KAARTEN}}` `{{WIJK_CHIPS}}` `{{WIJKEN_HUB}}` `{{TARIEF_KAARTEN}}` `{{CTA}}` `{{CALCULATOR}}` `{{STEDIN_CHECKER}}` `{{REVIEWS_CAROUSEL}}` `{{STORING_REKENHULP}}`
+
+Bovenaan elk content-bestand staat een JSON-blok met `slug`, `title`, `description` en eventueel `og_image`, `extra` en `"noindex": true`.
 
 ## Structuur
 
 ```
-build.py            ← draai dit
-bouw/               ← instellingen, data en sjablonen (Python)
-content/            ← bewerkbare pagina's (HTML + instellingen bovenaan tussen <!-- -->)
-assets/             ← bron-CSS, bron-JS, originele foto's
-img/                ← gegenereerd (niet handmatig aanpassen)
-*.html, */index.html, style.css, script.js, sitemap.xml, robots.txt ← gegenereerd
+build.py        bouwt de site
+bouw/           instellingen (config.py), data (wijken, storingen) en sjablonen
+content/        pagina's (bron)
+assets/         bron-CSS/JS, foto's, fonts, QR-bestanden
+worker/         formulier-backend (Cloudflare Worker)
+_config.yml     zorgt dat alleen de gegenereerde site online komt
+alles overige   gegenereerd, niet met de hand aanpassen
 ```
-
-Bovenaan elk content-bestand staat een blok met `title`, `description`, `og_image` en eventueel `"noindex": true`.
-
-## Verwijderd t.o.v. de Gemini-versie
-
-`public/` (volledige dubbele kopie van de site), `src/`, `vite.config.ts`, `tsconfig.json`, `package*.json`, `bun.lock`, `metadata.json`, `.env.example` (ongebruikte Gemini AI Studio/React-scaffolding), `generate_site_part1-3.py`, `build_and_deploy.py`, `build_components.py`, `emoji_cleaner.py`, `url_cleaner.py` (vervangen door `build.py`), `hero-elektricien.jpg.jpg` (duplicaat). De oude bestanden staan nog in je git-geschiedenis.

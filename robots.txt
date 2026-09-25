@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /assets/
-Disallow: /bouw/
-Disallow: /content/
 
 Sitemap: https://ino-elektra.nl/sitemap.xml
