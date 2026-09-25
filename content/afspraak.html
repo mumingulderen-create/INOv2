@@ -3,7 +3,8 @@
   "slug": "afspraak",
   "title": "Afspraak of schouw inplannen | Elektricien Utrecht | INO",
   "description": "Plan een afspraak of schouw met INO Techniek en Installatie in Utrecht e.o. Geef je voorkeursdatum en -tijd door, wij bevestigen de afspraak persoonlijk.",
-  "nav": "afspraak"
+  "nav": "afspraak",
+  "extra": ["formulier"]
 }
 -->
 <section class="lp-hero">
@@ -27,17 +28,17 @@
           <li>✓ Definitieve afspraak bevestigen we persoonlijk</li>
         </ul>
       </div>
-      <form id="appointmentForm" class="appointment-form" action="https://formsubmit.co/d0d9de6bb2a30083d92c3fe4775b9ce6" method="POST">
-        <input type="hidden" name="_subject" value="Nieuwe afspraakvoorkeur via de website">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <label>Naam<input name="name" required placeholder="Voor- en achternaam"></label>
-        <label>Telefoon<input name="phone" required placeholder="06 ..."></label>
+      <form id="appointmentForm" class="appointment-form" data-formulier="afspraak" method="post">
+        <label>Naam<input name="name" required maxlength="80" autocomplete="name" placeholder="Voor- en achternaam"></label>
+        <label>Telefoon<input name="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="06 ..."></label>
+        <label class="span-2">E-mailadres (optioneel, voor een bevestiging)<input name="email" type="email" maxlength="254" autocomplete="email" placeholder="jouw@email.nl"></label>
         <label>Gewenste datum<input type="date" id="date" name="datum" required></label>
         <label>Voorkeurstijd<select name="tijd" required><option value="">Kies een tijd</option><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 16:00</option><option>16:00 – 18:00</option></select></label>
-        <label class="span-2">Waar gaat het om? (optioneel)<textarea name="message" rows="3" placeholder="Bijv. schouw voor een nieuwe groepenkast"></textarea></label>
+        <label class="span-2">Waar gaat het om? (optioneel)<textarea name="message" rows="3" maxlength="2000" placeholder="Bijv. schouw voor een nieuwe groepenkast"></textarea></label>
+        <div class="form-turnstile span-2"></div>
         <button class="btn btn-primary" type="submit">Voorkeur aanvragen</button>
-        <div id="formResult" class="form-result" hidden></div>
+        <div id="formResult" class="form-result" role="status" aria-live="polite" hidden></div>
+        <noscript><p class="form-note">Dit formulier werkt alleen met JavaScript. Bel of app ons op {{tel}}.</p></noscript>
       </form>
     </div>
   </section>

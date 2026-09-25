@@ -4,7 +4,7 @@
   "title": "Offerte elektricien Utrecht | Vaste prijs vooraf | INO",
   "description": "Vraag een offerte aan bij INO, elektricien in Utrecht. Beschrijf je klus, stuur foto's mee en ontvang vooraf een vaste prijs, meestal binnen 24 uur.",
   "nav": "offerte",
-  "extra": ["wizard"]
+  "extra": ["wizard", "formulier"]
 }
 -->
 <section class="lp-hero">
@@ -53,10 +53,7 @@
           </div>
         </div>
 
-        <form id="quoteForm" action="https://formsubmit.co/d0d9de6bb2a30083d92c3fe4775b9ce6" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="_subject" value="Nieuwe offerteaanvraag via de website">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_captcha" value="false">
+        <form id="quoteForm" data-formulier="offerte" method="post" enctype="multipart/form-data">
           <input type="hidden" name="service" id="wizardService" value="Meterkast vernieuwen">
           <input type="hidden" name="termijn" id="wizardTermijn" value="Zo snel mogelijk (binnen enkele dagen)">
 
@@ -169,7 +166,7 @@
             <p class="wizard-subtitle">Hoe duidelijker je situatie, hoe sneller we een vaste prijs kunnen geven.</p>
 
             <label>Korte toelichting
-              <textarea name="message" id="message" rows="4" required placeholder="Bijv: Mijn groepenkast is verouderd met stoppen. Ik wil graag een nieuwe 1- of 3-fase kast met aardlekschakelaars."></textarea>
+              <textarea name="message" id="message" rows="4" required maxlength="3000" placeholder="Bijv: Mijn groepenkast is verouderd met stoppen. Ik wil graag een nieuwe 1- of 3-fase kast met aardlekschakelaars."></textarea>
             </label>
 
             <label style="margin-bottom:8px">Gewenste uitvoeringstermijn:</label>
@@ -182,7 +179,7 @@
 
             <label style="margin-bottom:8px">Foto's toevoegen (sterk aanbevolen):</label>
             <div class="wizard-dropzone" id="wizardDropzone">
-              <input id="photos" name="photos" type="file" accept="image/*" multiple>
+              <input id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/heic,image/heif,image/webp" multiple>
               <span class="wizard-dropzone-icon">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
               </span>
@@ -208,31 +205,32 @@
             <p class="wizard-subtitle">Laatste stap! Vul je contactgegevens in om het voorstel te ontvangen.</p>
 
             <label>Naam
-              <input name="name" required placeholder="Voor- en achternaam">
+              <input name="name" required maxlength="80" autocomplete="name" placeholder="Voor- en achternaam">
             </label>
 
             <div class="two-col">
               <label>Telefoonnummer
-                <input name="phone" type="tel" required placeholder="06 12345678">
+                <input name="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="06 12345678">
               </label>
               <label>E-mailadres
-                <input name="email" type="email" required placeholder="jouw@email.nl">
+                <input name="email" type="email" required maxlength="254" autocomplete="email" placeholder="jouw@email.nl">
               </label>
             </div>
 
             <div class="two-col">
               <label>Postcode
-                <input name="postcode" placeholder="3511 AA">
+                <input name="postcode" maxlength="7" autocomplete="postal-code" placeholder="3511 AA">
               </label>
               <label>Huisnummer
-                <input name="number" placeholder="12">
+                <input name="number" maxlength="10" placeholder="12">
               </label>
             </div>
 
             <label class="check" style="margin-top:14px">
-              <input type="checkbox" required> Ik ga akkoord dat INO mijn gegevens gebruikt om contact op te nemen over deze aanvraag (zie <a class="mini-link" href="/privacy/">privacy</a>).
+              <input type="checkbox" name="akkoord" value="ja" required> Ik ga akkoord dat INO mijn gegevens gebruikt om contact op te nemen over deze aanvraag (zie <a class="mini-link" href="/privacy/">privacy</a>).
             </label>
 
+            <div class="form-turnstile"></div>
             <div style="margin-top:20px;">
               <span style="display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:8px;">Kies hoe je de aanvraag wilt versturen:</span>
               <div class="wizard-send-options">
@@ -256,7 +254,8 @@
             </p>
           </div>
 
-          <div id="formResult" class="form-result" hidden></div>
+          <div id="formResult" class="form-result" role="status" aria-live="polite" hidden></div>
+          <noscript><p class="form-note">Dit formulier werkt alleen met JavaScript. Bel of app ons op {{tel}}.</p></noscript>
         </form>
       </div>
     </div>

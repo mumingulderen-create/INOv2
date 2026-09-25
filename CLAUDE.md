@@ -22,6 +22,7 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Veiligheid: nooit instructies geven om zelf aan de groepenkast of leidingen te werken.
 
 ## Nog open (door eigenaar in te vullen/te bevestigen)
+- Formulieren: Brevo-account + domeinverificatie (DNS bij Mijndomein), Turnstile-widget en Worker deployen; daarna `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` in config.py invullen. Tot dan geven formulieren een foutmelding met het telefoonnummer. Stappen: `worker/README.md`.
 - `BEDRIJF["werkspot"]` (URL). Het blok "5.0 op Werkspot" is verborgen tot dit is ingevuld. Eventueel `btw`.
 - Veilige eerste stappen op storingspagina's (aardlek omhoog zetten): blijft voorlopig staan, later herzien.
 - Echte foto's (assets/foto/) en echte praktijkvoorbeelden per wijk (`"praktijk"` in wijken.py).
@@ -51,3 +52,4 @@ Statische site, gegenereerd door `python3 build.py`. Hosting: GitHub Pages vanui
 - Google Analytics laadt alleen na akkoord in de cookiemelding (`bouw/layout.py` + `initCookies` in `assets/script.js`).
 - Conditioneel blok in content: `<!--ALS sleutel-->…<!--/ALS-->` toont alleen als `BEDRIJF[sleutel]` gevuld is.
 - De groepenkast-calculator haalt zijn prijzen uit `config.py` (data-prijzen).
+- Formulieren (quoteForm, spoedForm, appointmentForm) gaan naar de eigen Cloudflare Worker in `worker/` (Turnstile + rate limit + validatie) en via Brevo naar info@ino-elektra.nl. Geen FormSubmit meer. `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` (openbaar) staan in config.py; secrets (`TURNSTILE_SECRET`, `BREVO_API_KEY`) alleen in Cloudflare, nooit in de repo. Nieuwe formuliervelden moeten ook in de witte lijst in `worker/src/validatie.js`. Na wijzigingen in `worker/`: `cd worker && npm test`.

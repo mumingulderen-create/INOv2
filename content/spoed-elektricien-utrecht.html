@@ -4,7 +4,8 @@
   "title": "Spoed elektricien Utrecht 24/7 | Binnen {{aanrijtijd_utrecht}} min | INO",
   "description": "Met spoed een elektricien in Utrecht nodig? 24/7 hulp bij stroomstoring of kortsluiting. In Utrecht binnen {{aanrijtijd_utrecht}} min ter plaatse, vaste tarieven. Bel direct.",
   "og_image": "hero-elektricien.jpg",
-  "nav": "spoed-elektricien-utrecht"
+  "nav": "spoed-elektricien-utrecht",
+  "extra": ["formulier"]
 }
 -->
 <!-- 1. Hero & Dual Prominent CTA -->
@@ -290,15 +291,14 @@
         <div>✓ Erkend elektricien met 12 maanden garantie</div>
       </div>
     </div>
-    <form id="spoedForm" class="quote-form" action="https://formsubmit.co/d0d9de6bb2a30083d92c3fe4775b9ce6" method="POST">
-      <input type="hidden" name="_subject" value="Terugbelverzoek - Spoed elektricien landingspagina">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <label>Naam<input name="name" required placeholder="Voor- en achternaam"></label>
-      <label>Telefoonnummer<input name="phone" type="tel" required placeholder="06 ..."></label>
-      <label>Wat is er aan de hand?<textarea name="message" rows="4" required placeholder="Bijv. aardlekschakelaar valt soms uit, stopcontact vonkt, kookplaat aansluiten..."></textarea></label>
+    <form id="spoedForm" class="quote-form" data-formulier="spoed" method="post">
+      <label>Naam<input name="name" required maxlength="80" autocomplete="name" placeholder="Voor- en achternaam"></label>
+      <label>Telefoonnummer<input name="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="06 ..."></label>
+      <label>Wat is er aan de hand?<textarea name="message" rows="4" required maxlength="2000" placeholder="Bijv. aardlekschakelaar valt soms uit, stopcontact vonkt, kookplaat aansluiten..."></textarea></label>
+      <div class="form-turnstile"></div>
       <button class="btn btn-primary full" type="submit">Terugbelverzoek Versturen</button>
-      <div id="formResult" class="form-result" hidden></div>
+      <div id="formResult" class="form-result" role="status" aria-live="polite" hidden></div>
+      <noscript><p class="form-note">Dit formulier werkt alleen met JavaScript. Bel of app ons op {{tel}}.</p></noscript>
     </form>
   </div>
 </section>

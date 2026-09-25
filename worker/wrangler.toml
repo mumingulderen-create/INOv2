@@ -1,0 +1,31 @@
+# Cloudflare Worker voor de formulieren van ino-elektra.nl
+# Deploy: zie worker/README.md. Hier staan GEEN geheimen; die zet je met
+#   npx wrangler secret put TURNSTILE_SECRET
+#   npx wrangler secret put BREVO_API_KEY
+name = "ino-formulieren"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+# Logs: alleen de korte regels die de Worker zelf schrijft (zonder persoonsgegevens).
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[vars]
+ALLOWED_ORIGINS = "https://ino-elektra.nl,https://www.ino-elektra.nl"
+TURNSTILE_HOSTNAMES = "ino-elektra.nl,www.ino-elektra.nl"
+MAIL_TO = "info@ino-elektra.nl"
+MAIL_FROM = "formulier@ino-elektra.nl"
+MAIL_FROM_NAME = "Website INO"
+BEVESTIGING_KLANT = "true"
+BEDRIJF_NAAM = "INO Techniek en Installatie"
+BEDRIJF_TELEFOON = "06 28 76 37 75"
+BEDRIJF_TELEFOON_E164 = "+31628763775"
+BEDRIJF_WEBSITE = "https://ino-elektra.nl"
+
+# Rate limiting per IP-adres: maximaal 5 inzendingen per minuut.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 5, period = 60 }

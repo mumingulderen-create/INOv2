@@ -63,7 +63,10 @@
 
   function esc(v) { return String(v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]; }); }
 
-  // Formulieren via FormSubmit (AJAX) met honeypot tegen spam
+  // Formulieren → eigen beveiligd endpoint (Cloudflare Worker, zie worker/).
+  // Honeypot + Turnstile tegen spam; de server controleert alles opnieuw.
+  var VELDNAMEN = { name: "naam", phone: "telefoonnummer", email: "e-mailadres", message: "omschrijving", postcode: "postcode",
+    number: "huisnummer", datum: "datum", tijd: "tijd", akkoord: "toestemming", photos: "foto's" };
   function wire(form, okMsg) {
     if (!form) return;
     if (!form.querySelector('[name="_honey"]')) {
@@ -72,35 +75,69 @@
       form.appendChild(hp);
     }
     var submit = form.querySelector("button[type='submit']");
-    var label = submit ? submit.textContent : "Versturen";
+    var label = submit ? submit.innerHTML : "Versturen";
+    var bezig = false;
+    function toon(result, cls, html) {
+      if (result) { result.hidden = false; result.className = cls; result.innerHTML = html; result.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      else alert(html.replace(/<[^>]+>/g, " "));
+    }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (bezig) return; // geen dubbele inzending
+      var result = form.querySelector(".form-result") || document.getElementById("formResult");
       var data = new FormData(form);
       if (data.get("_honey")) return;
-      var result = form.querySelector(".form-result") || document.getElementById("formResult");
+      form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
+      var hulp = window.inoFormulier;
+      var fout = "<strong>Versturen lukte niet.</strong><br>Bel ons direct op <a href=\"tel:+31628763775\">06 28 76 37 75</a> of probeer het opnieuw.";
+      if (!"" || !hulp || !hulp.actief) { toon(result, "form-result form-result-error", fout); return; }
+      bezig = true;
       if (submit) { submit.disabled = true; submit.textContent = "Versturen…"; }
-      fetch("https://formsubmit.co/ajax/d0d9de6bb2a30083d92c3fe4775b9ce6", { method: "POST", body: data, headers: { Accept: "application/json" } })
-        .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+      var fotoVeld = form.querySelector("input[type='file'][name='photos']");
+      (fotoVeld && fotoVeld.files.length ? hulp.fotos(fotoVeld.files) : Promise.resolve([]))
+        .then(function (fotos) {
+          data.delete("photos");
+          fotos.forEach(function (f, i) { data.append("photos", f, f.name || "foto-" + (i + 1) + ".jpg"); });
+          return hulp.token(form);
+        }, function (err) { throw { bericht: err.message, veld: "photos" }; })
+        .then(function (t) {
+          if (!t) throw { bericht: "De beveiligingscontrole is nog niet klaar. Wacht even en probeer het opnieuw." };
+          data.set("cf-turnstile-response", t);
+          data.set("formulier", form.getAttribute("data-formulier"));
+          return fetch("", { method: "POST", body: data, mode: "cors", credentials: "omit", headers: { Accept: "application/json" } });
+        })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (j) {
+            if (r.ok && j.ok) return j;
+            if (r.status === 422 && j.velden) {
+              var namen = Object.keys(j.velden);
+              namen.forEach(function (n) { var el = form.querySelector("[name='" + n + "']"); if (el) el.setAttribute("aria-invalid", "true"); });
+              throw { bericht: "Controleer: " + namen.map(function (n) { return esc((VELDNAMEN[n] || n) + " – " + j.velden[n]); }).join("<br>"), veld: namen[0] };
+            }
+            if (r.status === 429) throw { bericht: "Je hebt net al iets verstuurd. Wacht een minuut of bel ons direct op <a href=\"tel:+31628763775\">06 28 76 37 75</a>." };
+            if (r.status === 403 && j.fout === "turnstile") throw { bericht: "De beveiligingscontrole is mislukt. Probeer het opnieuw." };
+            if (r.status === 413) throw { bericht: "De foto's zijn te groot. Stuur minder of kleinere foto's.", veld: "photos" };
+            throw {};
+          });
+        })
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
-          if (result) {
-            result.hidden = false; result.className = "form-result";
-            result.innerHTML = "<strong>Aanvraag verstuurd.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg;
-            result.scrollIntoView({ behavior: "smooth", block: "center" });
-          } else { alert("Verstuurd. " + okMsg); }
+          toon(result, "form-result", "<strong>Aanvraag verstuurd.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
           if (list) list.textContent = "";
         })
-        .catch(function () {
-          var msg = "<strong>Versturen lukte niet.</strong><br>Bel ons direct op <a href=\"tel:+31628763775\">06 28 76 37 75</a> of probeer het opnieuw.";
-          if (result) { result.hidden = false; result.className = "form-result form-result-error"; result.innerHTML = msg; }
-          else alert("Versturen lukte niet. Bel ons op 06 28 76 37 75.");
+        .catch(function (err) {
+          toon(result, "form-result form-result-error", err && err.bericht ? "<strong>Niet verstuurd.</strong><br>" + err.bericht : fout);
         })
-        .finally(function () { if (submit) { submit.disabled = false; submit.textContent = label; } });
+        .finally(function () {
+          bezig = false;
+          hulp.reset(form); // Turnstile-token is eenmalig; nieuw token voor een volgende poging
+          if (submit) { submit.disabled = false; submit.innerHTML = label; }
+        });
     });
   }
-  wire(document.getElementById("quoteForm"), "we nemen zo snel mogelijk contact met je op.");
+  wire(document.getElementById("quoteForm"), "we nemen zo snel mogelijk contact met je op. Je ontvangt ook een bevestiging per e-mail.");
   wire(document.getElementById("spoedForm"), "we bellen je zo snel mogelijk terug.");
   wire(document.getElementById("appointmentForm"), "we bevestigen de afspraak persoonlijk.");
 

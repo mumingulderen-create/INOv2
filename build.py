@@ -216,7 +216,9 @@ def main():
         warn(f"style.css is {len(css_min.encode())//1024} KB (budget {BUDGET_CSS_KB} KB). Zet pagina-specifieke CSS in assets/extra/.")
 
     js = open(os.path.join(ROOT, "assets", "script.js"), encoding="utf-8").read()
-    from config import FORM_ENDPOINT
+    from config import FORM_ENDPOINT, TURNSTILE_SITEKEY
+    if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
+        warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
     js = js.replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
     js_v = hashlib.md5(js.encode()).hexdigest()[:8]
     schrijf("script.js", js)
@@ -231,7 +233,7 @@ def main():
         if naam.endswith(".css"):
             inhoud = minify_css(inhoud)
         else:
-            inhoud = inhoud.replace("__WHATSAPP__", B["whatsapp"])
+            inhoud = inhoud.replace("__WHATSAPP__", B["whatsapp"]).replace("__TURNSTILE_SITEKEY__", TURNSTILE_SITEKEY)
         extra_v[naam] = hashlib.md5(inhoud.encode()).hexdigest()[:8]
         schrijf(naam, inhoud)
 
@@ -345,6 +347,8 @@ def controleer(rendered):
     titles, descs = {}, {}
     for slug, (p, html) in rendered.items():
         naam = slug or "index"
+        if "formsubmit" in html.lower():
+            warn(f"{naam}: bevat nog een verwijzing naar FormSubmit")
         t, d = p["title"], p["description"]
         tl = len(re.sub(r"&amp;", "&", t))
         if tl > 60:

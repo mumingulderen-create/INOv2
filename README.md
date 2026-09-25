@@ -14,6 +14,7 @@ Statische website voor INO Techniek en Installatie. Snel, zonder frameworks, geh
 | Menu | `bouw/config.py` → `NAV` |
 | Opmaak | `assets/style.css` |
 | Nieuwe foto | zet hem in `assets/foto/`, gebruik `<img src="/naam.jpg" alt="…">` |
+| **Formulieren** (offerte, spoed, afspraak) | frontend: `assets/script.js` (`wire`) + `assets/extra/formulier.js`; adres en Turnstile-sitekey: `bouw/config.py`; server: `worker/` (zie `worker/README.md`) |
 
 Daarna altijd:
 
