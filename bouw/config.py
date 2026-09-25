@@ -64,11 +64,11 @@ GOOGLE_SITE_VERIFICATION = "xHeZ_iY8KLYVB6SQZzxa5C9qnocjO7YkzjrELzLSXWw"
 # Google Analytics 4 (GA4) Meet-ID (bijv. "G-XXXXXXXXXX" of leeg laten)
 GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
 
-# Formulieren: website -> eigen Cloudflare Worker (map worker/) -> Brevo -> info@ino-elektra.nl
-# Beide waarden zijn OPENBAAR (ze staan ook in de pagina). Geheimen (Turnstile secret key,
-# Brevo API-key) staan alleen in Cloudflare, nooit hier. Zie worker/README.md.
-FORM_ENDPOINT = ""        # VUL_IN na deploy, bijv. "https://ino-formulieren.<account>.workers.dev"
-TURNSTILE_SITEKEY = ""    # VUL_IN: Cloudflare dashboard -> Turnstile -> Site Key
+# Formulieren: direct via FormSubmit (AJAX) naar info@ino-elektra.nl
+# Kan optioneel worden omgezet naar eigen Cloudflare Worker (map worker/) indien gewenst
+FORM_ENDPOINT = "https://formsubmit.co/ajax/info@ino-elektra.nl"
+TURNSTILE_SITEKEY = ""
+
 
 # ---------------------------------------------------------------------------
 # AANRIJTIJDEN bij spoed (vertrek vanuit Overvecht). Gebruik {{aanrijtijd_utrecht}} / {{aanrijtijd_regio}}.

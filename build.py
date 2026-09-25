@@ -217,8 +217,8 @@ def main():
 
     js = open(os.path.join(ROOT, "assets", "script.js"), encoding="utf-8").read()
     from config import FORM_ENDPOINT, TURNSTILE_SITEKEY
-    if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
-        warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
+    if not FORM_ENDPOINT:
+        warn("FORM_ENDPOINT in bouw/config.py is leeg: formulieren versturen niets")
     js = js.replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
     js_v = hashlib.md5(js.encode()).hexdigest()[:8]
     schrijf("script.js", js)
@@ -347,8 +347,6 @@ def controleer(rendered):
     titles, descs = {}, {}
     for slug, (p, html) in rendered.items():
         naam = slug or "index"
-        if "formsubmit" in html.lower():
-            warn(f"{naam}: bevat nog een verwijzing naar FormSubmit")
         t, d = p["title"], p["description"]
         tl = len(re.sub(r"&amp;", "&", t))
         if tl > 60:
