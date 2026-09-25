@@ -74,11 +74,6 @@
       hp.type = "text"; hp.name = "_honey"; hp.tabIndex = -1; hp.autocomplete = "off"; hp.className = "hp"; hp.setAttribute("aria-hidden", "true");
       form.appendChild(hp);
     }
-    if (!form.querySelector('[name="_captcha"]')) {
-      var cp = document.createElement("input");
-      cp.type = "hidden"; cp.name = "_captcha"; cp.value = "false";
-      form.appendChild(cp);
-    }
     var submit = form.querySelector("button[type='submit']");
     var label = submit ? submit.innerHTML : "Versturen";
     var bezig = false;
@@ -95,38 +90,25 @@
       form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
       var hulp = window.inoFormulier;
       var fout = "<strong>Versturen lukte niet.</strong><br>Bel ons direct op <a href=\"tel:+31628763775\">06 28 76 37 75</a> of probeer het opnieuw.";
-      if (!"https://formsubmit.co/ajax/info@ino-elektra.nl") { toon(result, "form-result form-result-error", fout); return; }
+      if (!"" || !hulp || !hulp.actief) { toon(result, "form-result form-result-error", fout); return; }
       bezig = true;
       if (submit) { submit.disabled = true; submit.textContent = "Versturen…"; }
       var fotoVeld = form.querySelector("input[type='file'][name='photos']");
-      (fotoVeld && fotoVeld.files && fotoVeld.files.length && hulp && hulp.fotos ? hulp.fotos(fotoVeld.files) : Promise.resolve([]))
+      (fotoVeld && fotoVeld.files.length ? hulp.fotos(fotoVeld.files) : Promise.resolve([]))
         .then(function (fotos) {
-          if (fotos && fotos.length) {
-            data.delete("photos");
-            fotos.forEach(function (f, i) { data.append("photos", f, f.name || "foto-" + (i + 1) + ".jpg"); });
-          }
-          if (hulp && hulp.actief && hulp.token) {
-            return hulp.token(form).then(function (t) {
-              if (t) data.set("cf-turnstile-response", t);
-              return true;
-            });
-          }
-          return true;
+          data.delete("photos");
+          fotos.forEach(function (f, i) { data.append("photos", f, f.name || "foto-" + (i + 1) + ".jpg"); });
+          return hulp.token(form);
         }, function (err) { throw { bericht: err.message, veld: "photos" }; })
-        .then(function () {
-          var formType = form.getAttribute("data-formulier") || form.id || "aanvraag";
-          if (!data.get("_subject")) {
-            data.set("_subject", "Nieuwe aanvraag (" + formType + ") via ino-elektra.nl");
-          }
-          return fetch("https://formsubmit.co/ajax/info@ino-elektra.nl", {
-            method: "POST",
-            body: data,
-            headers: { Accept: "application/json" }
-          });
+        .then(function (t) {
+          if (!t) throw { bericht: "De beveiligingscontrole is nog niet klaar. Wacht even en probeer het opnieuw." };
+          data.set("cf-turnstile-response", t);
+          data.set("formulier", form.getAttribute("data-formulier"));
+          return fetch("", { method: "POST", body: data, mode: "cors", credentials: "omit", headers: { Accept: "application/json" } });
         })
         .then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (j) {
-            if (r.ok || j.success === "true" || j.success === true || j.ok) return j;
+            if (r.ok && j.ok) return j;
             if (r.status === 422 && j.velden) {
               var namen = Object.keys(j.velden);
               namen.forEach(function (n) { var el = form.querySelector("[name='" + n + "']"); if (el) el.setAttribute("aria-invalid", "true"); });
@@ -141,23 +123,21 @@
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
-          var klantNaam = data.get("name") ? " " + esc(data.get("name")) : "";
-          toon(result, "form-result", "<strong>Aanvraag verstuurd.</strong><br>Bedankt" + klantNaam + ", " + okMsg);
+          toon(result, "form-result", "<strong>Aanvraag verstuurd.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
-          var photoList = form.querySelector(".photo-list") || document.getElementById("photoList") || document.getElementById("fileList");
-          if (photoList) photoList.textContent = "";
+          if (list) list.textContent = "";
         })
         .catch(function (err) {
           toon(result, "form-result form-result-error", err && err.bericht ? "<strong>Niet verstuurd.</strong><br>" + err.bericht : fout);
         })
         .finally(function () {
           bezig = false;
-          if (hulp && hulp.reset) hulp.reset(form);
+          hulp.reset(form); // Turnstile-token is eenmalig; nieuw token voor een volgende poging
           if (submit) { submit.disabled = false; submit.innerHTML = label; }
         });
     });
   }
-  wire(document.getElementById("quoteForm"), "we nemen zo snel mogelijk contact met je op.");
+  wire(document.getElementById("quoteForm"), "we nemen zo snel mogelijk contact met je op. Je ontvangt ook een bevestiging per e-mail.");
   wire(document.getElementById("spoedForm"), "we bellen je zo snel mogelijk terug.");
   wire(document.getElementById("appointmentForm"), "we bevestigen de afspraak persoonlijk.");
 
