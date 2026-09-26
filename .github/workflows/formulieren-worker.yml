@@ -1,7 +1,7 @@
 # Test (en optioneel deploy) van de formulieren-Worker in worker/.
 # Deploy gebeurt alleen als de repository-secrets CLOUDFLARE_API_TOKEN en
 # CLOUDFLARE_ACCOUNT_ID zijn ingesteld. Secrets van de Worker zelf
-# (TURNSTILE_SECRET, BREVO_API_KEY) staan in Cloudflare, niet hier.
+# (TURNSTILE_SECRET_KEY, BREVO_API_KEY) staan in Cloudflare, niet hier.
 name: Formulieren-Worker
 
 on:

@@ -1,6 +1,9 @@
 // INO formulieren-endpoint (Cloudflare Worker)
 // GitHub Pages (quoteForm / spoedForm / appointmentForm) → deze Worker → Brevo → info@ino-elektra.nl
 //
+// Eén endpoint voor alle formulieren: POST /api/form met veld "formulier"
+// (offerte | spoed | afspraak). multipart/form-data, omdat de offerte foto's kan bevatten.
+//
 // Volgorde per verzoek: HTTPS → CORS/Origin → methode → grootte → rate limit →
 // honeypot → validatie → foto's → Turnstile → e-mail → (bevestiging klant).
 // Logs bevatten nooit naam, telefoon, e-mail, IP-adres of berichtinhoud.
@@ -46,7 +49,7 @@ function json(status, body, origin) {
 async function turnstileOk(env, token, ip, formulier) {
   if (!token || typeof token !== "string" || token.length > 2048) return false;
   const body = new FormData();
-  body.append("secret", env.TURNSTILE_SECRET);
+  body.append("secret", env.TURNSTILE_SECRET_KEY);
   body.append("response", token);
   if (ip) body.append("remoteip", ip);
   const r = await fetch(env.TURNSTILE_VERIFY_URL || SITEVERIFY, { method: "POST", body });
@@ -68,7 +71,7 @@ export default {
     const cors = toegestaan ? origin : "";
 
     if (url.protocol !== "https:" && env.ALLOW_HTTP !== "true") return json(403, { ok: false, fout: "https" });
-    if (url.pathname !== "/" && url.pathname !== "/aanvraag") return json(404, { ok: false, fout: "niet_gevonden" }, cors);
+    if (url.pathname !== "/api/form") return json(404, { ok: false, fout: "niet_gevonden" }, cors);
 
     if (request.method === "OPTIONS") {
       return toegestaan ? new Response(null, { status: 204, headers: corsHeaders(origin) }) : new Response(null, { status: 403 });
@@ -122,7 +125,7 @@ export default {
     const { html, tekst } = aanvraagMail(formulier, d, bijlagen.length);
     const bericht = {
       sender: afzender,
-      to: [{ email: mailTo }],
+      to: [{ email: mailTo, contactPixelTrackingConsent: false }],
       subject: onderwerp(formulier, d),
       htmlContent: html,
       textContent: tekst,
@@ -151,7 +154,7 @@ export default {
       ctx.waitUntil(
         stuurBrevo(env, {
           sender: { name: headerVeilig(b.naamAfzender, 60), email: env.MAIL_FROM },
-          to: [{ email: d.email }],
+          to: [{ email: d.email, contactPixelTrackingConsent: false }],
           replyTo: { email: mailTo },
           subject: b.onderwerp,
           htmlContent: b.html,

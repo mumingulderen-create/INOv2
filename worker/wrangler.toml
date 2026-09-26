@@ -1,11 +1,16 @@
-# Cloudflare Worker voor de formulieren van ino-elektra.nl
+# Cloudflare Worker voor de formulieren van ino-elektra.nl (POST /api/form)
 # Deploy: zie worker/README.md. Hier staan GEEN geheimen; die zet je met
-#   npx wrangler secret put TURNSTILE_SECRET
+#   npx wrangler secret put TURNSTILE_SECRET_KEY
 #   npx wrangler secret put BREVO_API_KEY
-name = "ino-formulieren"
+name = "ino-form-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 workers_dev = true
+
+# Eigen adres https://api.ino-elektra.nl — pas aanzetten (# weghalen) als
+# ino-elektra.nl als domein ACTIEF is in Cloudflare (stap 4 in worker/README.md).
+# Cloudflare maakt het DNS-record en het HTTPS-certificaat dan zelf aan.
+# routes = [{ pattern = "api.ino-elektra.nl", custom_domain = true }]
 
 # Logs: alleen de korte regels die de Worker zelf schrijft (zonder persoonsgegevens).
 [observability]

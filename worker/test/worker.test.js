@@ -13,7 +13,7 @@ let verzonden, turnstileAntwoord, brevoStatus, limiter;
 const env = () => ({
   ALLOWED_ORIGINS: "https://ino-elektra.nl,https://www.ino-elektra.nl",
   TURNSTILE_HOSTNAMES: "ino-elektra.nl,www.ino-elektra.nl",
-  TURNSTILE_SECRET: "geheim",
+  TURNSTILE_SECRET_KEY: "geheim",
   BREVO_API_KEY: "sleutel",
   MAIL_TO: "info@ino-elektra.nl",
   MAIL_FROM: "formulier@ino-elektra.nl",
@@ -69,7 +69,7 @@ const SPOED = { name: "Piet", phone: "+31612345678", message: "Aardlek springt e
 function morgen() { return new Date(Date.now() + 864e5).toISOString().slice(0, 10); }
 const AFSPRAAK = () => ({ name: "Sara", phone: "0612345678", email: "sara@example.nl", datum: morgen(), tijd: "10:00 – 12:00" });
 
-function post(fd, { origin = ORIGIN, url = "https://ino-formulieren.test.workers.dev/", headers = {} } = {}) {
+function post(fd, { origin = ORIGIN, url = "https://api.ino-elektra.nl/api/form", headers = {} } = {}) {
   return new Request(url, { method: "POST", body: fd, headers: { Origin: origin, "CF-Connecting-IP": "203.0.113.9", ...headers } });
 }
 const ctx = () => { const p = []; return { waitUntil: (x) => p.push(x), klaar: () => Promise.all(p) }; };
@@ -82,11 +82,11 @@ test("offerte: normale aanvraag -> 200, mail aan info@ met Reply-To + bevestigin
   assert.equal(r.headers.get("access-control-allow-origin"), ORIGIN);
   assert.equal(verzonden.length, 2);
   const [m, b] = verzonden;
-  assert.deepEqual(m.to, [{ email: "info@ino-elektra.nl" }]);
+  assert.deepEqual(m.to, [{ email: "info@ino-elektra.nl", contactPixelTrackingConsent: false }]);
   assert.deepEqual(m.replyTo, { email: "jan@example.nl", name: "Jan de Vries" });
   assert.match(m.subject, /^\[Offerte\] Meterkast vernieuwen – Jan de Vries$/);
   assert.match(m.htmlContent, /Offerteaanvraag/); assert.match(m.htmlContent, /3561 AB/);
-  assert.deepEqual(b.to, [{ email: "jan@example.nl" }]);
+  assert.deepEqual(b.to, [{ email: "jan@example.nl", contactPixelTrackingConsent: false }]);
   assert.deepEqual(b.replyTo, { email: "info@ino-elektra.nl" });
   assert.ok(!b.htmlContent.includes("Jan") && !b.htmlContent.includes("Groepenkast"), "bevestiging bevat geen klantinvoer");
 });
@@ -157,7 +157,7 @@ test("offerte: te veel of te grote foto's -> 422", async () => {
 });
 
 test("request groter dan 12 MB -> 413", async () => {
-  const req = new Request("https://ino-formulieren.test.workers.dev/", { method: "POST", body: "x", headers: { Origin: ORIGIN, "content-type": "multipart/form-data; boundary=x", "content-length": String(13 * 1024 * 1024) } });
+  const req = new Request("https://api.ino-elektra.nl/api/form", { method: "POST", body: "x", headers: { Origin: ORIGIN, "content-type": "multipart/form-data; boundary=x", "content-length": String(13 * 1024 * 1024) } });
   assert.equal((await stuur(req))[0].status, 413);
 });
 
@@ -217,15 +217,15 @@ test("Turnstile mislukt of hergebruikt (dubbele inzending) -> 403", async () => 
 test("CORS: vreemde origin -> 403 zonder CORS-headers; preflight alleen voor eigen site", async () => {
   const [r] = await stuur(post(formulier("spoed", SPOED), { origin: "https://evil.test" }));
   assert.equal(r.status, 403); assert.equal(r.headers.get("access-control-allow-origin"), null);
-  const pre = await worker.fetch(new Request("https://x.workers.dev/", { method: "OPTIONS", headers: { Origin: ORIGIN } }), env(), ctx());
+  const pre = await worker.fetch(new Request("https://api.ino-elektra.nl/api/form", { method: "OPTIONS", headers: { Origin: ORIGIN } }), env(), ctx());
   assert.equal(pre.status, 204); assert.equal(pre.headers.get("access-control-allow-origin"), ORIGIN);
-  const pre2 = await worker.fetch(new Request("https://x.workers.dev/", { method: "OPTIONS", headers: { Origin: "https://evil.test" } }), env(), ctx());
+  const pre2 = await worker.fetch(new Request("https://api.ino-elektra.nl/api/form", { method: "OPTIONS", headers: { Origin: "https://evil.test" } }), env(), ctx());
   assert.equal(pre2.status, 403);
 });
 test("HTTP (geen HTTPS) -> 403; GET -> 405; onbekend pad -> 404; onbekend formulier -> 400", async () => {
-  assert.equal((await stuur(post(formulier("spoed", SPOED), { url: "http://x.workers.dev/" })))[0].status, 403);
-  assert.equal((await worker.fetch(new Request("https://x.workers.dev/", { headers: { Origin: ORIGIN } }), env(), ctx())).status, 405);
-  assert.equal((await stuur(post(formulier("spoed", SPOED), { url: "https://x.workers.dev/admin" })))[0].status, 404);
+  assert.equal((await stuur(post(formulier("spoed", SPOED), { url: "http://api.ino-elektra.nl/api/form" })))[0].status, 403);
+  assert.equal((await worker.fetch(new Request("https://api.ino-elektra.nl/api/form", { headers: { Origin: ORIGIN } }), env(), ctx())).status, 405);
+  assert.equal((await stuur(post(formulier("spoed", SPOED), { url: "https://api.ino-elektra.nl/admin" })))[0].status, 404);
   assert.equal((await stuur(post(formulier("bestelling", SPOED))))[0].status, 400);
 });
 test("rate limit: 6e inzending binnen een minuut -> 429", async () => {

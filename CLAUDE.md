@@ -46,10 +46,10 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Conditioneel blok: `<!--ALS sleutel-->…<!--/ALS-->` toont alleen als `BEDRIJF[sleutel]` gevuld is.
 - Rekenhulp storingskosten alleen op /tarieven/ (op spoed moet de klant direct kunnen bellen).
 - /review/ (noindex) stuurt door naar `google_review_url`; QR-code en A6-kaart: `assets/qr/` → /qr/.
-- Formulieren (quoteForm, spoedForm, appointmentForm) → eigen Cloudflare Worker (`worker/`) → Brevo → info@ino-elektra.nl. Geen FormSubmit. Nieuwe formuliervelden ook toevoegen aan de witte lijst in `worker/src/validatie.js`.
+- Formulieren (quoteForm, spoedForm, appointmentForm) → Turnstile → Cloudflare Worker `ino-form-api` (`worker/`, `POST https://api.ino-elektra.nl/api/form`) → Brevo → info@ino-elektra.nl + bevestiging klant. Geen FormSubmit. Secrets `TURNSTILE_SECRET_KEY` en `BREVO_API_KEY` alleen in Cloudflare. Nieuwe formuliervelden ook toevoegen aan de witte lijst in `worker/src/validatie.js`.
 
 ## Nog open (eigenaar)
-- Formulieren activeren: Brevo + domeinverificatie (DNS bij Mijndomein), Turnstile-widget, Worker deployen, daarna `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` invullen. Tot dan tonen de formulieren een foutmelding met het telefoonnummer. Stappen: `worker/README.md`.
+- Formulieren activeren: Brevo, Turnstile, Worker deployen, domein naar Cloudflare DNS (voor api.ino-elektra.nl), daarna `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` invullen. Tot dan tonen de formulieren een foutmelding met het telefoonnummer. Stappen: `worker/README.md`.
 - `BEDRIJF["werkspot"]` (URL; het Werkspot-blok blijft verborgen tot dit is ingevuld), eventueel `btw`.
 - Echte foto's (`assets/foto/`) en echte praktijkvoorbeelden per wijk.
 - Bij live zetten in de live repo ook verwijderen: `public/`, `src/`, `package*.json`, `bun.lock`, `vite.config.ts`, `tsconfig.json`, `metadata.json`, `*_cleaner.py`, `generate_site_part*.py`, `build_and_deploy.py`, `build_components.py` en losse root-`.jpg`'s.

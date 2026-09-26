@@ -89,7 +89,7 @@
       if (data.get("_honey")) return;
       form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
       var hulp = window.inoFormulier;
-      var fout = "<strong>Versturen lukte niet.</strong><br>Bel ons direct op <a href=\"tel:__TEL_E164__\">__TEL__</a> of probeer het opnieuw.";
+      var fout = "<strong>Er ging iets mis bij het verzenden van je aanvraag.</strong><br>Probeer het opnieuw of bel ons direct op <a href=\"tel:__TEL_E164__\">__TEL__</a>.";
       if (!"__FORM_ENDPOINT__" || !hulp || !hulp.actief) { toon(result, "form-result form-result-error", fout); return; }
       bezig = true;
       if (submit) { submit.disabled = true; submit.textContent = "Versturen…"; }
@@ -112,10 +112,10 @@
             if (r.status === 422 && j.velden) {
               var namen = Object.keys(j.velden);
               namen.forEach(function (n) { var el = form.querySelector("[name='" + n + "']"); if (el) el.setAttribute("aria-invalid", "true"); });
-              throw { bericht: "Controleer: " + namen.map(function (n) { return esc((VELDNAMEN[n] || n) + " – " + j.velden[n]); }).join("<br>"), veld: namen[0] };
+              throw { bericht: "Controleer de ingevulde gegevens en probeer het opnieuw:<br>" + namen.map(function (n) { return esc((VELDNAMEN[n] || n) + " – " + j.velden[n]); }).join("<br>"), veld: namen[0] };
             }
             if (r.status === 429) throw { bericht: "Je hebt net al iets verstuurd. Wacht een minuut of bel ons direct op <a href=\"tel:__TEL_E164__\">__TEL__</a>." };
-            if (r.status === 403 && j.fout === "turnstile") throw { bericht: "De beveiligingscontrole is mislukt. Probeer het opnieuw." };
+            if (r.status === 403) throw { bericht: "We konden je aanvraag niet verifiëren. Probeer het opnieuw of bel ons op <a href=\"tel:__TEL_E164__\">__TEL__</a>." };
             if (r.status === 413) throw { bericht: "De foto's zijn te groot. Stuur minder of kleinere foto's.", veld: "photos" };
             throw {};
           });
@@ -123,12 +123,12 @@
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
-          toon(result, "form-result", "<strong>Aanvraag verstuurd.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg);
+          toon(result, "form-result", "<strong>Je aanvraag is succesvol verzonden.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
           if (list) list.textContent = "";
         })
         .catch(function (err) {
-          toon(result, "form-result form-result-error", err && err.bericht ? "<strong>Niet verstuurd.</strong><br>" + err.bericht : fout);
+          toon(result, "form-result form-result-error", err && err.bericht ? "<strong>Je aanvraag is niet verzonden.</strong><br>" + err.bericht : fout);
         })
         .finally(function () {
           bezig = false;
