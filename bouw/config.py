@@ -18,6 +18,7 @@ BEDRIJF = {
     "whatsapp": "31628763775",
     "email": "info@ino-elektra.nl",
     "instagram": "https://www.instagram.com/ino_techniek_en_installatie",
+    "linkedin": "https://www.linkedin.com/in/mumin-gulderen",
     # Google Bedrijfsprofiel (cid uit je bestaande reviews-link)
     "google_maps": "https://maps.google.com/?cid=15258938996024411928",
     # Google-score zoals Google hem toont (gecontroleerd 24 sept 2026). Bijwerken als het aantal groeit. Alleen zichtbaar tonen met link naar Google,

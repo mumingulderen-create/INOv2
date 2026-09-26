@@ -18,6 +18,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Aanrijtijd vanuit Overvecht: gemeente Utrecht 5–30 min, daarbuiten 15–40 min (`AANRIJTIJD`). Geen andere tijden noemen.
 - **Niet** NEN 1010-gecertificeerd, wel werken **volgens** NEN 1010. **Wel** NEN 3140-gecertificeerd.
 - Ruim 85% van de storingen is binnen het eerste uur opgelost.
+- Vakmanschap (bevestigd 26 sept 2026): MBO Monteur Laagspanningsdistributie (Crebo 25769, Techniek College Rotterdam), STIPEL VP LS-netten (BEI BLS), 2,5 jaar monteur bij Stedin, VP bij Heijmans en Liander, 4 jaar zelfstandig. LinkedIn: `BEDRIJF["linkedin"]`.
 - Google: 5,0 uit 37 reviews (24 sept 2026), `google_score`/`google_aantal`. KvK 86669346.
 - Werkgebied: Utrecht met alle wijken, Maarssen, Nieuwegein, Vianen, Breukelen, Houten, Zeist, IJsselstein, De Bilt, Woerden, Amersfoort, Veenendaal. Niets daarbuiten zonder akkoord.
 - Voltfix Elektrotechniek (Amsterdam, eigenaar Hassan) is een bevriende elektricien. Link alleen op /werkgebied/ (#collega-netwerk) en /contact/, nooit in header of footer. Geen claims over hun diensten.

@@ -36,6 +36,7 @@ PLACEHOLDERS = {
     "whatsapp": B["whatsapp"],
     "email": B["email"],
     "instagram": B["instagram"],
+    "linkedin": B["linkedin"],
     "google_maps": B["google_maps"],
     "google_review_url": B["google_review_url"] or B["google_maps"],
     "google_score": B["google_score"],

@@ -35,7 +35,7 @@ def business_node(wijken):
         adres["streetAddress"] = B["straat"]
     if B["postcode"]:
         adres["postalCode"] = B["postcode"]
-    same = [u for u in [B["instagram"], B["google_maps"], B["werkspot"]] if u]
+    same = [u for u in [B["instagram"], B.get("linkedin"), B["google_maps"], B["werkspot"]] if u]
     node = {
         "@type": ["Electrician", "EmergencyService"],
         "@id": f"{SITE_URL}/#business",
@@ -57,7 +57,7 @@ def business_node(wijken):
             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "opens": "00:00", "closes": "23:59"}],
         "areaServed": areas,
-        "knowsAbout": ["NEN 1010", "NEN 3140", "groepenkast vervangen", "Perilex", "laadpaal installatie",
+        "knowsAbout": ["NEN 1010", "NEN 3140", "BEI BLS", "laagspanningsdistributie", "groepenkast vervangen", "Perilex", "laadpaal installatie",
                        "krachtstroom", "storingsdienst"],
         "sameAs": same,
     }
@@ -231,7 +231,21 @@ def breadcrumbs_html(crumbs):
 
 # --------------------------------------------------------------------------- footer
 def footer(wijken, storingen, variant="standaard"):
-    wijk_links = "".join(f'<a href="/elektricien-{w["slug"]}/">Elektricien {w["naam"]}</a>' for w in wijken)
+    top_links = "".join(f'<a href="/elektricien-{w["slug"]}/">{w["naam"]}</a>' for w in wijken[:5])
+    overige_links = "".join(f'<a href="/elektricien-{w["slug"]}/">{w["naam"]}</a>' for w in wijken[5:])
+    wijk_html = f"""<div class="footer-wijk-wrap">
+      {top_links}
+      <details class="footer-wijk-details">
+        <summary class="footer-wijk-toggle">
+          <span class="toggle-more">+ Toon alle wijken ({len(wijken) - 5} meer)</span>
+          <span class="toggle-less">− Minder wijken tonen</span>
+        </summary>
+        <div class="footer-wijk-more">
+          {overige_links}
+        </div>
+      </details>
+      <a href="/wijken/" class="footer-wijk-all">Alle {len(wijken)} wijken &amp; kaart →</a>
+    </div>"""
     storing_links = "".join(f'<a href="/{s["slug"]}/">{s["kort"]}</a>' for s in storingen)
     kvk = f' · KvK {B["kvk"]}' if B["kvk"] else ""
     btw = f' · btw {B["btw"]}' if B["btw"] else ""
@@ -259,13 +273,13 @@ def footer(wijken, storingen, variant="standaard"):
   <div class="container footer-grid">
     <div>
       <img src="/img/logo-390.png" alt="{B['naam']} logo" class="footer-logo" width="130" height="54" loading="lazy" decoding="async">
-      <p>Elektricien in Utrecht en omstreken. Vaste prijs vooraf, 24/7 bereikbaar bij storingen, NEN 1010.</p>
+      <p>Elektricien in Utrecht en omstreken. Vaste prijs vooraf en 24/7 bereikbaar bij storingen.</p>
       <p><a href="tel:{B['telefoon_e164']}" data-track="bellen"><strong>{B['telefoon_tonen']}</strong></a><br>
       <a href="mailto:{B['email']}">{B['email']}</a></p>
     </div>
     <div><h2 class="footer-h">Diensten</h2><a href="/diensten/">Alle diensten</a><a href="/groepenkast/">Groepenkast vervangen</a><a href="/perilex/">Perilex &amp; kookgroep</a><a href="/laadpaal-installeren/">Laadpaal installeren</a><a href="/krachtstroom-aanleggen/">Krachtstroom 400V</a><a href="/frezen-stopcontacten-verleggen/">Frezen &amp; stopcontacten</a><a href="/tuinverlichting-buitenelektra/">Tuinverlichting</a></div>
     <div><h2 class="footer-h">Storing?</h2><a href="/spoed-elektricien-utrecht/">Spoed elektricien 24/7</a>{storing_links}<a href="/tarieven/">Tarieven</a><a href="/faq/">Veelgestelde vragen</a></div>
-    <div><h2 class="footer-h">Werkgebied</h2>{wijk_links}<a href="/wijken/">Alle wijken &amp; plaatsen</a></div>
+    <div><h2 class="footer-h">Werkgebied</h2>{wijk_html}</div>
   </div>
   <div class="copyright">© {JAAR} {B['naam']}{kvk}{btw} · <a href="/werkwijze/">Werkwijze</a> · <a href="/vakmanschap/">Vakmanschap</a> · <a href="/reviews/">Reviews</a> · <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy &amp; Cookies</a>{' · <a href="#cookies" data-cookie-instellingen>Cookie-instellingen</a>' if GA4_MEASUREMENT_ID else ''} · <a href="{B['instagram']}" target="_blank" rel="noopener">Instagram</a></div>
 </footer>
