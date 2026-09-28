@@ -3,7 +3,7 @@
    script.js (wire) gebruikt window.inoFormulier bij het versturen. */
 (function () {
   "use strict";
-  var SITEKEY = "";
+  var SITEKEY = "0x4AAAAAAFHipRMEWmvnusQM";
   var widgets = {}; // form.id -> widgetId
 
   function renderAlles() {

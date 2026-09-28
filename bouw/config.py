@@ -59,7 +59,7 @@ GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
 # Beide waarden zijn OPENBAAR (ze staan ook in de pagina). Geheimen (Turnstile secret key,
 # Brevo API-key) staan alleen in Cloudflare, nooit hier. Zie worker/README.md.
 FORM_ENDPOINT = ""        # VUL_IN na deploy: "https://api.ino-elektra.nl/api/form"
-TURNSTILE_SITEKEY = ""    # VUL_IN: Cloudflare dashboard -> Turnstile -> Site Key
+TURNSTILE_SITEKEY = "0x4AAAAAAFHipRMEWmvnusQM"    # Cloudflare Turnstile Site Key (openbaar), widget "ino-elektra formulieren"
 
 # ---------------------------------------------------------------------------
 # AANRIJTIJDEN bij spoed (vertrek vanuit Overvecht). Gebruik {{aanrijtijd_utrecht}} / {{aanrijtijd_regio}}.
