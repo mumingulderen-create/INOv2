@@ -9,7 +9,7 @@
 <section class="lp-hero">
     <div class="container">
       <div class="badge">Veelgestelde vragen</div>
-      <h1>Veelgestelde vragen.</h1>
+      <h1>Veelgestelde vragen aan je elektricien in Utrecht</h1>
       <p>Snel antwoord op wat klanten het vaakst vragen.</p>
       <div class="page-purpose"><strong>Waarvoor deze pagina?</strong><span>Hier vind je snel antwoord op de vragen die klanten het vaakst stellen, zonder dat je hoeft te bellen.</span></div>
     </div>
@@ -17,17 +17,46 @@
 
   <section class="section soft" id="faq">
     <div class="container narrow">
+      <h2>Algemene vragen</h2>
       <div class="faq">
         <button class="faq-q">Welke werkzaamheden voert INO uit?<span>+</span></button><div class="faq-a">INO richt zich onder andere op meterkasten, nieuwe groepen, elektra en bekabeling, stopcontacten, montage, installatie en het opsporen en oplossen van storingen. Alle diensten staan op de <a class="mini-link" href="/diensten/">dienstenpagina</a>.</div>
-        <button class="faq-q">Kan ik foto's van mijn situatie meesturen?<span>+</span></button><div class="faq-a">Ja. In het offerteformulier kun je foto's van bijvoorbeeld de meterkast of de betreffende ruimte toevoegen. Een foto sturen via WhatsApp of het formulier is gratis.</div>
+        <button class="faq-q">Kan ik foto's van mijn situatie meesturen?<span>+</span></button><div class="faq-a">Ja. In het <a class="mini-link" href="/offerte/">offerteformulier</a> kun je foto's van bijvoorbeeld de meterkast of de betreffende ruimte toevoegen. Een foto sturen via WhatsApp of het formulier is gratis.</div>
         <button class="faq-q">Kan ik eerst een offerte aanvragen?<span>+</span></button><div class="faq-a">Ja. Via het aanvraagformulier kun je de werkzaamheden en situatie beschrijven. De definitieve werkwijze en prijs stemmen we af op de situatie.</div>
-        <button class="faq-q">Werkt INO voor particulieren en bedrijven?<span>+</span></button><div class="faq-a">De website is ingericht voor zowel particuliere als zakelijke aanvragen.</div>
-        <button class="faq-q">Wat kost een schouw op locatie?<span>+</span></button><div class="faq-a">Een schouw kost € {{schouw}} incl. btw. Dat bedrag verrekenen we volledig zodra je akkoord geeft op de klus.</div>
+        <button class="faq-q">Werkt INO voor particulieren en bedrijven?<span>+</span></button><div class="faq-a">Ja. Zowel particulieren als bedrijven kunnen bij ons terecht, met dezelfde vaste prijzen vooraf. Omschrijf je klus via het <a class="mini-link" href="/offerte/">offerteformulier</a>.</div>
+        <button class="faq-q">Wat kost een schouw op locatie?<span>+</span></button><div class="faq-a">Een schouw kost € {{schouw}} incl. btw. Dat bedrag verrekenen we volledig zodra je akkoord geeft op de klus. Je kunt een schouw <a class="mini-link" href="/afspraak/">online aanvragen</a>.</div>
         <button class="faq-q">Wat zijn de voorrijkosten?<span>+</span></button><div class="faq-a">{{voorrij_zin}}</div>
-        <button class="faq-q">Welke garantie krijg ik?<span>+</span></button><div class="faq-a">12 maanden garantie op het uitgevoerde werk en 2 jaar fabrieksgarantie op materialen, alles volgens de NEN 1010-norm.</div>
-        <button class="faq-q">Ben ik ook 's avonds en in het weekend welkom te bellen?<span>+</span></button><div class="faq-a">Ja, bij storingen ben je 24/7 welkom te bellen. Voor spoed gelden deze uurtarieven (incl. btw): {{tarief_zin_klein}}.</div>
-        <button class="faq-q">Werkt INO ook in mijn plaats?<span>+</span></button><div class="faq-a">We werken in de stad en provincie Utrecht. Staat jouw plaats er niet bij? We komen vaak ook net daarbuiten langs, vraag je adres na via het <a class="mini-link" href="/werkgebied/">werkgebied</a>.</div>
+        <button class="faq-q">Welke garantie krijg ik?<span>+</span></button><div class="faq-a">{{garantie_maanden}} maanden garantie op het uitgevoerde werk en 2 jaar fabrieksgarantie op materialen. We werken volgens NEN 1010 en zijn NEN 3140-gecertificeerd. Meer over onze opleiding lees je bij <a class="mini-link" href="/vakmanschap/">vakmanschap</a>.</div>
+        <button class="faq-q">Ben ik ook 's avonds en in het weekend welkom te bellen?<span>+</span></button><div class="faq-a">Ja, bij storingen ben je 24/7 welkom te bellen. Voor spoed gelden deze uurtarieven (incl. btw): {{tarief_zin_klein}}. Alle prijzen staan op <a class="mini-link" href="/tarieven/">tarieven</a>.</div>
+        <button class="faq-q">Werkt INO ook in mijn plaats?<span>+</span></button><div class="faq-a">We werken in de stad en provincie Utrecht. Staat jouw plaats er niet bij? We komen vaak ook net daarbuiten langs, vraag je adres na via het <a class="mini-link" href="/werkgebied/">werkgebied</a> of kies je <a class="mini-link" href="/wijken/">wijk</a>.</div>
         <button class="faq-q">Wat als er tijdens de klus meer werk nodig blijkt?<span>+</span></button><div class="faq-a">Dan stoppen we en overleggen we eerst de prijs. Pas na jouw akkoord gaan we door.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq-storing">
+    <div class="container narrow">
+      <h2>Vragen over storingen</h2>
+      <div class="faq">
+        <button class="faq-q">Hoe snel zijn jullie er bij een storing?<span>+</span></button><div class="faq-a">We vertrekken vanuit Overvecht. Binnen de gemeente Utrecht zijn we meestal binnen {{aanrijtijd_utrecht}} minuten ter plaatse, daarbuiten binnen {{aanrijtijd_regio}} minuten. Bel direct: {{tel}}.</div>
+        <button class="faq-q">Mijn aardlekschakelaar springt steeds. Wat nu?<span>+</span></button><div class="faq-a">Vaak zit de oorzaak in een apparaat of in vocht. Lees wat je veilig kunt controleren op <a class="mini-link" href="/aardlekschakelaar-springt-eruit/">aardlekschakelaar springt eruit</a>. Blijft hij springen? Bel ons, dan sporen we de oorzaak op.</div>
+        <button class="faq-q">Ik heb helemaal geen stroom. Ligt het aan mij of aan het net?<span>+</span></button><div class="faq-a">Dat verschilt. Hebben de buren ook geen stroom, dan is het vaak een storing van de netbeheerder. Zie <a class="mini-link" href="/stroomstoring-utrecht/">stroomstoring Utrecht</a> voor wat je kunt doen.</div>
+        <button class="faq-q">Een stopcontact wordt warm of ruikt verbrand. Is dat gevaarlijk?<span>+</span></button><div class="faq-a">Ja. Gebruik het stopcontact niet meer en haal de stekker eruit als dat veilig kan. Lees meer op <a class="mini-link" href="/stopcontact-werkt-niet/">stopcontact werkt niet of wordt warm</a> en bel ons.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="faq-klussen">
+    <div class="container narrow">
+      <h2>Vragen over klussen en prijzen</h2>
+      <div class="faq">
+        <button class="faq-q">Wat kost een nieuwe groepenkast?<span>+</span></button><div class="faq-a">Een 1-fase groepenkast tot 8 groepen kost all-in € {{groepenkast_1f}}, een 3-fase kast € {{groepenkast_3f}}. Meer uitleg en een calculator vind je op <a class="mini-link" href="/groepenkast/">groepenkast vervangen</a>.</div>
+        <button class="faq-q">Wanneer is het tijd om mijn groepenkast te vervangen?<span>+</span></button><div class="faq-a">Bijvoorbeeld als je nog smeltzekeringen hebt, als er geen of te weinig aardlekschakelaars zijn, of als je er een inductiekookplaat, laadpaal of warmtepomp bij wilt. Stuur een foto, dan geven we advies.</div>
+        <button class="faq-q">Wat kost een perilex aansluiting voor inductie?<span>+</span></button><div class="faq-a">Is er al een perilex-wandcontactdoos, dan kost aansluiten € {{perilex_aansluiten}}. Een nieuwe kookgroep vanuit de meterkast kost € {{perilex_kookgroep}}. Zie <a class="mini-link" href="/perilex/">perilex en kookgroep</a>.</div>
+        <button class="faq-q">Kan er nog een groep bij in mijn meterkast?<span>+</span></button><div class="faq-a">Vaak wel. Een extra groep in een bestaande kast kost € {{extra_groep}}. Lees meer op <a class="mini-link" href="/extra-groep-aanleggen/">extra groep aanleggen</a>.</div>
+        <button class="faq-q">Installeren jullie ook laadpalen?<span>+</span></button><div class="faq-a">Ja. We sluiten thuisladers aan op een eigen groep met de juiste aardlekbeveiliging. Zie <a class="mini-link" href="/laadpaal-installeren/">laadpaal installeren</a>.</div>
+        <button class="faq-q">Kunnen jullie een stopcontact verplaatsen of bijplaatsen?<span>+</span></button><div class="faq-a">Ja, vanaf € {{stopcontact_verleggen}} per punt, inclusief frezen en afmonteren. Zie <a class="mini-link" href="/frezen-stopcontacten-verleggen/">frezen en stopcontacten verleggen</a>.</div>
+        <button class="faq-q">Leggen jullie ook stroom aan in de tuin?<span>+</span></button><div class="faq-a">Ja: tuinverlichting, buitenstopcontacten en stroom naar een schuur of overkapping. Zie <a class="mini-link" href="/tuinverlichting-buitenelektra/">tuinverlichting en buitenelektra</a>.</div>
+        <button class="faq-q">Hoe kan ik betalen?<span>+</span></button><div class="faq-a">Na afloop ontvang je een betaalverzoek of een factuur.</div>
       </div>
     </div>
   </section>

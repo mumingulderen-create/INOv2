@@ -46,6 +46,7 @@ PLACEHOLDERS = {
     "tarief_zin_klein": TARIEF_ZIN[0].lower() + TARIEF_ZIN[1:],
     "voorrij_zin": VOORRIJ_ZIN,
     "actief_sinds": B["actief_sinds"],
+    "kvk": B["kvk"],
     "jaar": str(datetime.date.today().year),
     "icon_wa": layout.ICON_WA,
     "icon_tel": layout.ICON_TEL,

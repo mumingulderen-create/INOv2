@@ -10,7 +10,7 @@
 <section class="lp-hero">
   <div class="container">
     <div class="badge">Eerlijke tarieven</div>
-    <h1>Heldere prijzen vooraf, zonder verrassingen achteraf</h1>
+    <h1>Tarieven elektricien Utrecht: heldere prijzen vooraf</h1>
     <p>Bij ons weet je precies waar je financieel aan toe bent. Alle tarieven zijn inclusief 21% btw. De definitieve prijs spreken we altijd vooraf met je af op basis van foto's of een gerichte schouw.</p>
     <div class="page-purpose"><strong>Transparantie voorop:</strong><span>Hier vind je onze actuele uurtarieven, reiskosten per regio en vaste montagetarieven voor groepenkasten en perilex. Vergelijk direct en met een gerust hart.</span></div>
   </div>
@@ -115,7 +115,11 @@
         <ul class="addon-items">
           <li><a href="/groepenkast/">Groepenkast vervangen</a><strong>vanaf € {{groepenkast_1f}}</strong></li>
           <li><a href="/perilex/">Perilex aansluiting</a><strong>€ {{perilex_aansluiten}}</strong></li>
-          <li><a href="/frezen-stopcontacten-verleggen/">Leidingsleuven frezen</a><strong>vanaf € {{frezen_per_meter}}/meter</strong></li>
+          <li><a href="/extra-groep-aanleggen/">Extra groep in bestaande kast</a><strong>€ {{extra_groep}}</strong></li>
+          <li><a href="/extra-groep-aanleggen/">Extra groep met nieuwe leiding</a><strong>€ {{extra_groep_leiding}} – € {{extra_groep_leiding_max}}</strong></li>
+          <li><a href="/extra-groep-aanleggen/">3-fase krachtgroep 400V</a><strong>vanaf € {{extra_krachtgroep_3fase}}</strong></li>
+          <li><a href="/perilex/">Kookgroep meterkast naar perilex</a><strong>€ {{perilex_kookgroep}}</strong></li>
+          <li><a href="/frezen-stopcontacten-verleggen/">Sleuven frezen gips / steen / beton</a><strong>€ {{frezen_per_meter}} / € {{frezen_steen_per_meter}} / € {{frezen_beton_per_meter}} per meter</strong></li>
           <li><a href="/frezen-stopcontacten-verleggen/">Stopcontactpunt verplaatsen</a><strong>vanaf € {{stopcontact_verleggen}}/punt</strong></li>
           <li><a href="/laadpaal-installeren/">Laadpaal montage &amp; aansluiting</a><strong>op maat</strong></li>
           <li><a href="/krachtstroom-aanleggen/">Krachtstroomvoorziening 400V</a><strong>op maat</strong></li>
@@ -131,6 +135,71 @@
           <a class="btn btn-secondary" href="/offerte/">Offerte met foto's</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section soft">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">ZO REKENEN WE</span>
+      <h2>Uurtarieven per tijdvak</h2>
+      <p>Voor werk op uurbasis en storingen betaal je het eerste uur, inclusief diagnose en btw. Daarna rekenen we per kwartier. Zo betaal je niet voor tijd die je niet gebruikt.</p>
+    </div>
+    <div class="table-container">
+      <table class="responstijd-table">
+        <thead><tr><th>Tijdvak</th><th>Eerste uur</th><th>Per extra kwartier</th></tr></thead>
+        <tbody>
+          <tr><td>Ma–vr 08:00–18:00</td><td>€ {{uur_dag}}</td><td>€ {{kwartier_dag}}</td></tr>
+          <tr><td>Ma–vr 18:00–22:00</td><td>€ {{uur_avond}}</td><td>€ {{kwartier_avond}}</td></tr>
+          <tr><td>22:00–08:00, zaterdag, zondag en feestdagen</td><td>€ {{uur_nacht}}</td><td>€ {{kwartier_nacht}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:18px">Materialen, zoals een nieuwe automaat of een stopcontact, komen er apart bij. Die prijs hoor je voordat we ze plaatsen. Bij een storing lees je meer op <a class="mini-link" href="/spoed-elektricien-utrecht/">spoed elektricien Utrecht</a>.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">VOORBEELDEN</span>
+      <h2>Wat betaal je voor een veelvoorkomende klus?</h2>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <h3>Nieuwe inductiekookplaat</h3>
+        <p>Is er al een perilex-wandcontactdoos? Dan kost aansluiten € {{perilex_aansluiten}}. Moet er een nieuwe kookgroep vanuit de meterkast komen? Dan betaal je € {{perilex_kookgroep}}. <a class="mini-link" href="/perilex/">Meer over perilex →</a></p>
+      </div>
+      <div class="cert-card">
+        <h3>Oude meterkast vervangen</h3>
+        <p>Een nieuwe 1-fase groepenkast met maximaal 8 groepen kost all-in € {{groepenkast_1f}}, een 3-fase kast € {{groepenkast_3f}}. Extra's zoals een kookgroep of overspanningsbeveiliging reken je uit met de calculator op de <a class="mini-link" href="/groepenkast/">groepenkastpagina</a>.</p>
+      </div>
+      <div class="cert-card">
+        <h3>Stopcontact op een andere plek</h3>
+        <p>Een stopcontact een stukje verplaatsen kost € {{stopcontact_verleggen}} per punt, inclusief frezen en afmonteren. Bij een langere kabelroute is het € {{stopcontact_complex_min}} tot € {{stopcontact_complex_max}}. <a class="mini-link" href="/frezen-stopcontacten-verleggen/">Meer over frezen →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section soft">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">VEELGESTELDE VRAGEN</span>
+      <h2>Vragen over onze tarieven</h2>
+    </div>
+    <div class="faq" style="max-width:820px;margin:0 auto">
+      <button class="faq-q"><span>Zijn de prijzen inclusief btw?</span><span>+</span></button>
+      <div class="faq-a"><p>Ja. Alle prijzen op deze website zijn inclusief 21% btw.</p></div>
+      <button class="faq-q"><span>Betaal ik voorrijkosten?</span><span>+</span></button>
+      <div class="faq-a"><p>{{voorrij_zin}}</p></div>
+      <button class="faq-q"><span>Wanneer geldt het nachttarief?</span><span>+</span></button>
+      <div class="faq-a"><p>Tussen 22:00 en 08:00, en de hele zaterdag, zondag en op feestdagen. Dan betaal je € {{uur_nacht}} voor het eerste uur.</p></div>
+      <button class="faq-q"><span>Wat als de klus meer werk blijkt te zijn?</span><span>+</span></button>
+      <div class="faq-a"><p>Dan stoppen we en bespreken we eerst de extra kosten met je. Pas na jouw akkoord gaan we verder.</p></div>
+      <button class="faq-q"><span>Hoe krijg ik een vaste prijs voor mijn klus?</span><span>+</span></button>
+      <div class="faq-a"><p>Stuur foto's via het <a class="mini-link" href="/offerte/">offerteformulier</a> of WhatsApp. Dat is gratis. Is een bezoek nodig, dan <a class="mini-link" href="/afspraak/">plan je een schouw</a> van € {{schouw}}, die we verrekenen bij opdracht.</p></div>
     </div>
   </div>
 </section>

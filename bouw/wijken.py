@@ -26,7 +26,7 @@ WIJKEN = [
             "Nobelstraat"
         ],
         "aanrijtijd": "{aanrijtijd_utrecht} min",
-        "intro": "Geen stroom in een monumentaal pand, stoppen doorgeslagen of je meterkast moderniseren in de Utrechtse binnenstad? INO Elektra is gevestigd in Utrecht en kent de unieke installaties rondom de Oudegracht, de Neude en het Museumkwartier door en door. Rechtstreeks contact met een erkend elektricien, heldere prijsafspraken vooraf en binnen de gemeente Utrecht rekenen wij nooit voorrijkosten.",
+        "intro": "Geen stroom in een monumentaal pand, stoppen doorgeslagen of je meterkast moderniseren in de Utrechtse binnenstad? INO Elektra is gevestigd in Utrecht en kent de unieke installaties rondom de Oudegracht, de Neude en het Museumkwartier door en door. Rechtstreeks contact met een gediplomeerde elektricien, heldere prijsafspraken vooraf en binnen de gemeente Utrecht rekenen wij nooit voorrijkosten.",
         "woningen": "In de historische binnenstad van Utrecht tref je veel eeuwenoude panden, grachtenpanden en monumentale herenhuizen aan. De elektra is hier vaak door de decennia heen stapsgewijs uitgebreid. In de praktijk komen we regelmatig nog stoffen bedrading tegen, oude stalen leidingen, ontbrekende aarding in woonvertrekken en overbelaste smeltzekeringen. Wie overstapt op een moderne inductiekookplaat, airconditioning of zwaardere apparatuur, heeft een vakkundige verzwaring en complete modernisering naar aardlekautomaten volgens NEN 1010 nodig.",
         "klussen": [
             [
@@ -697,7 +697,7 @@ WIJKEN = [
             "Coucheron"
         ],
         "aanrijtijd": "{aanrijtijd_regio} min",
-        "intro": "Elektricien in Zeist nodig? INO Elektra helpt particulieren en bedrijven in Zeist, Kerckebosch en Zeist-West. Van groepenkasten en krachtstroom tot tuinverlichting en storingsdienst. Erkend vakman, duidelijke tarieven en betrouwbare service volgens NEN 1010.",
+        "intro": "Elektricien in Zeist nodig? INO Elektra helpt particulieren en bedrijven in Zeist, Kerckebosch en Zeist-West. Van groepenkasten en krachtstroom tot tuinverlichting en storingsdienst. Gediplomeerd vakman, duidelijke tarieven en betrouwbare service volgens NEN 1010.",
         "woningen": "Zeist kenmerkt zich door prachtige bosrijke villawijken, karakteristieke jaren '30 panden en naoorlogse woonwijken. In veel woningen met grote percelen installeren wij uitgebreide buitenverlichting met grondkabels en schemerschakelaars. Daarnaast voeren we regelmatig 3-fase verzwaringen uit voor inductiekoken, sauna's en warmtepompen.",
         "klussen": [
             [

@@ -54,3 +54,5 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - `BEDRIJF["werkspot"]` (URL; het Werkspot-blok blijft verborgen tot dit is ingevuld), eventueel `btw`.
 - Echte foto's (`assets/foto/`) en echte praktijkvoorbeelden per wijk.
 - Bij live zetten in de live repo ook verwijderen: `public/`, `src/`, `package*.json`, `bun.lock`, `vite.config.ts`, `tsconfig.json`, `metadata.json`, `*_cleaner.py`, `generate_site_part*.py`, `build_and_deploy.py`, `build_components.py` en losse root-`.jpg`'s.
+- Nog bevestigen door eigenaar (staat al op de site, niet uitgebreid): samenwerking met stratenmakers (/tuinverlichting-buitenelektra/), staffelkorting bij 3+ stopcontacten (/frezen-stopcontacten-verleggen/), "offerte doorgaans binnen 24 uur" (/tarieven/), betalen via betaalverzoek of factuur (/spoed/, /faq/).
+- Aanrijtijd 15–40 min geldt voor "buiten de gemeente Utrecht"; voor Amersfoort en Veenendaal niet noemen tot de eigenaar dat bevestigt.
