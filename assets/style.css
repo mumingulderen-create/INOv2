@@ -820,3 +820,11 @@ a.alert-banner:hover{border-color:#e0334f}
   color: #1b6315 !important;
   border-color: #c9dacb;
 }
+
+/* Mobiel: nooit zijwaarts scrollen. Grid-kolommen mogen smaller worden dan hun inhoud;
+   html/body knippen alles af wat toch buiten beeld valt (clip houdt de sticky header werkend). */
+.map-layout>*,.hero-grid>*,.hero-grid-2col>*,.split-grid>*,.form-layout>*,.appointment>*{min-width:0}
+img,svg,video,iframe{max-width:100%}
+html{overflow-x:hidden}
+body{overflow-x:hidden;overflow-x:clip}
+@media(max-width:420px){.location-columns{grid-template-columns:1fr 1fr!important}}
