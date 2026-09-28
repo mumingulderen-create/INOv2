@@ -58,7 +58,7 @@ GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
 # Formulieren: website -> eigen Cloudflare Worker (map worker/) -> Brevo -> info@ino-elektra.nl
 # Beide waarden zijn OPENBAAR (ze staan ook in de pagina). Geheimen (Turnstile secret key,
 # Brevo API-key) staan alleen in Cloudflare, nooit hier. Zie worker/README.md.
-FORM_ENDPOINT = ""        # VUL_IN na deploy: "https://api.ino-elektra.nl/api/form"
+FORM_ENDPOINT = "https://api.ino-elektra.nl/api/form"   # Cloudflare Worker ino-form-api (reserve: https://ino-form-api.mumingulderen.workers.dev/api/form)
 TURNSTILE_SITEKEY = "0x4AAAAAAFHipRMEWmvnusQM"    # Cloudflare Turnstile Site Key (openbaar), widget "ino-elektra formulieren"
 
 # ---------------------------------------------------------------------------

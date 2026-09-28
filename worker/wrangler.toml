@@ -6,6 +6,7 @@ name = "ino-form-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 workers_dev = true
+preview_urls = false
 
 # Eigen adres https://api.ino-elektra.nl — pas aanzetten (# weghalen) als
 # ino-elektra.nl als domein ACTIEF is in Cloudflare (stap 4 in worker/README.md).

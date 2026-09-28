@@ -90,7 +90,7 @@
       form.querySelectorAll("[aria-invalid]").forEach(function (el) { el.removeAttribute("aria-invalid"); });
       var hulp = window.inoFormulier;
       var fout = "<strong>Er ging iets mis bij het verzenden van je aanvraag.</strong><br>Probeer het opnieuw of bel ons direct op <a href=\"tel:+31628763775\">06 28 76 37 75</a>.";
-      if (!"" || !hulp || !hulp.actief) { toon(result, "form-result form-result-error", fout); return; }
+      if (!"https://api.ino-elektra.nl/api/form" || !hulp || !hulp.actief) { toon(result, "form-result form-result-error", fout); return; }
       bezig = true;
       if (submit) { submit.disabled = true; submit.textContent = "Versturen…"; }
       var fotoVeld = form.querySelector("input[type='file'][name='photos']");
@@ -104,7 +104,7 @@
           if (!t) throw { bericht: "De beveiligingscontrole is nog niet klaar. Wacht even en probeer het opnieuw." };
           data.set("cf-turnstile-response", t);
           data.set("formulier", form.getAttribute("data-formulier"));
-          return fetch("", { method: "POST", body: data, mode: "cors", credentials: "omit", headers: { Accept: "application/json" } });
+          return fetch("https://api.ino-elektra.nl/api/form", { method: "POST", body: data, mode: "cors", credentials: "omit", headers: { Accept: "application/json" } });
         })
         .then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (j) {
