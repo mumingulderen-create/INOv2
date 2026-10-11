@@ -405,35 +405,76 @@
   // Cookiemelding: Google Analytics alleen na akkoord (AVG / Telecommunicatiewet).
   function initCookies() {
     if (typeof window.inoGA4 !== "function") return;
-    var KEY = "ino_cookies";
+    var KEY = "ino_cookies", KEY_DATUM = "ino_cookies_datum", GELDIG_DAGEN = 365;
     function lees() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
-    function bewaar(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
-    var bar;
-    function toon() {
-      if (bar) { bar.hidden = false; return; }
-      bar = document.createElement("div");
-      bar.className = "cookiebar";
-      bar.setAttribute("role", "region");
-      bar.setAttribute("aria-label", "Cookiemelding");
-      bar.innerHTML = '<p>We gebruiken Google Analytics om te zien hoe de site gebruikt wordt. Dat gebeurt alleen als je akkoord geeft. <a href="/privacy/">Meer info</a></p>' +
-        '<div class="cookiebar-knoppen"><button type="button" class="btn btn-secondary" data-cookie="nee">Weigeren</button>' +
-        '<button type="button" class="btn btn-primary" data-cookie="ja">Akkoord</button></div>';
-      bar.addEventListener("click", function (e) {
-        var b = e.target.closest && e.target.closest("[data-cookie]");
-        if (!b) return;
-        var v = b.getAttribute("data-cookie");
-        var oud = lees();
-        bewaar(v);
-        bar.hidden = true;
-        if (v === "ja") window.inoGA4();
-        else if (oud === "ja") location.reload(); // intrekken: pagina zonder GA opnieuw laden
-      });
-      document.body.appendChild(bar);
+    function datum() { try { return parseInt(localStorage.getItem(KEY_DATUM) || "0", 10); } catch (e) { return 0; } }
+    function bewaar(v) { try { localStorage.setItem(KEY, v); localStorage.setItem(KEY_DATUM, String(Date.now())); } catch (e) {} }
+    var box, stat, details, vorigeFocus;
+    function sluit() { box.hidden = true; if (vorigeFocus && vorigeFocus !== document.body && vorigeFocus.focus) vorigeFocus.focus({ preventScroll: true }); }
+    function kies(v) {
+      var oud = lees();
+      bewaar(v);
+      sluit();
+      if (v === "ja") window.inoGA4();
+      else if (oud === "ja") location.reload(); // intrekken: pagina zonder GA opnieuw laden
     }
-    if (!lees()) toon();
+    function bouw() {
+      box = document.createElement("div");
+      box.className = "consent";
+      box.setAttribute("role", "dialog");
+      box.setAttribute("aria-modal", "false");
+      box.setAttribute("aria-labelledby", "consentTitel");
+      box.setAttribute("aria-describedby", "consentTekst");
+      box.innerHTML =
+        '<div class="consent-kop"><span class="consent-icoon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>' +
+        '<h2 id="consentTitel">Jouw privacy</h2></div>' +
+        '<p id="consentTekst">We gebruiken alleen wat nodig is om de site te laten werken. Met jouw toestemming meten we ook hoe de site gebruikt wordt, zodat we hem kunnen verbeteren. Geen advertenties, geen verkoop van gegevens. <a href="/privacy/">Privacyverklaring</a></p>' +
+        '<div class="consent-details" hidden>' +
+          '<div class="consent-rij"><div><strong>Noodzakelijk</strong><span>Onthoudt je cookiekeuze en beschermt formulieren tegen spam. Altijd aan.</span></div>' +
+            '<label class="consent-schakel is-vast"><input type="checkbox" checked disabled><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Noodzakelijk, altijd aan</span></label></div>' +
+          '<div class="consent-rij"><div><strong>Statistieken</strong><span>Google Analytics: welke pagina’s bekeken worden. Geanonimiseerd, niet voor advertenties.</span></div>' +
+            '<label class="consent-schakel"><input type="checkbox" data-consent-stat><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Statistieken toestaan</span></label></div>' +
+        '</div>' +
+        '<div class="consent-knoppen">' +
+          '<button type="button" class="consent-btn consent-btn-link" data-consent="voorkeuren" aria-expanded="false">Voorkeuren</button>' +
+          '<button type="button" class="consent-btn consent-btn-link" data-consent="opslaan" hidden>Keuze opslaan</button>' +
+          '<button type="button" class="consent-btn consent-btn-sec" data-consent="nee">Alleen noodzakelijk</button>' +
+          '<button type="button" class="consent-btn consent-btn-pri" data-consent="ja">Alles accepteren</button>' +
+        '</div>';
+      stat = box.querySelector("[data-consent-stat]");
+      details = box.querySelector(".consent-details");
+      box.addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest("[data-consent]");
+        if (!b) return;
+        var actie = b.getAttribute("data-consent");
+        if (actie === "voorkeuren") { toonDetails(true); stat.focus(); return; }
+        if (actie === "opslaan") { kies(stat.checked ? "ja" : "nee"); return; }
+        kies(actie);
+      });
+      document.body.appendChild(box);
+    }
+    function toonDetails(aan) {
+      details.hidden = !aan;
+      box.classList.toggle("is-open", aan);
+      box.querySelector('[data-consent="voorkeuren"]').hidden = aan;
+      box.querySelector('[data-consent="voorkeuren"]').setAttribute("aria-expanded", aan ? "true" : "false");
+      box.querySelector('[data-consent="opslaan"]').hidden = !aan;
+    }
+    function toon(metDetails, focus) {
+      vorigeFocus = document.activeElement;
+      if (!box) bouw();
+      stat.checked = lees() === "ja";
+      toonDetails(!!metDetails);
+      box.hidden = false;
+      var eerste = box.querySelector(metDetails ? "[data-consent-stat]" : '[data-consent="ja"]');
+      if (focus && eerste) setTimeout(function () { eerste.focus({ preventScroll: true }); }, 50);
+    }
+    var keuze = lees();
+    var verlopen = keuze && datum() && (Date.now() - datum() > GELDIG_DAGEN * 864e5);
+    if (!keuze || verlopen) toon(false);
     document.addEventListener("click", function (e) {
       var a = e.target.closest && e.target.closest("[data-cookie-instellingen]");
-      if (a) { e.preventDefault(); toon(); }
+      if (a) { e.preventDefault(); toon(true, true); }
     });
   }
   initCookies();
