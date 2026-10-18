@@ -57,8 +57,18 @@ def business_node(wijken):
             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "opens": "00:00", "closes": "23:59"}],
         "areaServed": areas,
-        "knowsAbout": ["NEN 1010", "NEN 3140", "BEI BLS", "laagspanningsdistributie", "groepenkast vervangen", "Perilex", "laadpaal installatie",
-                       "krachtstroom", "storingsdienst"],
+        "knowsAbout": [
+            "NEN 1010", "NEN 3140", "NEN 3140 VP", "BEI LS VP", "BEI BLS", "VCA VOL",
+            "MBO 2 Laagspanningsdistributie", "groepenkast vervangen", "meterkast vervangen",
+            "Perilex aansluiten", "laadpaal installatie", "thuisbatterij installatie",
+            "krachtstroom aanleggen", "storingsdienst"
+        ],
+        "hasCredential": [
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "MBO 2 Laagspanningsdistributie"},
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "NEN 3140 VP (Vakbekwaam Persoon)"},
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "BEI LS VP (Vakbekwaam Persoon Laagspanning)"},
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "VCA VOL (Veiligheid voor Operationeel Leidinggevenden)"},
+        ],
         "sameAs": same,
     }
     if B["kvk"]:

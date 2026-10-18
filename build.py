@@ -60,6 +60,7 @@ BREADCRUMB_NAMEN = {
     "groepenkast": [("Diensten", "/diensten/"), ("Groepenkast", None)],
     "perilex": [("Diensten", "/diensten/"), ("Perilex", None)],
     "laadpaal-installeren": [("Diensten", "/diensten/"), ("Laadpaal", None)],
+    "thuisbatterij-installeren": [("Diensten", "/diensten/"), ("Thuisbatterij installeren", None)],
     "krachtstroom-aanleggen": [("Diensten", "/diensten/"), ("Krachtstroom", None)],
     "frezen-stopcontacten-verleggen": [("Diensten", "/diensten/"), ("Frezen & stopcontacten", None)],
     "extra-groep-aanleggen": [("Diensten", "/diensten/"), ("Extra groep aanleggen", None)],

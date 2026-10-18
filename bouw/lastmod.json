@@ -20,8 +20,8 @@
   "hash": "73f1c4f9de554c04101f2197a2e6ae95"
  },
  "diensten": {
-  "date": "2026-10-15",
-  "hash": "74282b25524ee1e717cb97215371ccdd"
+  "date": "2026-10-17",
+  "hash": "987a0caf43a15f9934cbb7c5c790ba92"
  },
  "elektricien-breukelen": {
   "date": "2026-09-24",
@@ -96,8 +96,8 @@
   "hash": "0c6b584dff857bab87eb8cf566981ede"
  },
  "extra-groep-aanleggen": {
-  "date": "2026-09-25",
-  "hash": "a71d28fc3118d78954d77c9dc30520ab"
+  "date": "2026-10-15",
+  "hash": "e543d59650bda6351ccaf47e35527fd1"
  },
  "faq": {
   "date": "2026-09-28",
@@ -108,12 +108,12 @@
   "hash": "a0578139b205d976a52203485322ab8e"
  },
  "groepenkast": {
-  "date": "2026-09-28",
-  "hash": "9b8990f9be6f5b17a901fbe2a4be0c17"
+  "date": "2026-10-15",
+  "hash": "74c915fed3da416663e68fe1a74d8ab5"
  },
  "index": {
-  "date": "2026-09-26",
-  "hash": "2ee292f03cf1375618cb665f6a5a6750"
+  "date": "2026-10-15",
+  "hash": "d1bb76cd74e9c84c5e6f3c711bebb076"
  },
  "inductiekookplaat-aansluiten": {
   "date": "2026-10-16",
@@ -128,8 +128,8 @@
   "hash": "1acdd7a34fa80ff6499d054cdcf4244e"
  },
  "laadpaal-installeren": {
-  "date": "2026-09-26",
-  "hash": "0a37a6dd23ef178f18389178c4f17575"
+  "date": "2026-10-15",
+  "hash": "c6b641f143a129c7535211fcf86ae98f"
  },
  "mv-box-vervangen": {
   "date": "2026-10-16",
@@ -175,17 +175,21 @@
   "date": "2026-09-28",
   "hash": "5b85c5cc799da86ad6760a7b2cdbb5a9"
  },
+ "thuisbatterij-installeren": {
+  "date": "2026-10-18",
+  "hash": "fac48e21fddc5fcf44c5fee912fb4e4f"
+ },
  "tuinverlichting-buitenelektra": {
-  "date": "2026-09-28",
-  "hash": "40e08b4d21444d075748b28c93a7dfa5"
+  "date": "2026-10-15",
+  "hash": "7712616153096802093324a196ddc640"
  },
  "tv-ophangen": {
   "date": "2026-10-16",
   "hash": "3fe1f4ce1860123b03abed25141b92ac"
  },
  "vakmanschap": {
-  "date": "2026-09-26",
-  "hash": "38f6cce01b30bc9d32daacdb36c3c9ae"
+  "date": "2026-10-17",
+  "hash": "eeede190fb353880aa42baf7f9e87fc9"
  },
  "videodeurbel-installeren": {
   "date": "2026-10-16",
