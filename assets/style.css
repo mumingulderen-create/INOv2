@@ -808,3 +808,61 @@ img,svg,video,iframe{max-width:100%}
 html{overflow-x:hidden}
 body{overflow-x:hidden;overflow-x:clip}
 @media(max-width:420px){.location-columns{grid-template-columns:1fr 1fr!important}}
+
+/* ===== STAPPENPLAN ===== */
+/* Stappenplan Grid */
+.steps-section {
+  background: #f7faf8;
+  border-top: 1px solid #e2ebe4;
+  border-bottom: 1px solid #e2ebe4;
+  padding: 44px 0;
+}
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+.step-card {
+  background: #ffffff;
+  border: 1px solid #dbe6dd;
+  border-radius: 14px;
+  padding: 24px 20px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(16, 34, 13, 0.04);
+}
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--green);
+  color: #10220d;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+.step-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.step-card p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #4b584d;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .steps-section {
+    padding: 32px 0;
+  }
+}
