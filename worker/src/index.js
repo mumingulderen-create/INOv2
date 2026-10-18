@@ -1,6 +1,7 @@
 // INO formulieren-endpoint (Cloudflare Worker)
 // GitHub Pages (quoteForm / spoedForm / appointmentForm) → deze Worker → Brevo → info@ino-elektra.nl
 //
+// Daarnaast: GET /api/reviews (live Google-score, zie reviews.js).
 // Eén endpoint voor alle formulieren: POST /api/form met veld "formulier"
 // (offerte | spoed | afspraak). multipart/form-data, omdat de offerte foto's kan bevatten.
 //
@@ -10,6 +11,7 @@
 
 import { valideer, FORMULIEREN } from "./validatie.js";
 import { verwerkFotos } from "./foto.js";
+import { reviews } from "./reviews.js";
 import { aanvraagMail, bevestigingMail, onderwerp, stuurBrevo, headerVeilig } from "./mail.js";
 
 const MAX_BODY = 12 * 1024 * 1024;
@@ -71,6 +73,15 @@ export default {
     const cors = toegestaan ? origin : "";
 
     if (url.protocol !== "https:" && env.ALLOW_HTTP !== "true") return json(403, { ok: false, fout: "https" });
+    if (url.pathname === "/api/reviews") {
+      // Alleen-lezen en openbaar (dezelfde info als op Google zelf); CORS alleen voor onze eigen site.
+      const h = toegestaan ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : { Vary: "Origin" };
+      if (request.method === "OPTIONS") {
+        return toegestaan ? new Response(null, { status: 204, headers: { ...h, "Access-Control-Allow-Methods": "GET, OPTIONS", "Access-Control-Max-Age": "86400" } }) : new Response(null, { status: 403 });
+      }
+      if (request.method !== "GET") return json(405, { ok: false, fout: "methode" }, cors);
+      return reviews(request, env, ctx, h);
+    }
     if (url.pathname !== "/api/form") return json(404, { ok: false, fout: "niet_gevonden" }, cors);
 
     if (request.method === "OPTIONS") {

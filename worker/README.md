@@ -136,3 +136,19 @@ Dit gebruikt de test-secret van Cloudflare, die altijd slaagt. `ALLOW_HTTP`, `TU
 
 ## Automatisch deployen (optioneel)
 `.github/workflows/formulieren-worker.yml` draait de tests bij elke wijziging in `worker/`. Deployen doet hij alleen als je in GitHub → Settings → Secrets → Actions `CLOUDFLARE_API_TOKEN` (sjabloon "Edit Cloudflare Workers") en `CLOUDFLARE_ACCOUNT_ID` zet.
+
+## Live Google-reviews (GET /api/reviews)
+
+De site toont eerst de vaste score uit `bouw/config.py` en werkt die daarna bij met de actuele score, het aantal reviews en (op /reviews/) de nieuwste reviews van Google. De API-key staat alleen in Cloudflare.
+
+1. **Google Cloud Console** → project kiezen of maken → *APIs & Services* → *Library* → **Places API (New)** inschakelen. Een betaalaccount koppelen is verplicht; met de cache blijft het gebruik ruim binnen het gratis maandvolume.
+2. *Credentials* → **Create credentials → API key**. Beperk de key: *API restrictions* → alleen **Places API (New)**. (Geen website-beperking: de Worker roept Google aan, niet de browser.)
+3. **Place ID** opzoeken: open https://developers.google.com/maps/documentation/places/web-service/place-id, zoek "INO Techniek en Installatie" en kopieer de ID (begint met `ChIJ`). Zet die in `wrangler.toml` bij `GOOGLE_PLACE_ID`.
+4. Key als secret zetten en opnieuw deployen:
+   ```
+   npx wrangler secret put GOOGLE_PLACES_API_KEY
+   npx wrangler deploy
+   ```
+5. Testen: open https://api.ino-elektra.nl/api/reviews — je ziet `"ok":true` met score en aantal.
+
+Cache: standaard 6 uur (`REVIEWS_CACHE_SECONDS`). Werkt de Worker niet, dan blijft gewoon de vaste score uit `config.py` staan.

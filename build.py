@@ -225,10 +225,10 @@ def main():
         warn(f"style.css is {len(css_min.encode())//1024} KB (budget {BUDGET_CSS_KB} KB). Zet pagina-specifieke CSS in assets/extra/.")
 
     js = open(os.path.join(ROOT, "assets", "script.js"), encoding="utf-8").read()
-    from config import FORM_ENDPOINT, TURNSTILE_SITEKEY
+    from config import FORM_ENDPOINT, TURNSTILE_SITEKEY, REVIEWS_ENDPOINT
     if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
         warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
-    js = js.replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
+    js = js.replace("__REVIEWS_ENDPOINT__", REVIEWS_ENDPOINT).replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
     js_v = hashlib.md5(js.encode()).hexdigest()[:8]
     schrijf("script.js", js)
     if len(js.encode()) > BUDGET_JS_KB * 1024:

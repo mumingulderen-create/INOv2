@@ -481,3 +481,53 @@
   }
   initCookies();
 })();
+
+/* Live Google-score: de vaste score staat al in de HTML; dit werkt hem bij via onze
+   eigen Worker (geen Google-scripts, geen cookies). Op /reviews/ ook de nieuwste reviews. */
+(function () {
+  var url = "https://api.ino-elektra.nl/api/reviews";
+  if (!url || !window.fetch || !document.querySelector("[data-g]")) return;
+  function maak(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst != null) e.textContent = tekst; return e; }
+  function kaarten(d) {
+    var track = document.getElementById("reviewsTrack");
+    if (!track || !d.reviews || !d.reviews.length) return;
+    var badge = track.querySelector(".review-google-badge"), ster = track.querySelector(".review-stars-wrap svg");
+    var oud = track.querySelectorAll("article.review-slide-card"), plek = track.querySelector(".review-slide-more");
+    for (var i = 0; i < oud.length; i++) oud[i].remove();
+    d.reviews.forEach(function (r) {
+      var a = maak("article", "review-slide-card"), top = maak("div", "review-card-top"), wrap = maak("div", "review-author-wrap");
+      var init = r.naam.split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0); }).join("").toUpperCase();
+      var av = maak("div", "review-avatar", init); av.setAttribute("aria-hidden", "true");
+      var info = maak("div"); info.appendChild(maak("strong", "review-author-name", r.naam));
+      info.appendChild(maak("span", "review-author-meta", "Google-review" + (r.wanneer ? " · " + r.wanneer : "")));
+      wrap.appendChild(av); wrap.appendChild(info); top.appendChild(wrap);
+      if (badge) top.appendChild(badge.cloneNode(true));
+      var rij = maak("div", "review-rating-row"), st = maak("span", "review-stars-wrap");
+      st.setAttribute("role", "img"); st.setAttribute("aria-label", r.sterren + " van 5 sterren");
+      for (var s = 0; s < r.sterren && ster; s++) st.appendChild(ster.cloneNode(true));
+      rij.appendChild(st);
+      a.appendChild(top); a.appendChild(rij); a.appendChild(maak("p", "review-card-text", "“" + r.tekst + "”"));
+      track.insertBefore(a, plek);
+    });
+  }
+  function zet(d) {
+    var nl = function (n, dec) { return Number(n).toLocaleString("nl-NL", { minimumFractionDigits: dec, maximumFractionDigits: dec }); };
+    document.querySelectorAll("[data-g]").forEach(function (e) {
+      var k = e.getAttribute("data-g");
+      if (k === "score" && d.score) e.textContent = nl(d.score, 1);
+      if (k === "aantal" && d.aantal) e.textContent = nl(d.aantal, 0);
+    });
+    kaarten(d);
+  }
+  var bewaard = null;
+  try { bewaard = JSON.parse(sessionStorage.getItem("inoReviews") || "null"); } catch (e) {}
+  if (bewaard && bewaard.t > Date.now() - 36e5) { zet(bewaard.d); return; }
+  fetch(url, { mode: "cors", credentials: "omit", headers: { Accept: "application/json" } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.ok) return;
+      zet(d);
+      try { sessionStorage.setItem("inoReviews", JSON.stringify({ t: Date.now(), d: d })); } catch (e) {}
+    })
+    .catch(function () {});
+})();

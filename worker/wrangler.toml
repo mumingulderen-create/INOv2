@@ -2,6 +2,7 @@
 # Deploy: zie worker/README.md. Hier staan GEEN geheimen; die zet je met
 #   npx wrangler secret put TURNSTILE_SECRET_KEY
 #   npx wrangler secret put BREVO_API_KEY
+#   npx wrangler secret put GOOGLE_PLACES_API_KEY
 name = "ino-form-api"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
@@ -29,6 +30,10 @@ BEDRIJF_NAAM = "INO Techniek en Installatie"
 BEDRIJF_TELEFOON = "06 28 76 37 75"
 BEDRIJF_TELEFOON_E164 = "+31628763775"
 BEDRIJF_WEBSITE = "https://ino-elektra.nl"
+# Live Google-reviews (GET /api/reviews). Place ID invullen; API-key als secret:
+#   npx wrangler secret put GOOGLE_PLACES_API_KEY
+GOOGLE_PLACE_ID = ""
+REVIEWS_CACHE_SECONDS = "21600"
 
 # Rate limiting per IP-adres: maximaal 5 inzendingen per minuut.
 [[ratelimits]]
