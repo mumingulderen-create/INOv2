@@ -3,8 +3,10 @@
 Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. Uitleg voor mensen (wat staat waar, hoe bouwen): `README.md`. Formulier-backend: `worker/README.md`.
 
 ## Taakverdeling
-- Claude werkt alleen in **INOv2**. Google AI Studio werkt alleen in **v1** (Ino-elektra). Niet door elkaar heen, anders overschrijven we elkaars werk.
-- Eerst een voorstel aan de eigenaar, pas uitvoeren na akkoord. Niets live zetten zonder dat de eigenaar letterlijk "zet live" zegt.
+- **Google AI Studio** is baas van **Ino-elektra** (de live site; GitHub Pages toont die repo op ino-elektra.nl). AI Studio werkt daar in de bron (`content/`, `bouw/`, `assets/`), draait `build.py` en houdt zich aan de feiten hieronder. Aan `worker/` verandert AI Studio niets.
+- **Claude** werkt alleen in **INOv2** (werkkopie) en beheert `worker/` (formulieren en `/api/reviews`, deployen met `npx.cmd wrangler deploy` vanuit `INOv2/worker`).
+- Claude zet pas live als de eigenaar letterlijk "zet live" zegt. **Synchroniseren vóór elke "zet live":** eerst de commits van AI Studio in Ino-elektra sinds de vorige "Zet live"-commit bekijken (`git diff <vorige zet live> HEAD -- content bouw assets build.py`), het goede overnemen in de bron van INOv2 (alleen bevestigde feiten), builden en testen; pas daarna INOv2 naar Ino-elektra kopiëren. Zo gaat werk van AI Studio nooit verloren.
+- Eerst een voorstel aan de eigenaar, pas uitvoeren na akkoord.
 
 ## Werkwijze
 - Bewerk alleen de bron: `content/`, `bouw/`, `assets/`, `worker/`. Alles in de root (`*.html`, `*/index.html`, `style.css`, `script.js`, `wizard.*`, `reviews.*`, `rekenhulp.*`, `formulier.js`, `sitemap.xml`, `robots.txt`, `img/`, `qr/`, `fonts/`) is gegenereerd.
