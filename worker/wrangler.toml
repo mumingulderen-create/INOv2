@@ -32,7 +32,7 @@ BEDRIJF_TELEFOON_E164 = "+31628763775"
 BEDRIJF_WEBSITE = "https://ino-elektra.nl"
 # Live Google-reviews (GET /api/reviews). Place ID invullen; API-key als secret:
 #   npx wrangler secret put GOOGLE_PLACES_API_KEY
-GOOGLE_PLACE_ID = ""
+GOOGLE_PLACE_ID = "ChIJjVHbarJSgqMRGAdk6yukwtM"   # INO Techniek en Installatie (cid 15258938996024411928)
 REVIEWS_CACHE_SECONDS = "21600"
 
 # Rate limiting per IP-adres: maximaal 5 inzendingen per minuut.

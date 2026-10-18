@@ -19,7 +19,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - **Niet** NEN 1010-gecertificeerd, wel werken **volgens** NEN 1010. **Wel** NEN 3140-gecertificeerd.
 - Ruim 85% van de storingen is binnen het eerste uur opgelost.
 - Vakmanschap (bevestigd 26 sept 2026): MBO Monteur Laagspanningsdistributie (Crebo 25769, Techniek College Rotterdam), STIPEL VP LS-netten (BEI BLS), 2,5 jaar monteur bij Stedin, VP bij Heijmans en Liander, 4 jaar zelfstandig. LinkedIn: `BEDRIJF["linkedin"]`.
-- Google: 5,0 uit 37 reviews (24 sept 2026), `google_score`/`google_aantal`. KvK 86669346.
+- Google: 5,0 uit 41 reviews (18 okt 2026), `google_score`/`google_aantal`. KvK 86669346.
 - Werkgebied: Utrecht met alle wijken, Maarssen, Nieuwegein, Vianen, Breukelen, Houten, Zeist, IJsselstein, De Bilt, Woerden, Amersfoort, Veenendaal. Niets daarbuiten zonder akkoord.
 - Voltfix Elektrotechniek (Amsterdam, eigenaar Hassan) is een bevriende elektricien. Link alleen op /werkgebied/ (#collega-netwerk) en /contact/, nooit in header of footer. Geen claims over hun diensten.
 
@@ -52,7 +52,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 
 ## Nog open (eigenaar)
 - Formulieren activeren: Brevo, Turnstile, Worker deployen, domein naar Cloudflare DNS (voor api.ino-elektra.nl), daarna `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` invullen. Tot dan tonen de formulieren een foutmelding met het telefoonnummer. Stappen: `worker/README.md`.
-- Live Google-reviews: `GET /api/reviews` in de Worker staat klaar (`worker/src/reviews.js`). Eigenaar moet nog: Places API (New) key aanmaken, `GOOGLE_PLACE_ID` invullen, secret zetten en Worker deployen (`worker/README.md`). Score/aantal in HTML met `data-g="score"`/`data-g="aantal"`; vaste waarden in `config.py` blijven de terugval.
+- Live Google-reviews: `GET /api/reviews` in de Worker staat klaar (`worker/src/reviews.js`). Place ID staat in `wrangler.toml` (servicegebied-bedrijf: alleen vindbaar met `includePureServiceAreaBusinesses`). Eigenaar moet nog: secret `GOOGLE_PLACES_API_KEY` zetten en Worker deployen (`worker/README.md`). Score/aantal in HTML met `data-g="score"`/`data-g="aantal"`; vaste waarden in `config.py` blijven de terugval.
 - `BEDRIJF["werkspot"]` (URL; het Werkspot-blok blijft verborgen tot dit is ingevuld), eventueel `btw`.
 - Echte foto's (`assets/foto/`) en echte praktijkvoorbeelden per wijk.
 - Bij live zetten in de live repo ook verwijderen: `public/`, `src/`, `package*.json`, `bun.lock`, `vite.config.ts`, `tsconfig.json`, `metadata.json`, `*_cleaner.py`, `generate_site_part*.py`, `build_and_deploy.py`, `build_components.py` en losse root-`.jpg`'s.

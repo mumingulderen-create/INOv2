@@ -22,13 +22,13 @@ BEDRIJF = {
     # Google Bedrijfsprofiel
     "google_maps": "https://maps.google.com/?cid=15258938996024411928",
     "google_maps_short": "https://maps.app.goo.gl/w6tLaCDY26ydscbH8",
-    # Google-score zoals Google hem toont (gecontroleerd 24 sept 2026). Bijwerken als het aantal groeit. Alleen zichtbaar tonen met link naar Google,
+    # Google-score zoals Google hem toont (gecontroleerd 18 okt 2026). Bijwerken als het aantal groeit. Alleen zichtbaar tonen met link naar Google,
     # NIET als AggregateRating-schema (Google staat zelf-reviews voor LocalBusiness niet toe).
     # Directe "review schrijven"-link uit je Google Bedrijfsprofiel (knop "Vraag om reviews",
     # ziet eruit als https://g.page/r/XXXX/review). Leeg = /review/ stuurt naar je Maps-profiel.
     "google_review_url": "https://g.page/r/CRgHZOsrpMLTEBM/review",
     "google_score": "5,0",
-    "google_aantal": "37",
+    "google_aantal": "41",
     "werkspot": "",                            # VUL_IN: volledige URL van je Werkspot-profiel
     "actief_sinds": "2021",
     # Officiële vakdiploma's en certificeringen van de ondernemer
