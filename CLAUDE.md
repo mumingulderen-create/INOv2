@@ -43,6 +43,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - CSS/JS voor één pagina: `assets/extra/<naam>.css|js` + front-matter `"extra": ["<naam>"]` (nu: `wizard` en `formulier` op /offerte/, `formulier` op /afspraak/ en spoed, `reviews` op /reviews/, `rekenhulp` op /tarieven/).
 - Geen externe scripts of fonts (Inter staat lokaal), behalve Cloudflare Turnstile op de formulierpagina's. Geen `backdrop-filter` of zware animaties.
 - Afbeeldingen: origineel in `assets/foto/`, altijd met beschrijvende `alt`; de build maakt WebP-varianten en ruimt varianten van verwijderde foto's op.
+- SVG-beelden (zoals het SBB-beeldmerk) ook in `assets/foto/`; de build kopieert ze ongewijzigd naar `img/`. Nooit los in `img/` zetten: de build ruimt dat op.
 - Mobiel: geen pagina breder dan 390 px (`build.py --test` controleert dit).
 - Conditioneel blok: `<!--ALS sleutel-->…<!--/ALS-->` toont alleen als `BEDRIJF[sleutel]` gevuld is.
 - Rekenhulp storingskosten alleen op /tarieven/ (op spoed moet de klant direct kunnen bellen).

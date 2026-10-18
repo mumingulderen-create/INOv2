@@ -5,7 +5,7 @@ Afbeeldingen: zet originele foto's uit assets/foto/ om naar snelle, responsive v
 - Vervangt <img src="/foto.jpg"> in de pagina's automatisch door <picture> met width/height
   (voorkomt verspringen tijdens laden = betere Core Web Vitals / CLS)
 """
-import os, re
+import os, re, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "assets", "foto")
@@ -68,6 +68,10 @@ def verwerk():
 
     for fn in sorted(os.listdir(SRC)):
         stem, ext = os.path.splitext(fn)
+        if ext.lower() == ".svg":
+            # Vectorbeeld (bijv. SBB-beeldmerk): ongewijzigd naar img/ kopiëren
+            shutil.copyfile(os.path.join(SRC, fn), os.path.join(OUT, fn))
+            continue
         if ext.lower() not in (".jpg", ".jpeg", ".png", ".webp"):
             continue
         src = os.path.join(SRC, fn)
@@ -97,7 +101,7 @@ def verwerk():
     for fn in os.listdir(OUT):
         if fn == os.path.basename(LOGO_UIT):
             continue
-        stem = re.sub(r"(-\d+)?\.(webp|jpg|png)$", "", fn[3:] if fn.startswith("og-") else fn)
+        stem = re.sub(r"(-\d+)?\.(webp|jpg|png|svg)$", "", fn[3:] if fn.startswith("og-") else fn)
         if stem not in bronnen:
             os.remove(os.path.join(OUT, fn))
     return INFO
