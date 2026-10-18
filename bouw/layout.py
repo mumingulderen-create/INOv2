@@ -112,7 +112,10 @@ def schema_graph(page, wijken):
 # --------------------------------------------------------------------------- head
 def head(page, wijken, css_v, font_url=None):
     t, d = page["title"], page["description"]
-    robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
+    if page.get("slug") == "beheer":
+        robots = "noindex, nofollow"
+    else:
+        robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
     og_img = page.get("og_image_url") or f"{SITE_URL}/img/og-hero-elektricien.jpg"
     canon = "" if page.get("slug") == "404" else f'<link rel="canonical" href="{page["url"]}">'
     pre = ""

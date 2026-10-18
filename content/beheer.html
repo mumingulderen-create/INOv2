@@ -1,0 +1,538 @@
+<!--
+{
+  "slug": "beheer",
+  "title": "Beheer & Klanten Hub | INO Techniek",
+  "description": "Beveiligde beheeromgeving voor INO Techniek en Installatie voor het beheren van aanvragen, planning en klantbeoordelingen in Utrecht en omstreken.",
+  "noindex": true,
+  "sitemap": false
+}
+-->
+<div class="container" style="max-width:960px;margin-top:32px;margin-bottom:60px;">
+
+  <!-- 1. LOGIN SCHERM (STANDAARD GETOOND ALS NIET INGELOGD) -->
+  <div id="loginCard" class="card" style="max-width:440px;margin:40px auto;padding:36px;text-align:center;box-shadow:0 12px 36px rgba(0,0,0,0.08);border-radius:16px;">
+    <div style="width:64px;height:64px;background:#eef7ec;color:#278a1d;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;">
+      🔒
+    </div>
+    <h2 style="font-size:22px;margin-bottom:8px;color:#111;">INO Beheerportaal</h2>
+    <p style="color:#666;font-size:14px;margin-bottom:24px;">Beveiligde toegang tot inkomende aanvragen en klantenbeheer.</p>
+
+    <form id="loginForm" onsubmit="beheerLogin(event)">
+      <div style="margin-bottom:16px;text-align:left;">
+        <label for="passInput" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#333;">Toegangscode / Pincode</label>
+        <input type="password" id="passInput" class="form-input" placeholder="Voer je geheime code in" required autocomplete="current-password" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+      </div>
+      <div id="loginError" style="display:none;color:#d32f2f;font-size:13px;margin-bottom:14px;background:#fde8e8;padding:8px 12px;border-radius:6px;"></div>
+      <button type="submit" id="loginBtn" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;font-weight:700;">Inloggen</button>
+    </form>
+    <div style="margin-top:20px;font-size:12px;color:#888;">
+      🛡️ 256-bit versleutelde verificatie · Strikt privé
+    </div>
+  </div>
+
+  <!-- 2. DASHBOARD OMGEVING (ALLEEN ZICHTBAAR NA INLOGGEN) -->
+  <div id="dashboardArea" style="display:none;">
+    
+    <!-- Topbar Dashboard -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;border-bottom:1px solid #e5e5e5;padding-bottom:16px;">
+      <div>
+        <span class="badge" style="background:#eef7ec;color:#278a1d;margin-bottom:4px;display:inline-block;">INO Techniek &amp; Installatie</span>
+        <h1 style="font-size:26px;margin:4px 0 0;color:#111;letter-spacing:normal;line-height:1.3;font-weight:800;">Klanten &amp; Klussen Hub</h1>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="openNieuweKlusModal()" class="btn btn-primary" style="padding:10px 18px;font-size:14px;font-weight:700;">+ Nieuwe Klant / Klus</button>
+        <button onclick="beheerLogout()" class="btn btn-outline" style="padding:10px 14px;font-size:14px;">Uitloggen</button>
+      </div>
+    </div>
+
+    <!-- Stat kaarten -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:12px;margin-bottom:24px;">
+      <div class="card" style="padding:16px;text-align:center;border-left:4px solid #888;">
+        <div style="font-size:12px;color:#666;text-transform:uppercase;font-weight:700;">Totaal Klussen</div>
+        <div id="statTotaal" style="font-size:26px;font-weight:800;color:#111;">0</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-left:4px solid #f59e0b;">
+        <div style="font-size:12px;color:#666;text-transform:uppercase;font-weight:700;">🟡 Nieuw</div>
+        <div id="statNieuw" style="font-size:26px;font-weight:800;color:#f59e0b;">0</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-left:4px solid #3b82f6;">
+        <div style="font-size:12px;color:#666;text-transform:uppercase;font-weight:700;">🔵 Offerte Gestuurd</div>
+        <div id="statOfferte" style="font-size:26px;font-weight:800;color:#3b82f6;">0</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-left:4px solid #8b5cf6;">
+        <div style="font-size:12px;color:#666;text-transform:uppercase;font-weight:700;">🟣 Ingepland</div>
+        <div id="statIngepland" style="font-size:26px;font-weight:800;color:#8b5cf6;">0</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-left:4px solid #10b981;">
+        <div style="font-size:12px;color:#666;text-transform:uppercase;font-weight:700;">🟢 Afgerond</div>
+        <div id="statAfgerond" style="font-size:26px;font-weight:800;color:#10b981;">0</div>
+      </div>
+    </div>
+
+    <!-- Filters en zoekbalk -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="filter-tab active" data-filter="alle" onclick="setFilter('alle')">Alle (<span id="countAlle">0</span>)</button>
+        <button class="filter-tab" data-filter="nieuw" onclick="setFilter('nieuw')">Nieuw</button>
+        <button class="filter-tab" data-filter="offerte" onclick="setFilter('offerte')">Offerte</button>
+        <button class="filter-tab" data-filter="ingepland" onclick="setFilter('ingepland')">Ingepland</button>
+        <button class="filter-tab" data-filter="afgerond" onclick="setFilter('afgerond')">Afgerond</button>
+      </div>
+      <div style="position:relative;min-width:240px;flex:1;max-width:320px;">
+        <input type="text" id="zoekInput" oninput="renderKlussen()" placeholder="Zoek op naam, wijk, telefoon..." style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px;">
+      </div>
+    </div>
+
+    <!-- Klussen Lijst Container -->
+    <div id="klussenLijst" style="display:flex;flex-direction:column;gap:14px;"></div>
+    <div id="geenKlussen" style="display:none;text-align:center;padding:40px;background:#f9f9f9;border-radius:12px;color:#666;">
+      <p style="font-size:16px;margin-bottom:8px;">Geen klussen gevonden binnen dit filter.</p>
+      <button onclick="openNieuweKlusModal()" class="btn btn-outline" style="font-size:13px;">+ Klant toevoegen</button>
+    </div>
+
+    <!-- Export & Tools Footer -->
+    <div style="margin-top:40px;padding:20px;background:#f5f5f5;border-radius:12px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;">
+      <div style="font-size:13px;color:#666;">
+        <strong>Dataopslag:</strong> Lokaal opgeslagen in jouw browser. Maak af en toe een export als veilige back-up.
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="exporteerBackup()" class="btn btn-outline" style="font-size:13px;padding:8px 14px;">📥 Exporteer Back-up (JSON)</button>
+        <label class="btn btn-outline" style="font-size:13px;padding:8px 14px;cursor:pointer;margin:0;">
+          📤 Importeer Back-up
+          <input type="file" id="importInput" onchange="importeerBackup(event)" accept=".json" style="display:none;">
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL: NIEUWE KLUS TOEVOEGEN / BEWERKEN -->
+<div id="klusModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;border-radius:16px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 id="modalTitel" style="margin:0;font-size:18px;">Nieuwe Klus / Klant Toevoegen</h3>
+      <button onclick="sluitKlusModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#888;">&times;</button>
+    </div>
+    
+    <form id="klusForm" onsubmit="slaKlusOp(event)">
+      <input type="hidden" id="klusId">
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Klantnaam *</label>
+          <input type="text" id="klusNaam" required placeholder="bijv. Jan Jansen" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Telefoonnummer *</label>
+          <input type="tel" id="klusTel" required placeholder="bijv. 0612345678" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Wijk / Plaats</label>
+          <input type="text" id="klusWijk" placeholder="bijv. Leidsche Rijn, Overvecht" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Dienst / Werkzaamheid</label>
+          <select id="klusDienst" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;background:#fff;">
+            <option value="Groepenkast vervangen">Groepenkast vervangen</option>
+            <option value="Thuisbatterij installeren">Thuisbatterij installeren</option>
+            <option value="Laadpaal installeren">Laadpaal installeren</option>
+            <option value="Perilex / Kookgroep">Perilex / Kookgroep</option>
+            <option value="Krachtstroom aanleggen">Krachtstroom aanleggen</option>
+            <option value="Extra groep aanleggen">Extra groep aanleggen</option>
+            <option value="24/7 Storing / Spoed">24/7 Storing / Spoed</option>
+            <option value="Frezen & Stopcontacten">Frezen &amp; Stopcontacten</option>
+            <option value="MV-box vervangen">MV-box vervangen</option>
+            <option value="Overig installatiewerk">Overig installatiewerk</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Status</label>
+          <select id="klusStatus" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;background:#fff;">
+            <option value="nieuw">🟡 Nieuw</option>
+            <option value="offerte">🔵 Offerte gestuurd</option>
+            <option value="ingepland">🟣 Ingepland</option>
+            <option value="afgerond">🟢 Afgerond</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Prijsindicatie (€)</label>
+          <input type="text" id="klusPrijs" placeholder="bijv. € 760,-" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;">
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:#333;">Notities / Adres / Afspraken</label>
+        <textarea id="klusNotities" rows="3" placeholder="bijv. Straatnaam 12, klant wil 3-fase ABB kast met 8 groepen. Datum afgesproken: komende dinsdag 09:00." style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:14px;resize:vertical;"></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button type="button" onclick="sluitKlusModal()" class="btn btn-outline" style="padding:10px 16px;">Annuleren</button>
+        <button type="submit" class="btn btn-primary" style="padding:10px 20px;font-weight:700;">Opslaan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+.filter-tab {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #555;
+}
+.filter-tab.active {
+  background: #278a1d;
+  color: #fff;
+  border-color: #278a1d;
+}
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-nieuw { background: #fef3c7; color: #b45309; }
+.status-offerte { background: #dbeafe; color: #1d4ed8; }
+.status-ingepland { background: #ede9fe; color: #6d28d9; }
+.status-afgerond { background: #d1fae5; color: #047857; }
+/* Verberg klant-contactknoppen en banners op het beheerportaal */
+.floating-wa, .mobile-bar, .sticky-contact, .consent {
+  display: none !important;
+}
+</style>
+
+<script>
+(function() {
+  const SALT = "ino_beheer_salt_utrecht_2026:";
+  const TARGET_HASH = "f8463b1bfd91298bae4d5d1c192761bbad95fd5cebe97dd1457cee22d87e13d6";
+  const STORAGE_KEY = "ino_crm_klussen_v1";
+  const AUTH_KEY = "ino_beheer_auth_session";
+
+  let actieveFilter = "alle";
+
+  // SHA-256 Hasher
+  async function sha256(str) {
+    const buffer = new TextEncoder().encode(str);
+    const hash = await crypto.subtle.digest("SHA-256", buffer);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Login handler
+  window.beheerLogin = async function(e) {
+    e.preventDefault();
+    const input = document.getElementById("passInput").value.trim();
+    const errEl = document.getElementById("loginError");
+    errEl.style.display = "none";
+
+    const hash = await sha256(SALT + input);
+    if (hash === TARGET_HASH) {
+      sessionStorage.setItem(AUTH_KEY, "authenticated_2026");
+      checkAuth();
+    } else {
+      errEl.textContent = "Onjuiste code. Toegang geweigerd.";
+      errEl.style.display = "block";
+      document.getElementById("passInput").value = "";
+    }
+  };
+
+  // Logout handler
+  window.beheerLogout = function() {
+    sessionStorage.removeItem(AUTH_KEY);
+    checkAuth();
+  };
+
+  function checkAuth() {
+    const isAuth = sessionStorage.getItem(AUTH_KEY) === "authenticated_2026";
+    const loginCard = document.getElementById("loginCard");
+    const dashboardArea = document.getElementById("dashboardArea");
+    if (isAuth) {
+      loginCard.style.display = "none";
+      dashboardArea.style.display = "block";
+      renderKlussen();
+    } else {
+      loginCard.style.display = "block";
+      dashboardArea.style.display = "none";
+    }
+  }
+
+  // Data helpers
+  function getKlussen() {
+    try {
+      const d = localStorage.getItem(STORAGE_KEY);
+      if (!d) {
+        // Init met representatieve startklussen
+        const startData = [
+          {
+            id: "k-1",
+            naam: "Peter van Vliet",
+            tel: "0621345678",
+            wijk: "Leidsche Rijn",
+            dienst: "Groepenkast vervangen",
+            status: "afgerond",
+            prijs: "€ 760,-",
+            notities: "3-fase ABB groepenkast met 8 groepen geplaatst. Zeer tevreden.",
+            datum: new Date().toLocaleDateString('nl-NL')
+          },
+          {
+            id: "k-2",
+            naam: "Anouk Bakker",
+            tel: "0687654321",
+            wijk: "Overvecht",
+            dienst: "Thuisbatterij installeren",
+            status: "ingepland",
+            prijs: "€ 550,-",
+            notities: "Sessy thuisaccu aansluiten op aparte groep + werkschakelaar.",
+            datum: new Date().toLocaleDateString('nl-NL')
+          }
+        ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(startData));
+        return startData;
+      }
+      return JSON.parse(d);
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveKlussen(klussen) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(klussen));
+    renderKlussen();
+  }
+
+  window.setFilter = function(filter) {
+    actieveFilter = filter;
+    document.querySelectorAll(".filter-tab").forEach(tab => {
+      tab.classList.toggle("active", tab.getAttribute("data-filter") === filter);
+    });
+    renderKlussen();
+  };
+
+  window.renderKlussen = function() {
+    const klussen = getKlussen();
+    const lijst = document.getElementById("klussenLijst");
+    const geen = document.getElementById("geenKlussen");
+    const zoek = (document.getElementById("zoekInput")?.value || "").toLowerCase();
+
+    // Stats
+    const nieuw = klussen.filter(k => k.status === 'nieuw').length;
+    const offerte = klussen.filter(k => k.status === 'offerte').length;
+    const ingepland = klussen.filter(k => k.status === 'ingepland').length;
+    const afgerond = klussen.filter(k => k.status === 'afgerond').length;
+
+    document.getElementById("statTotaal").textContent = klussen.length;
+    document.getElementById("statNieuw").textContent = nieuw;
+    document.getElementById("statOfferte").textContent = offerte;
+    document.getElementById("statIngepland").textContent = ingepland;
+    document.getElementById("statAfgerond").textContent = afgerond;
+    document.getElementById("countAlle").textContent = klussen.length;
+
+    // Filter
+    let gefilterd = klussen.filter(k => {
+      const matchFilter = actieveFilter === "alle" || k.status === actieveFilter;
+      const matchZoek = !zoek || 
+        k.naam.toLowerCase().includes(zoek) || 
+        (k.wijk || "").toLowerCase().includes(zoek) || 
+        (k.tel || "").includes(zoek) ||
+        (k.dienst || "").toLowerCase().includes(zoek);
+      return matchFilter && matchZoek;
+    });
+
+    if (gefilterd.length === 0) {
+      lijst.innerHTML = "";
+      geen.style.display = "block";
+      return;
+    }
+    geen.style.display = "none";
+
+    lijst.innerHTML = gefilterd.map(k => {
+      const telClean = (k.tel || "").replace(/[^0-9]/g, "");
+      const waNumber = telClean.startsWith("0") ? "31" + telClean.slice(1) : telClean;
+      
+      const reviewTekst = `Beste ${k.naam}, fijn dat de werkzaamheden aan de ${k.dienst || 'elektrische installatie'} in ${k.wijk || 'Utrecht'} naar tevredenheid zijn afgerond! Zou je me enorm willen helpen met een korte beoordeling op Google? Dat kost maar 1 minuutje en helpt ons als lokale vakman ontzettend: https://ino-elektra.nl/review`;
+      const waReviewLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(reviewTekst)}`;
+
+      const statusLabels = {
+        nieuw: "🟡 Nieuw",
+        offerte: "🔵 Offerte gestuurd",
+        ingepland: "🟣 Ingepland",
+        afgerond: "🟢 Afgerond"
+      };
+
+      return `
+        <div class="card" style="padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.04);background:#fff;border:1px solid #e5e5e5;">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h3 style="margin:0;font-size:18px;color:#111;">${k.naam}</h3>
+                <span class="status-pill status-${k.status}">${statusLabels[k.status] || k.status}</span>
+                ${k.prijs ? `<span style="font-weight:700;color:#278a1d;font-size:14px;">${k.prijs}</span>` : ''}
+              </div>
+              <div style="font-size:13px;color:#666;margin-top:4px;">
+                <strong>📍 ${k.wijk || 'Utrecht'}</strong> · 🔧 ${k.dienst} · 📅 ${k.datum || 'Recent'}
+              </div>
+            </div>
+            
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <a href="tel:${k.tel}" class="btn btn-outline" style="padding:6px 12px;font-size:13px;display:inline-flex;align-items:center;gap:4px;">
+                📞 Bellen (${k.tel})
+              </a>
+              <a href="https://wa.me/${waNumber}" target="_blank" rel="noopener" class="btn btn-outline" style="padding:6px 12px;font-size:13px;display:inline-flex;align-items:center;gap:4px;">
+                💬 WhatsApp
+              </a>
+            </div>
+          </div>
+
+          ${k.notities ? `<div style="background:#f9f9f9;padding:10px 14px;border-radius:6px;font-size:13px;color:#444;margin-bottom:14px;border-left:3px solid #278a1d;">${k.notities}</div>` : ''}
+
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #f0f0f0;padding-top:12px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:12px;color:#777;font-weight:600;">Status wijzigen:</span>
+              <select onchange="updateKlusStatus('${k.id}', this.value)" style="padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-size:13px;background:#fff;">
+                <option value="nieuw" ${k.status === 'nieuw' ? 'selected' : ''}>🟡 Nieuw</option>
+                <option value="offerte" ${k.status === 'offerte' ? 'selected' : ''}>🔵 Offerte gestuurd</option>
+                <option value="ingepland" ${k.status === 'ingepland' ? 'selected' : ''}>🟣 Ingepland</option>
+                <option value="afgerond" ${k.status === 'afgerond' ? 'selected' : ''}>🟢 Afgerond</option>
+              </select>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+              ${k.status === 'afgerond' ? `
+                <a href="${waReviewLink}" target="_blank" rel="noopener" class="btn btn-primary" style="padding:6px 14px;font-size:13px;background:#10b981;border-color:#10b981;font-weight:700;">
+                  ⭐ Review Vragen via WhatsApp
+                </a>
+              ` : ''}
+              <button onclick="bewerkKlus('${k.id}')" class="btn btn-outline" style="padding:6px 10px;font-size:12px;">✏️ Bewerk</button>
+              <button onclick="verwijderKlus('${k.id}')" class="btn btn-outline" style="padding:6px 10px;font-size:12px;color:#d32f2f;">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  };
+
+  window.updateKlusStatus = function(id, nieuweStatus) {
+    const klussen = getKlussen();
+    const k = klussen.find(item => item.id === id);
+    if (k) {
+      k.status = nieuweStatus;
+      saveKlussen(klussen);
+    }
+  };
+
+  window.openNieuweKlusModal = function() {
+    document.getElementById("klusForm").reset();
+    document.getElementById("klusId").value = "";
+    document.getElementById("modalTitel").textContent = "Nieuwe Klant / Klus Toevoegen";
+    document.getElementById("klusModal").style.display = "flex";
+  };
+
+  window.sluitKlusModal = function() {
+    document.getElementById("klusModal").style.display = "none";
+  };
+
+  window.slaKlusOp = function(e) {
+    e.preventDefault();
+    const id = document.getElementById("klusId").value || "k-" + Date.now();
+    const klussen = getKlussen();
+    
+    const bestaandIdx = klussen.findIndex(item => item.id === id);
+    const klusData = {
+      id: id,
+      naam: document.getElementById("klusNaam").value.trim(),
+      tel: document.getElementById("klusTel").value.trim(),
+      wijk: document.getElementById("klusWijk").value.trim(),
+      dienst: document.getElementById("klusDienst").value,
+      status: document.getElementById("klusStatus").value,
+      prijs: document.getElementById("klusPrijs").value.trim(),
+      notities: document.getElementById("klusNotities").value.trim(),
+      datum: bestaandIdx !== -1 ? klussen[bestaandIdx].datum : new Date().toLocaleDateString('nl-NL')
+    };
+
+    if (bestaandIdx !== -1) {
+      klussen[bestaandIdx] = klusData;
+    } else {
+      klussen.unshift(klusData);
+    }
+
+    saveKlussen(klussen);
+    sluitKlusModal();
+  };
+
+  window.bewerkKlus = function(id) {
+    const klussen = getKlussen();
+    const k = klussen.find(item => item.id === id);
+    if (!k) return;
+
+    document.getElementById("klusId").value = k.id;
+    document.getElementById("klusNaam").value = k.naam;
+    document.getElementById("klusTel").value = k.tel;
+    document.getElementById("klusWijk").value = k.wijk || "";
+    document.getElementById("klusDienst").value = k.dienst;
+    document.getElementById("klusStatus").value = k.status;
+    document.getElementById("klusPrijs").value = k.prijs || "";
+    document.getElementById("klusNotities").value = k.notities || "";
+    document.getElementById("modalTitel").textContent = "Klus Bewerken";
+
+    document.getElementById("klusModal").style.display = "flex";
+  };
+
+  window.verwijderKlus = function(id) {
+    if (!confirm("Weet je zeker dat je deze klus wilt verwijderen?")) return;
+    let klussen = getKlussen();
+    klussen = klussen.filter(k => k.id !== id);
+    saveKlussen(klussen);
+  };
+
+  window.exporteerBackup = function() {
+    const klussen = getKlussen();
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(klussen, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `ino-klanten-backup-${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+  };
+
+  window.importeerBackup = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const geïmporteerd = JSON.parse(e.target.result);
+        if (Array.isArray(geïmporteerd)) {
+          if (confirm(`Wil je ${geïmporteerd.length} klussen importeren? Dit voegt ze samen met je huidige overzicht.`)) {
+            const huidige = getKlussen();
+            const samengevoegd = [...geïmporteerd, ...huidige.filter(h => !geïmporteerd.some(g => g.id === h.id))];
+            saveKlussen(samengevoegd);
+            alert("Back-up succesvol geïmporteerd!");
+          }
+        } else {
+          alert("Ongeldig back-up bestand.");
+        }
+      } catch(err) {
+        alert("Fout bij het lezen van bestand: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Check login bij laden
+  document.addEventListener("DOMContentLoaded", checkAuth);
+})();
+</script>

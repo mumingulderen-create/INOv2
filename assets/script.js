@@ -375,6 +375,8 @@
       msg = "Hallo INO, ik wil een inductiekookplaat of Perilex aansluiting laten aanleggen. Hierbij een foto van mijn situatie.";
     } else if (p.indexOf("laadpaal") !== -1) {
       msg = "Hallo INO, ik wil graag een laadpaal laten installeren aan huis. Wat zijn de mogelijkheden en kosten?";
+    } else if (p.indexOf("thuisbatterij") !== -1) {
+      msg = "Hallo INO, ik wil graag advies of een offerte voor het aansluiten van een thuisbatterij. Hierbij stuur ik een foto van mijn meterkast mee.";
     } else if (p.indexOf("krachtstroom") !== -1) {
       msg = "Hallo INO, ik heb krachtstroom (3-fase) nodig in mijn woning of bedrijfspand. Graag ontvang ik advies en een richtprijs.";
     } else if (p.indexOf("spoed") !== -1 || p.indexOf("storing") !== -1 || p.indexOf("kortsluiting") !== -1 || p.indexOf("aardlek") !== -1) {
