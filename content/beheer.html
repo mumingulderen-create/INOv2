@@ -95,10 +95,11 @@
       <div style="font-size:13px;color:#666;">
         <strong>Dataopslag:</strong> Lokaal opgeslagen in jouw browser. Maak af en toe een export als veilige back-up.
       </div>
-      <div style="display:flex;gap:10px;">
-        <button onclick="exporteerBackup()" class="btn btn-outline" style="font-size:13px;padding:8px 14px;">📥 Exporteer Back-up (JSON)</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button onclick="exporteerExcelCSV()" class="btn btn-outline" style="font-size:13px;padding:8px 14px;background:#fff;border-color:#278a1d;color:#278a1d;font-weight:700;">📊 Exporteer naar Excel (CSV)</button>
+        <button onclick="exporteerBackup()" class="btn btn-outline" style="font-size:13px;padding:8px 14px;">📥 Back-up (JSON)</button>
         <label class="btn btn-outline" style="font-size:13px;padding:8px 14px;cursor:pointer;margin:0;">
-          📤 Importeer Back-up
+          📤 Herstel Back-up
           <input type="file" id="importInput" onchange="importeerBackup(event)" accept=".json" style="display:none;">
         </label>
       </div>
@@ -495,6 +496,50 @@
     let klussen = getKlussen();
     klussen = klussen.filter(k => k.id !== id);
     saveKlussen(klussen);
+  };
+
+  window.exporteerExcelCSV = function() {
+    const klussen = getKlussen();
+    if (klussen.length === 0) {
+      alert("Er zijn nog geen klussen om te exporteren.");
+      return;
+    }
+    
+    // Headers voor Nederlandse Excel / Google Sheets
+    const headers = ["Factuur Ref", "Datum", "Klantnaam", "Telefoon", "Wijk / Plaats", "Dienst", "Status", "Bedrag (Incl. BTW)", "Excl. BTW (21%)", "BTW 21%", "Notities"];
+    
+    const rows = klussen.map((k, i) => {
+      let bedragNum = parseFloat((k.prijs || "0").replace(/[^0-9,.-]/g, "").replace(",", "."));
+      if (isNaN(bedragNum)) bedragNum = 0;
+      
+      const exclBtw = (bedragNum / 1.21).toFixed(2);
+      const btwBedrag = (bedragNum - parseFloat(exclBtw)).toFixed(2);
+      const ref = "FACT-" + (new Date().getFullYear()) + "-" + String(i + 1).padStart(3, '0');
+
+      return [
+        ref,
+        k.datum || new Date().toLocaleDateString('nl-NL'),
+        `"${(k.naam || '').replace(/"/g, '""')}"`,
+        `"${(k.tel || '').replace(/"/g, '""')}"`,
+        `"${(k.wijk || '').replace(/"/g, '""')}"`,
+        `"${(k.dienst || '').replace(/"/g, '""')}"`,
+        k.status,
+        bedragNum.toFixed(2).replace('.', ','),
+        exclBtw.replace('.', ','),
+        btwBedrag.replace('.', ','),
+        `"${(k.notities || '').replace(/"/g, '""').replace(/\n/g, ' ')}"`
+      ].join(";");
+    });
+
+    const csvContent = "\uFEFF" + headers.join(";") + "\n" + rows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", url);
+    dlAnchor.setAttribute("download", `ino-boekhouding-export-${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
   };
 
   window.exporteerBackup = function() {
