@@ -68,7 +68,9 @@ def business_node(wijken):
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "NEN 3140 VP (Vakbekwaam Persoon)"},
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "BEI LS VP (Vakbekwaam Persoon Laagspanning)"},
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "VCA VOL (Veiligheid voor Operationeel Leidinggevenden)"},
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "SBB Erkend Leerbedrijf (Relatienummer: 100850431)"},
         ],
+        "award": "SBB Erkend Leerbedrijf – Wij leiden vakmensen op",
         "sameAs": same,
     }
     if B["kvk"]:

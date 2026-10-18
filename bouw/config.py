@@ -38,17 +38,20 @@ BEDRIJF = {
         "BEI LS VP",
         "VCA VOL",
     ],
+    # Officiële SBB Erkenning als Leerbedrijf
+    "sbb_erkend": True,
+    "sbb_relatienummer": "100850431",
+    "sbb_startdatum": "15-10-2026",
     # --- Wettelijk verplicht op je website (Handelsregisterwet): KvK-nummer ---
     "kvk": "86669346",
     "btw": "",                                 # VUL_IN (optioneel)
-    # Adres: alleen invullen als je dit ook in Google Bedrijfsprofiel toont.
-    # Werk je vanuit huis als servicegebied-bedrijf? Laat straat/postcode leeg.
-    "straat": "",
-    "postcode": "",
+    # Officieel zakelijk vestigingsadres (Kaap Hoorndreef Utrecht)
+    "straat": "Kaap Hoorndreef 12 B",
+    "postcode": "3563 AS",
     "plaats": "Utrecht",
     "provincie": "Utrecht",
-    "lat": 52.0907,
-    "lng": 5.1214,
+    "lat": 52.1221,
+    "lng": 5.1054,
 }
 
 # Echte Google-reviews (letterlijk overnemen van je Google-profiel, nooit zelf verzinnen).
