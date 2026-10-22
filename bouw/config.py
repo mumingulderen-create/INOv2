@@ -163,6 +163,7 @@ NAV = [
         {"label": "Kookplaat aansluiten", "href": "/inductiekookplaat-aansluiten/"},
         {"label": "TV ophangen", "href": "/tv-ophangen/"},
         {"label": "MV-box vervangen", "href": "/mv-box-vervangen/"},
+        {"label": "Aardpen slaan", "href": "/aardpen-slaan/"},
     ]},
     {"label": "Tarieven", "href": "/tarieven/", "key": "tarieven"},
     {"label": "Werkgebied", "href": "/werkgebied/", "key": "werkgebied", "sub": "WIJKEN"},  # automatisch gevuld
@@ -177,7 +178,7 @@ NAV_GROEP = {
     "thuisbatterij-installeren": "diensten",
     "krachtstroom-aanleggen": "diensten", "frezen-stopcontacten-verleggen": "diensten",
     "extra-groep-aanleggen": "diensten", "tuinverlichting-buitenelektra": "diensten", "diensten": "diensten",
-    "buitengesloten-cilinder-vervangen": "diensten", "slim-deurslot-installeren": "diensten", "videodeurbel-installeren": "diensten", "inductiekookplaat-aansluiten": "diensten", "tv-ophangen": "diensten", "mv-box-vervangen": "diensten",
+    "buitengesloten-cilinder-vervangen": "diensten", "slim-deurslot-installeren": "diensten", "videodeurbel-installeren": "diensten", "inductiekookplaat-aansluiten": "diensten", "tv-ophangen": "diensten", "mv-box-vervangen": "diensten", "aardpen-slaan": "diensten",
     "spoed-elektricien-utrecht": "spoed", "stroomstoring-utrecht": "spoed",
     "aardlekschakelaar-springt-eruit": "spoed", "kortsluiting-utrecht": "spoed",
     "stopcontact-werkt-niet": "spoed",

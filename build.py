@@ -71,6 +71,7 @@ BREADCRUMB_NAMEN = {
     "inductiekookplaat-aansluiten": [("Diensten", "/diensten/"), ("Kookplaat aansluiten", None)],
     "tv-ophangen": [("Diensten", "/diensten/"), ("TV ophangen", None)],
     "mv-box-vervangen": [("Diensten", "/diensten/"), ("MV-box vervangen", None)],
+    "aardpen-slaan": [("Diensten", "/diensten/"), ("Aardpen slaan", None)],
     "tarieven": [("Tarieven", None)],
     "werkgebied": [("Werkgebied", None)],
     "wijken": [("Werkgebied", "/werkgebied/"), ("Alle wijken", None)],
