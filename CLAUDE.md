@@ -52,7 +52,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Formulieren (quoteForm, spoedForm, appointmentForm) → Turnstile → Cloudflare Worker `ino-form-api` (`worker/`, `POST https://api.ino-elektra.nl/api/form`) → Brevo → info@ino-elektra.nl + bevestiging klant. Geen FormSubmit. Secrets `TURNSTILE_SECRET_KEY` en `BREVO_API_KEY` alleen in Cloudflare. Nieuwe formuliervelden ook toevoegen aan de witte lijst in `worker/src/validatie.js`.
 
 ## Nog open (eigenaar)
-- Formulieren activeren: Brevo, Turnstile, Worker deployen, domein naar Cloudflare DNS (voor api.ino-elektra.nl), daarna `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` invullen. Tot dan tonen de formulieren een foutmelding met het telefoonnummer. Stappen: `worker/README.md`.
+- Formulieren zijn ACTIEF (bevestigd eigenaar 24 okt 2026): Brevo, Turnstile en Worker `ino-form-api` op `api.ino-elektra.nl` draaien; `FORM_ENDPOINT` en `TURNSTILE_SITEKEY` staan ingevuld in `config.py`. Secrets alleen in Cloudflare. Achtergrond/onderhoud: `worker/README.md`.
 - Live Google-reviews: `GET /api/reviews` in de Worker staat klaar (`worker/src/reviews.js`). Place ID staat in `wrangler.toml` (servicegebied-bedrijf: alleen vindbaar met `includePureServiceAreaBusinesses`). Eigenaar moet nog: secret `GOOGLE_PLACES_API_KEY` zetten en Worker deployen (`worker/README.md`). Score/aantal in HTML met `data-g="score"`/`data-g="aantal"`; vaste waarden in `config.py` blijven de terugval.
 - `BEDRIJF["werkspot"]` (URL; het Werkspot-blok blijft verborgen tot dit is ingevuld), eventueel `btw`.
 - Echte foto's (`assets/foto/`) en echte praktijkvoorbeelden per wijk.
