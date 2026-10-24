@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /beheer/
 
 Sitemap: https://ino-elektra.nl/sitemap.xml

@@ -31,6 +31,12 @@
   </div>
 </section>
 
+{{STEDIN_CHECKER}}
+
+
+
+
+
 <!-- ===== HOE WIJ WERKEN (3 STAPPENPLAN) ===== -->
 <section class="steps-section">
   <div class="container">
@@ -46,17 +52,69 @@
       </div>
       <div class="step-card">
         <div class="step-number">2</div>
-        <h3>Vooraf duidelijk wat het kost</h3>
-        <p>Je hoort vóórdat we beginnen wat het kost: een vaste prijs of ons uurtarief. Geen verborgen kosten en <strong>€ {{voorrijkosten_utrecht}},- voorrijkosten</strong> binnen de gemeente Utrecht.</p>
+        <h3>Vooraf een duidelijke vaste prijs</h3>
+        <p>Je weet exact waar je aan toe bent vóórdat we beginnen. Geen verborgen kosten, geen onverwachte nacalculaties en <strong>€ 0,- voorrijkosten</strong> binnen de gemeente Utrecht.</p>
       </div>
       <div class="step-card">
         <div class="step-number">3</div>
-        <h3>Veilig opgeleverd &amp; {{garantie_maanden}} mnd garantie</h3>
-        <p>Gediplomeerd monteur, gewerkt volgens NEN 1010 en na afloop doorgemeten. Inclusief {{garantie_maanden}} maanden garantie.</p>
+        <h3>Vakkundig gekeurd &amp; 12 mnd garantie</h3>
+        <p>Gediplomeerd monteur, installatie strikt volgens NEN 1010 voorschriften en met professionele kalibratiemeters doorgemeten. Inclusief 12 maanden volledige garantie.</p>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ===== VASTE PRIJZEN HOMEPAGE ===== -->
+<section class="pricing-overview-section" id="tarieven-overzicht">
+  <div class="container">
+    <div class="section-heading" style="margin-bottom:12px;">
+      <h2>Duidelijke tarieven, vaste prijs vooraf</h2>
+      <p>Geen verborgen kosten of verrassingen achteraf. € 0,- voorrijkosten binnen de gemeente Utrecht.</p>
+    </div>
+    <div class="pricing-grid-3">
+      <div class="price-card">
+        <div class="price-card-title">Uurtarief &amp; Storing</div>
+        <div class="price-amount">€ 90 <span>/ uur</span></div>
+        <div class="price-sub">Standaard uurtarief gepland werk (overdag)</div>
+        <ul class="price-features">
+          <li><span>⚡</span> <strong>Acute storing overdag:</strong> € 120 all-in (1e uur)</li>
+          <li><span>⚡</span> <strong>Avond- &amp; weekendstoring:</strong> € 145 all-in (1e uur)</li>
+          <li><span>✓</span> <strong>€ 0,- voorrijkosten</strong> binnen gemeente Utrecht</li>
+          <li><span>✓</span> Vakkundige NEN 3140 storingsdiagnose</li>
+        </ul>
+        <a href="/tarieven/" class="price-cta btn-secondary">Bekijk alle uurtarieven &rarr;</a>
+      </div>
+
+      <div class="price-card popular">
+        <span class="popular-badge">Meest gekozen</span>
+        <div class="price-card-title">Groepenkast vervangen</div>
+        <div class="price-amount">€ 695 <span>vanaf, all-in</span></div>
+        <div class="price-sub">Compleet gemonteerd, aangesloten &amp; gekeurd</div>
+        <ul class="price-features">
+          <li><span>✓</span> A-merk componenten (ABB of Hager)</li>
+          <li><span>✓</span> Inclusief hoofdschakelaar &amp; aardleks</li>
+          <li><span>✓</span> 1-fase of 3-fase voorbereid voor inductie</li>
+          <li><span>✓</span> Oplevering conform NEN 1010 + garantie</li>
+        </ul>
+        <a href="/groepenkast/" class="price-cta btn-primary">Bereken groepenkast &rarr;</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card-title">Perilex &amp; Kookgroep</div>
+        <div class="price-amount">€ 120 <span>vanaf (excl. btw)</span></div>
+        <div class="price-sub">Voor inductiekookplaten &amp; elektrisch koken</div>
+        <ul class="price-features">
+          <li><span>✓</span> Aansluiten op bestaande geschikte leiding</li>
+          <li><span>✓</span> Fasevolgorde &amp; spanning doormeten</li>
+          <li><span>✓</span> Uitbreiding kookgroep in groepenkast mogelijk</li>
+          <li><span>✓</span> Direct veilig koken zonder risico</li>
+        </ul>
+        <a href="/perilex/" class="price-cta btn-secondary">Meer over Perilex &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <section class="section" id="storing">
   <div class="container">
@@ -68,28 +126,9 @@
   </div>
 </section>
 
-<section class="split-cta">
-  <div class="container split-grid">
-    <div class="split-card split-urgent">
-      <h2 class="h3">Ik heb nu een storing</h2>
-      <p>Bel of app: je krijgt direct een inschatting en bij spoed staan we zo snel mogelijk voor de deur, dag en nacht.</p>
-      <div class="split-actions">
-        <a class="btn btn-primary" href="tel:{{tel_e164}}" data-track="bellen">Bel direct</a>
-        <a class="btn btn-whatsapp" href="https://wa.me/{{whatsapp}}?text=Hallo%20INO%2C%20ik%20heb%20een%20storing%20en%20wil%20graag%20hulp." target="_blank" rel="noopener" data-track="whatsapp">WhatsApp</a>
-      </div>
-    </div>
-    <div class="split-card">
-      <h2 class="h3">Ik wil een klus plannen</h2>
-      <p>Meterkast, nieuwe groep, laadpaal of een verbouwing? Stuur foto's mee en ontvang een vaste prijs, meestal binnen 24 uur.</p>
-      <div class="split-actions">
-        <a class="btn btn-secondary" href="/offerte/">Offerte aanvragen</a>
-        <a class="btn btn-secondary" href="/afspraak/">Afspraak aanvragen</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-{{STEDIN_CHECKER}}
+
+
 
 <section class="section soft" id="diensten">
   <div class="container">

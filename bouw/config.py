@@ -22,13 +22,13 @@ BEDRIJF = {
     # Google Bedrijfsprofiel
     "google_maps": "https://maps.google.com/?cid=15258938996024411928",
     "google_maps_short": "https://maps.app.goo.gl/w6tLaCDY26ydscbH8",
-    # Google-score zoals Google hem toont (gecontroleerd 18 okt 2026). Bijwerken als het aantal groeit. Alleen zichtbaar tonen met link naar Google,
+    # Google-score zoals Google hem toont (gecontroleerd 24 sept 2026). Bijwerken als het aantal groeit. Alleen zichtbaar tonen met link naar Google,
     # NIET als AggregateRating-schema (Google staat zelf-reviews voor LocalBusiness niet toe).
     # Directe "review schrijven"-link uit je Google Bedrijfsprofiel (knop "Vraag om reviews",
     # ziet eruit als https://g.page/r/XXXX/review). Leeg = /review/ stuurt naar je Maps-profiel.
     "google_review_url": "https://g.page/r/CRgHZOsrpMLTEBM/review",
     "google_score": "5,0",
-    "google_aantal": "41",
+    "google_aantal": "46",
     "werkspot": "",                            # VUL_IN: volledige URL van je Werkspot-profiel
     "actief_sinds": "2021",
     # Officiële vakdiploma's en certificeringen van de ondernemer
@@ -70,7 +70,7 @@ GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
 # Beide waarden zijn OPENBAAR (ze staan ook in de pagina). Geheimen (Turnstile secret key,
 # Brevo API-key) staan alleen in Cloudflare, nooit hier. Zie worker/README.md.
 FORM_ENDPOINT = "https://api.ino-elektra.nl/api/form"   # Cloudflare Worker ino-form-api (reserve: https://ino-form-api.mumingulderen.workers.dev/api/form)
-REVIEWS_ENDPOINT = "https://api.ino-elektra.nl/api/reviews"   # live Google-score via dezelfde Worker; leeg = alleen de vaste score hierboven
+REVIEWS_ENDPOINT = "https://api.ino-elektra.nl/api/reviews"   # live Google-score via Worker
 TURNSTILE_SITEKEY = "0x4AAAAAAFHipRMEWmvnusQM"    # Cloudflare Turnstile Site Key (openbaar), widget "ino-elektra formulieren"
 
 # ---------------------------------------------------------------------------
@@ -94,8 +94,8 @@ TARIEVEN = {
     "voorrijkosten_utrecht": 0,
     "km_tarief": "0,40",      # buiten gemeente Utrecht
     "schouw": 90,             # wordt verrekend bij opdracht
-    "groepenkast_1f": 640,        # 1-fase tot 8 groepen, all-in (bevestigd eigenaar)
-    "groepenkast_3f": 760,        # 3-fase tot 8 groepen, all-in (bevestigd eigenaar)
+    "groepenkast_1f": 695,        # 1-fase tot 8 groepen, all-in (bevestigd eigenaar)
+    "groepenkast_3f": 815,        # 3-fase tot 8 groepen, all-in (bevestigd eigenaar)
     "extra_groep": 60,
     "perilex_aansluiten": 120,
     "perilex_kookgroep": 150,

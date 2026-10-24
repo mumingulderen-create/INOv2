@@ -334,7 +334,7 @@ def main():
 
     schrijf("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n")
-    schrijf("robots.txt", "User-agent: *\nAllow: /\nDisallow: /beheer/\n\n"
+    schrijf("robots.txt", "User-agent: *\nAllow: /\n\n"
             f"Sitemap: {SITE_URL}/sitemap.xml\n")
 
     print("6/6 Kwaliteitscontrole…")

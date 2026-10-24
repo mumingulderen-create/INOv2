@@ -114,10 +114,7 @@ def schema_graph(page, wijken):
 # --------------------------------------------------------------------------- head
 def head(page, wijken, css_v, font_url=None):
     t, d = page["title"], page["description"]
-    if page.get("slug") == "beheer":
-        robots = "noindex, nofollow"
-    else:
-        robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
+    robots = "noindex, follow" if page.get("noindex") else "index, follow, max-image-preview:large, max-snippet:-1"
     og_img = page.get("og_image_url") or f"{SITE_URL}/img/og-hero-elektricien.jpg"
     canon = "" if page.get("slug") == "404" else f'<link rel="canonical" href="{page["url"]}">'
     pre = ""
@@ -137,7 +134,7 @@ def head(page, wijken, css_v, font_url=None):
     gtag('js', new Date());
     gtag('config', '{GA4_MEASUREMENT_ID}', {{ anonymize_ip: true }});
   }};
-  try {{ if (localStorage.getItem('ino_cookies') === 'ja') window.inoGA4(); }} catch (e) {{}}
+  try {{ var host = location.hostname || ''; if (host === 'ino-elektra.nl' || host === 'www.ino-elektra.nl') {{ if (localStorage.getItem('ino_cookies') === 'ja') window.inoGA4(); }} }} catch (e) {{}}
 </script>""" if GA4_MEASUREMENT_ID else ""
     return f"""<!doctype html>
 <html lang="nl">

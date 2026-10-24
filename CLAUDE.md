@@ -12,14 +12,14 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Na elke wijziging `python3 build.py --test` (zonder playwright: `python3 build.py`) en alle aandachtspunten oplossen vóór je commit. Na wijzigingen in `worker/`: `cd worker && npm test`.
 
 ## Bevestigd door de eigenaar
-- Prijzen van de live site kloppen. Groepenkast all-in: 1-fase € 640, 3-fase € 760 (de calculator rekent met dezelfde bedragen).
+- Prijzen van de live site kloppen. Groepenkast all-in: 1-fase € 695, 3-fase € 815 (de calculator rekent met dezelfde bedragen).
 - Perilex-stekker aansluiten € 120 (`perilex_aansluiten`), nieuwe kookgroep € 150 (`perilex_kookgroep`). Er bestaat geen € 275.
 - Zaterdag, zondag, feestdagen en 22:00–08:00: nachttarief.
 - Aanrijtijd vanuit Overvecht: gemeente Utrecht 5–30 min, daarbuiten 15–40 min (`AANRIJTIJD`). Geen andere tijden noemen.
 - **Niet** NEN 1010-gecertificeerd, wel werken **volgens** NEN 1010. **Wel** NEN 3140-gecertificeerd.
 - Ruim 85% van de storingen is binnen het eerste uur opgelost.
 - Vakmanschap (bevestigd 26 sept 2026): MBO Monteur Laagspanningsdistributie (Crebo 25769, Techniek College Rotterdam), STIPEL VP LS-netten (BEI BLS), 2,5 jaar monteur bij Stedin, VP bij Heijmans en Liander, 4 jaar zelfstandig. LinkedIn: `BEDRIJF["linkedin"]`.
-- Google: 5,0 uit 41 reviews (18 okt 2026), `google_score`/`google_aantal`. KvK 86669346.
+- Google: 5,0 uit 46 reviews (23 okt 2026), `google_score`/`google_aantal`. KvK 86669346.
 - Werkgebied: Utrecht met alle wijken, Maarssen, Nieuwegein, Vianen, Breukelen, Houten, Zeist, IJsselstein, De Bilt, Woerden, Amersfoort, Veenendaal. Niets daarbuiten zonder akkoord.
 - Voltfix Elektrotechniek (Amsterdam, eigenaar Hassan) is een bevriende elektricien. Link alleen op /werkgebied/ (#collega-netwerk) en /contact/, nooit in header of footer. Geen claims over hun diensten.
 
@@ -32,6 +32,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Sitewide links naar andere bedrijven.
 - Google Analytics laden vóór akkoord in de cookiemelding (`bouw/layout.py` + `initCookies` in `assets/script.js`).
 - Secrets (API-keys, wachtwoorden) in de repo, HTML of JavaScript.
+- Een beheer-/CRM-/inlogpagina op de publieke site zetten. Een login in client-side JavaScript is schijnbeveiliging (met één console-regel te omzeilen) en klantgegevens in localStorage zijn niet AVG-veilig. CRM hoort in een afgeschermd hulpmiddel (Brevo CRM, Moneybird). /beheer/ is om die reden uit v2 verwijderd (24 okt 2026); niet opnieuw toevoegen.
 
 ## SEO en tekst
 - Title ≤ 60 tekens, description 120–160, precies één H1 met zoekwoord.
