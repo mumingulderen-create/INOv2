@@ -1,0 +1,126 @@
+<!--
+{
+  "title": "Appointment or site visit | Electrician Utrecht | INO",
+  "description": "Book an appointment or site visit with INO Techniek en Installatie in and around Utrecht. Choose your preferred date and time and we confirm it personally.",
+  "nav": "afspraak",
+  "extra": ["formulier"]
+}
+-->
+<section class="lp-hero">
+    <div class="container">
+      <div class="badge">Request an appointment</div>
+      <h1>Appointment or site visit with an electrician in Utrecht</h1>
+      <p>The date and time you choose are a preference; we confirm the final appointment with you personally.</p>
+      </div>
+  </section>
+
+  <section class="section" id="afspraak">
+    <div class="container appointment">
+      <div>
+        <span class="eyebrow">REQUEST AN APPOINTMENT</span>
+        <h2>When suits you?</h2>
+        <p>Choose a date and time slot and leave your details so we can reach you.</p>
+        <ul class="include-items">
+          <li>✓ Site visit: € {{schouw}} incl. VAT, fully deducted if you go ahead</li>
+          <li>✓ No call-out charge within Utrecht</li>
+          <li>✓ We confirm the final appointment personally</li>
+        </ul>
+      </div>
+      <form id="appointmentForm" class="appointment-form" data-formulier="afspraak" method="post">
+        <label>Name<input name="name" required maxlength="80" autocomplete="name" placeholder="First and last name"></label>
+        <label>Phone<input name="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="06 ..."></label>
+        <label class="span-2">Email address (optional, for a confirmation)<input name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com"></label>
+        <label>Preferred date<input type="date" id="date" name="datum" required></label>
+        <label>Preferred time<select name="tijd" required><option value="">Choose a time</option><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 16:00</option><option>16:00 – 18:00</option></select></label>
+        <label class="span-2">What is it about? (optional)<textarea name="message" rows="3" maxlength="2000" placeholder="E.g. site visit for a new fuse box"></textarea></label>
+        <div class="form-turnstile span-2"></div>
+        <button class="btn btn-primary" type="submit">Request this time</button>
+        <div id="formResult" class="form-result" role="status" aria-live="polite" hidden></div>
+        <noscript><p class="form-note">This form only works with JavaScript. Call or WhatsApp us on {{tel}}.</p></noscript>
+      </form>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">WHAT SHOULD YOU CHOOSE?</span>
+        <h2>Appointment, quote or emergency?</h2>
+        <p>Not every question needs a visit. This is how you choose the fastest route:</p>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-card">
+          <h3>Site visit</h3>
+          <p>Useful for a larger job or when photos don't tell the whole story, such as an old meter cupboard, a renovation or an EV charger with a long cable route. Costs € {{schouw}}, fully deducted if you give us the job.</p>
+        </div>
+        <div class="cert-card">
+          <h3>Quote based on photos</h3>
+          <p>For most standard jobs a photo is enough, for example a <a class="mini-link" href="/en/perilex-cooker-connection/">Perilex connection</a> or an <a class="mini-link" href="/en/extra-circuit/">extra circuit</a>. That is free. <a class="mini-link" href="/en/quote/">Go to the quote form →</a></p>
+        </div>
+        <div class="cert-card">
+          <h3>Power fault</h3>
+          <p>No power or a circuit that keeps tripping? Don't use this form, call us directly: {{tel}}. We are available 24/7. See <a class="mini-link" href="/en/emergency-electrician-utrecht/">emergency electrician Utrecht</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2>What happens during a site visit?</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <b>01</b>
+          <h3>We confirm the appointment</h3>
+          <p>You choose a preferred day and time slot. We call or WhatsApp you to agree the final time.</p>
+        </div>
+        <div class="step">
+          <b>02</b>
+          <h3>We look at the situation</h3>
+          <p>We look at your meter cupboard, the cabling and the place where the work is needed. That way we see what is needed and what is possible, for example whether there is room for extra circuits.</p>
+        </div>
+        <div class="step">
+          <b>03</b>
+          <h3>You get a fixed price</h3>
+          <p>After the site visit you receive a clear price upfront, including VAT. If you agree, we deduct the € {{schouw}} for the site visit from the total.</p>
+        </div>
+      </div>
+      <p style="margin-top:22px">Would you rather look at the prices first? See our <a class="mini-link" href="/en/prices/">prices</a> or the overview of <a class="mini-link" href="/en/services/">all services</a>. {{voorrij_zin}}</p>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">FREQUENTLY ASKED QUESTIONS</span>
+        <h2>Questions about an appointment</h2>
+      </div>
+      <div class="faq" style="max-width:820px;margin:0 auto">
+        <button class="faq-q"><span>Is the date I choose confirmed straight away?</span><span>+</span></button>
+        <div class="faq-a"><p>No. You give us a preference. We contact you to confirm the appointment personally.</p></div>
+        <button class="faq-q"><span>What does a site visit cost?</span><span>+</span></button>
+        <div class="faq-a"><p>A site visit costs € {{schouw}} incl. VAT. If you then give us the job, we deduct this amount in full.</p></div>
+        <button class="faq-q"><span>Do I need to be at home during the site visit?</span><span>+</span></button>
+        <div class="faq-a"><p>Yes, or someone else who can let us in. Make sure the meter cupboard and the place of the job are easy to reach.</p></div>
+        <button class="faq-q"><span>Can I also book an appointment in the evening or at the weekend?</span><span>+</span></button>
+        <div class="faq-a"><p>The time slots in the form run from 08:00 to 18:00. Doesn't that suit you? Add your preference to the message and we will see what is possible. Outside working hours the evening or night rate applies, see our <a class="mini-link" href="/en/prices/">prices</a>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-cta">
+    <div class="container">
+      <span class="eyebrow">PREFER A QUOTE FIRST?</span>
+      <h2>Request a fixed price.</h2>
+      <p>Send photos and you will know the cost upfront.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="/en/quote/">Request a quote</a>
+        <a class="btn btn-outline-light" href="tel:{{tel_e164}}">Call {{tel}}</a>
+        <a class="btn btn-outline-light" href="https://wa.me/{{whatsapp}}?text=Hello%20INO%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-outline-light" href="mailto:{{email}}">{{email}}</a>
+      </div>
+    </div>
+  </section>

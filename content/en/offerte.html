@@ -1,0 +1,279 @@
+<!--
+{
+  "title": "Electrician quote Utrecht | Fixed price upfront | INO",
+  "description": "Request a quote from INO, your electrician in Utrecht. Describe your job, send photos and receive a fixed price upfront, usually within 24 hours.",
+  "nav": "offerte",
+  "extra": ["wizard", "formulier"]
+}
+-->
+<section class="lp-hero">
+    <div class="container">
+      <div class="badge">Request a quote in 3 steps</div>
+      <h1>Request a quote from your electrician in Utrecht</h1>
+      <p>Choose your job, explain the situation and send photos. You get a fixed price upfront, with no surprises afterwards.</p>
+      </div>
+  </section>
+
+  <section class="section soft" id="offerte">
+    <div class="container form-layout">
+      <div>
+        <span class="eyebrow">QUOTE / REQUEST</span>
+        <h2>Put your request together.</h2>
+        <p>In three short steps. You can also choose several jobs at once.</p>
+        <div class="form-benefits"><div>✓ Fixed price upfront</div><div>✓ Send photos straight away</div><div>✓ No call-out charge in Utrecht</div><div>✓ Reply within 24 hours</div></div>
+        <p class="form-note" style="margin-top:22px">Is it a power fault? Call us straight away: <a class="mini-link" href="tel:{{tel_e164}}">{{tel}}</a></p>
+        <div class="offerte-wa-box" style="margin-top:24px;background:#eefaf0;border:1.5px solid #25d366;border-radius:16px;padding:22px;box-shadow:0 6px 20px rgba(37,211,102,0.08);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#25d366;color:#0b2e17;">{{icon_wa}}</span>
+            <strong style="color:#0f5132;font-size:16px;">Prefer to send photos via WhatsApp?</strong>
+          </div>
+          <p style="margin:0 0 10px;font-size:13.5px;color:#2b4231;line-height:1.5;">Want to know a fixed price straight away, without a form? Send us via WhatsApp:</p>
+          <ul style="margin:0 0 14px 18px;padding:0;font-size:13px;color:#2b4231;line-height:1.6;">
+            <li><strong>1. An overview photo</strong> of your whole meter cupboard</li>
+            <li><strong>2. A close-up</strong> of the fuses / circuits</li>
+            <li><strong>3. A photo of the connection</strong> or the appliance (induction hob, EV charger, etc.)</li>
+          </ul>
+          <a class="btn btn-whatsapp full" style="gap:8px;font-size:14.5px;padding:12px 18px;" href="https://wa.me/{{whatsapp}}?text=Hello%20INO%2C%20I%20would%20like%20a%20fixed%20price%20estimate.%20Here%20are%20the%20photos%20of%20my%20meter%20cupboard." target="_blank" rel="noopener" data-track="whatsapp">
+            {{icon_wa}} Send photos via WhatsApp &rarr;
+          </a>
+        </div>
+      </div>
+      <div class="wizard-box" id="quoteWizard">
+        <!-- Progress bar -->
+        <div class="wizard-progress">
+          <div class="wizard-progress-bar" id="wizardProgressBar"></div>
+          <div class="wizard-progress-step active" data-step="1">
+            <div class="wizard-circle">1</div>
+            <span class="wizard-step-label">Choose your job</span>
+          </div>
+          <div class="wizard-progress-step" data-step="2">
+            <div class="wizard-circle">2</div>
+            <span class="wizard-step-label">Details &amp; photos</span>
+          </div>
+          <div class="wizard-progress-step" data-step="3">
+            <div class="wizard-circle">3</div>
+            <span class="wizard-step-label">Contact &amp; price</span>
+          </div>
+        </div>
+
+        <form id="quoteForm" data-formulier="offerte" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="service" id="wizardService" value="Fuse box replacement">
+          <input type="hidden" name="termijn" id="wizardTermijn" value="As soon as possible (within a few days)">
+
+          <!-- STEP 1: CHOOSE YOUR JOB -->
+          <div class="wizard-step-content" data-step="1">
+            <h3 class="wizard-title">What electrical job(s) would you like done?</h3>
+            <p class="wizard-subtitle">Select one or more options (multiple choices possible) and click next:</p>
+
+            <div class="wizard-tiles">
+              <button type="button" class="wizard-tile selected" data-service="Fuse box replacement">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="20" x="3" y="2" rx="2"/><path d="M12 2v20"/><path d="M7 7h.01"/><path d="M7 12h.01"/><path d="M17 7h.01"/><path d="M17 12h.01"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Fuse box replacement</strong>
+                  <span>Single- or three-phase, Hager or ABB</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Extra circuit">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Extra circuit</strong>
+                  <span>Kitchen, washing machine, air con</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Cooking circuit / Perilex">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="3"/><circle cx="8" cy="8" r="2"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Cooking circuit / Perilex</strong>
+                  <span>For an induction hob</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="EV charger installation">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.2 2 11.5V16c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>EV charger installation</strong>
+                  <span>Home EV charger + load balancing</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Wall chasing & sockets">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/><path d="M17 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Wall chasing &amp; sockets</strong>
+                  <span>Moving, adding, cabling</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Three-phase power 400V">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-2 7h5L11 22l2-7H8l5-13z"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Three-phase power 400V</strong>
+                  <span>Heat pump, hot tub, shed</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Fault / power cut">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Fault / power cut</strong>
+                  <span>RCD tripping, emergency</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+
+              <button type="button" class="wizard-tile" data-service="Other electrical work">
+                <span class="wizard-tile-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </span>
+                <span class="wizard-tile-body">
+                  <strong>Other electrical work</strong>
+                  <span>Garden lighting, doorbell, smart lock, TV, ventilation unit</span>
+                </span>
+                <span class="wizard-tile-check">✓</span>
+              </button>
+            </div>
+
+            <div class="wizard-nav" style="justify-content: space-between; align-items: center;">
+              <span id="wizardStep1Count" style="font-size:13px;font-weight:700;color:var(--green-dark);background:#eef8ec;padding:6px 14px;border-radius:999px;">1 job selected</span>
+              <button type="button" class="btn btn-primary" id="wizardStep1Next" data-wizard-next>
+                Next: details &amp; photos →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: DETAILS & PHOTOS -->
+          <div class="wizard-step-content" data-step="2" hidden>
+            <h3 class="wizard-title">Briefly explain your situation</h3>
+            <p class="wizard-subtitle">The clearer your situation, the faster we can give you a fixed price.</p>
+
+            <label>Short description
+              <textarea name="message" id="message" rows="4" required maxlength="3000" placeholder="E.g. My fuse box is old with screw-in fuses. I would like a new single- or three-phase board with RCDs."></textarea>
+            </label>
+
+            <label style="margin-bottom:8px">Preferred timing:</label>
+            <div class="wizard-pills">
+              <button type="button" class="wizard-pill selected" data-val="As soon as possible (within a few days)">As soon as possible</button>
+              <button type="button" class="wizard-pill" data-val="Within 2 weeks">Within 2 weeks</button>
+              <button type="button" class="wizard-pill" data-val="Within 1 month / to be agreed">Within 1 month</button>
+              <button type="button" class="wizard-pill" data-val="Price estimate only, for orientation">Price estimate only</button>
+            </div>
+
+            <label style="margin-bottom:8px">Add photos (highly recommended):</label>
+            <div class="wizard-dropzone" id="wizardDropzone">
+              <input id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/heic,image/heif,image/webp" multiple>
+              <span class="wizard-dropzone-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              </span>
+              <strong>Drag your photo(s) here or tap to upload</strong>
+              <span>Tip: a photo of your meter cupboard or situation from your phone</span>
+              <div class="wizard-dropzone-badge">✓ With photos we can give a fixed price faster</div>
+            </div>
+            <div id="photoList" class="photo-list"></div>
+
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-secondary" data-wizard-prev>
+                ← Previous step
+              </button>
+              <button type="button" class="btn btn-primary" data-wizard-next>
+                Go to contact details →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: CONTACT DETAILS & SEND -->
+          <div class="wizard-step-content" data-step="3" hidden>
+            <h3 class="wizard-title">Where should we send the quote?</h3>
+            <p class="wizard-subtitle">Last step! Fill in your contact details to receive the proposal.</p>
+
+            <label>Name
+              <input name="name" required maxlength="80" autocomplete="name" placeholder="First and last name">
+            </label>
+
+            <div class="two-col">
+              <label>Phone number
+                <input name="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="06 12345678">
+              </label>
+              <label>Email address
+                <input name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com">
+              </label>
+            </div>
+
+            <div class="two-col">
+              <label>Postcode
+                <input name="postcode" maxlength="7" autocomplete="postal-code" placeholder="3511 AA">
+              </label>
+              <label>House number
+                <input name="number" maxlength="10" placeholder="12">
+              </label>
+            </div>
+
+            <label class="check" style="margin-top:14px">
+              <input type="checkbox" name="akkoord" value="ja" required> I agree that INO may use my details to contact me about this request (see <a class="mini-link" href="/en/privacy/">privacy</a>).
+            </label>
+
+            <div class="form-turnstile"></div>
+            <div style="margin-top:20px;">
+              <span style="display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:8px;">Choose how you want to send your request:</span>
+              <div class="wizard-send-options">
+                <button class="btn btn-whatsapp" id="btnSendWhatsApp" type="button" style="font-size:14.5px;padding:14px 16px;justify-content:center;gap:8px;" data-track="whatsapp">
+                  {{icon_wa}} Send via WhatsApp
+                </button>
+                <button class="btn btn-primary" id="btnSendEmail" type="submit" style="font-size:14.5px;padding:14px 16px;justify-content:center;gap:8px;">
+                  {{icon_mail}} Send by email
+                </button>
+              </div>
+            </div>
+
+            <div class="wizard-nav" style="border-top:none;margin-top:14px;padding-top:0;">
+              <button type="button" class="btn btn-secondary" data-wizard-prev style="padding:10px 18px;font-size:13.5px;">
+                ← Previous step
+              </button>
+            </div>
+
+            <p class="form-note" style="margin-top:14px;text-align:center">
+              No spam, no obligations. Your request goes straight to {{email}}. We reply within 24 hours, often sooner.
+            </p>
+          </div>
+
+          <div id="formResult" class="form-result" role="status" aria-live="polite" hidden></div>
+          <noscript><p class="form-note">This form only works with JavaScript. Call or WhatsApp us on {{tel}}.</p></noscript>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-cta">
+    <div class="container">
+      <span class="eyebrow">PREFER TO TALK FIRST?</span>
+      <h2>Feel free to call or WhatsApp.</h2>
+      <p>You get an estimate straight away. Would you like us to visit? Then book an appointment.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="/en/appointment/">Request an appointment</a>
+        <a class="btn btn-outline-light" href="tel:{{tel_e164}}">Call {{tel}}</a>
+        <a class="btn btn-outline-light" href="https://wa.me/{{whatsapp}}?text=Hello%20INO%2C%20I%20have%20a%20question%20about%20a%20quote." target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-outline-light" href="mailto:{{email}}">{{email}}</a>
+      </div>
+    </div>
+  </section>
