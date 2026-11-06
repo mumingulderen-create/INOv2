@@ -119,6 +119,14 @@
   "date": "2026-11-06",
   "hash": "40846215b5704148dac0d8e624f0c506"
  },
+ "en/ev-charger-installation": {
+  "date": "2026-11-06",
+  "hash": "0746504406c400616352c5c79b4a7714"
+ },
+ "en/extra-circuit": {
+  "date": "2026-11-06",
+  "hash": "7275f72d715de1931aefe0e3ce295217"
+ },
  "en/faq": {
   "date": "2026-11-06",
   "hash": "892dc0bb6dd9fae5bc66a01d72cf7ad5"
@@ -127,9 +135,21 @@
   "date": "2026-11-06",
   "hash": "78a153598bf47259a598e1295c8ff899"
  },
+ "en/garden-lighting-outdoor-electrics": {
+  "date": "2026-11-06",
+  "hash": "ebc4cfd339e1e77a97555b35147fb621"
+ },
+ "en/home-battery-installation": {
+  "date": "2026-11-06",
+  "hash": "3bcba72df3801a0eff61a831732ebce5"
+ },
  "en/how-we-work": {
   "date": "2026-11-06",
   "hash": "cd13b27ab1e2edb363e13fe57803e6e4"
+ },
+ "en/moving-sockets-wall-chasing": {
+  "date": "2026-11-06",
+  "hash": "0249057474fe009de204d548cab15101"
  },
  "en/neighbourhoods": {
   "date": "2026-11-06",
@@ -170,6 +190,10 @@
  "en/services": {
   "date": "2026-11-06",
   "hash": "f6eb91f9d50e53c73c111f4a3c4c976f"
+ },
+ "en/three-phase-power": {
+  "date": "2026-11-06",
+  "hash": "4da2dbd800d07730a6bd47696baa8172"
  },
  "extra-groep-aanleggen": {
   "date": "2026-10-24",
