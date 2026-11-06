@@ -136,40 +136,50 @@ VOORRIJ_ZIN = (
     f"Daarbuiten geldt een vast kilometertarief van € {T['km_tarief']} per km."
 )
 
+# Dezelfde zinnen in het Engels (voor /en/-pagina's)
+TARIEF_ZIN_EN = (
+    f"Mon–Fri 08:00–18:00 € {T['uur_dag']}, Mon–Fri 18:00–22:00 € {T['uur_avond']}, "
+    f"22:00–08:00 and Saturday & Sunday € {T['uur_nacht']} (first hour incl. diagnosis and VAT)"
+)
+VOORRIJ_ZIN_EN = (
+    f"Within the municipality of Utrecht the call-out charge is € {T['voorrijkosten_utrecht']}. "
+    f"Outside it we charge a fixed € {T['km_tarief'].replace(',', '.')} per km."
+)
+
 # ---------------------------------------------------------------------------
-# NAVIGATIE (header). 'sub' = uitklapmenu.
+# NAVIGATIE (header). 'sub' = uitklapmenu. 'label_en' = Engelse menunaam.
 # ---------------------------------------------------------------------------
 NAV = [
-    {"label": "Spoed 24/7", "href": "/spoed-elektricien-utrecht/", "key": "spoed", "sub": [
-        {"label": "Spoed elektricien 24/7", "href": "/spoed-elektricien-utrecht/"},
-        {"label": "Geen stroom in huis", "href": "/stroomstoring-utrecht/"},
-        {"label": "Aardlekschakelaar springt eruit", "href": "/aardlekschakelaar-springt-eruit/"},
-        {"label": "Kortsluiting / groep valt uit", "href": "/kortsluiting-utrecht/"},
-        {"label": "Stopcontact werkt niet of wordt warm", "href": "/stopcontact-werkt-niet/"},
+    {"label": "Spoed 24/7", "label_en": "Emergency 24/7", "href": "/spoed-elektricien-utrecht/", "key": "spoed", "sub": [
+        {"label": "Spoed elektricien 24/7", "label_en": "Emergency electrician 24/7", "href": "/spoed-elektricien-utrecht/"},
+        {"label": "Geen stroom in huis", "label_en": "No power at home", "href": "/stroomstoring-utrecht/"},
+        {"label": "Aardlekschakelaar springt eruit", "label_en": "RCD keeps tripping", "href": "/aardlekschakelaar-springt-eruit/"},
+        {"label": "Kortsluiting / groep valt uit", "label_en": "Short circuit / circuit trips", "href": "/kortsluiting-utrecht/"},
+        {"label": "Stopcontact werkt niet of wordt warm", "label_en": "Socket not working or getting hot", "href": "/stopcontact-werkt-niet/"},
     ]},
-    {"label": "Diensten", "href": "/diensten/", "key": "diensten", "sub": [
-        {"label": "Alle diensten", "href": "/diensten/"},
-        {"label": "Groepenkast vervangen", "href": "/groepenkast/"},
-        {"label": "Perilex & kookgroep", "href": "/perilex/"},
-        {"label": "Laadpaal installeren", "href": "/laadpaal-installeren/"},
-        {"label": "Thuisbatterij installeren", "href": "/thuisbatterij-installeren/"},
-        {"label": "Krachtstroom 400V", "href": "/krachtstroom-aanleggen/"},
-        {"label": "Frezen & stopcontacten", "href": "/frezen-stopcontacten-verleggen/"},
-        {"label": "Extra groep aanleggen", "href": "/extra-groep-aanleggen/"},
-        {"label": "Tuinverlichting", "href": "/tuinverlichting-buitenelektra/"},
-        {"label": "Buitengesloten & cilinder", "href": "/buitengesloten-cilinder-vervangen/"},
-        {"label": "Slim deurslot", "href": "/slim-deurslot-installeren/"},
-        {"label": "Videodeurbel", "href": "/videodeurbel-installeren/"},
-        {"label": "Kookplaat aansluiten", "href": "/inductiekookplaat-aansluiten/"},
-        {"label": "TV ophangen", "href": "/tv-ophangen/"},
-        {"label": "MV-box vervangen", "href": "/mv-box-vervangen/"},
-        {"label": "Aardpen slaan", "href": "/aardpen-slaan/"},
+    {"label": "Diensten", "label_en": "Services", "href": "/diensten/", "key": "diensten", "sub": [
+        {"label": "Alle diensten", "label_en": "All services", "href": "/diensten/"},
+        {"label": "Groepenkast vervangen", "label_en": "Fuse box replacement", "href": "/groepenkast/"},
+        {"label": "Perilex & kookgroep", "label_en": "Perilex & cooking circuit", "href": "/perilex/"},
+        {"label": "Laadpaal installeren", "label_en": "EV charger installation", "href": "/laadpaal-installeren/"},
+        {"label": "Thuisbatterij installeren", "label_en": "Home battery installation", "href": "/thuisbatterij-installeren/"},
+        {"label": "Krachtstroom 400V", "label_en": "Three-phase power 400V", "href": "/krachtstroom-aanleggen/"},
+        {"label": "Frezen & stopcontacten", "label_en": "Moving sockets & chasing", "href": "/frezen-stopcontacten-verleggen/"},
+        {"label": "Extra groep aanleggen", "label_en": "Extra circuit", "href": "/extra-groep-aanleggen/"},
+        {"label": "Tuinverlichting", "label_en": "Garden lighting", "href": "/tuinverlichting-buitenelektra/"},
+        {"label": "Buitengesloten & cilinder", "label_en": "Locked out & lock cylinder", "href": "/buitengesloten-cilinder-vervangen/"},
+        {"label": "Slim deurslot", "label_en": "Smart lock", "href": "/slim-deurslot-installeren/"},
+        {"label": "Videodeurbel", "label_en": "Video doorbell", "href": "/videodeurbel-installeren/"},
+        {"label": "Kookplaat aansluiten", "label_en": "Induction hob connection", "href": "/inductiekookplaat-aansluiten/"},
+        {"label": "TV ophangen", "label_en": "TV wall mounting", "href": "/tv-ophangen/"},
+        {"label": "MV-box vervangen", "label_en": "Ventilation unit replacement", "href": "/mv-box-vervangen/"},
+        {"label": "Aardpen slaan", "label_en": "Earth rod installation", "href": "/aardpen-slaan/"},
     ]},
-    {"label": "Tarieven", "href": "/tarieven/", "key": "tarieven"},
-    {"label": "Werkgebied", "href": "/werkgebied/", "key": "werkgebied", "sub": "WIJKEN"},  # automatisch gevuld
-    {"label": "Werkwijze", "href": "/werkwijze/", "key": "werkwijze"},
-    {"label": "Reviews", "href": "/reviews/", "key": "reviews"},
-    {"label": "Contact", "href": "/contact/", "key": "contact"},
+    {"label": "Tarieven", "label_en": "Prices", "href": "/tarieven/", "key": "tarieven"},
+    {"label": "Werkgebied", "label_en": "Service area", "href": "/werkgebied/", "key": "werkgebied", "sub": "WIJKEN"},  # automatisch gevuld
+    {"label": "Werkwijze", "label_en": "How we work", "href": "/werkwijze/", "key": "werkwijze"},
+    {"label": "Reviews", "label_en": "Reviews", "href": "/reviews/", "key": "reviews"},
+    {"label": "Contact", "label_en": "Contact", "href": "/contact/", "key": "contact"},
 ]
 
 # Welke pagina-sleutel hoort bij welk hoofdmenu-item (voor 'actief' markeren)

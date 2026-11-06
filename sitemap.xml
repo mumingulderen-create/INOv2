@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ino-elektra.nl/</loc><lastmod>2026-11-06</lastmod><priority>1.0</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://ino-elektra.nl/</loc><lastmod>2026-11-06</lastmod><priority>1.0</priority><xhtml:link rel="alternate" hreflang="nl" href="https://ino-elektra.nl/"/><xhtml:link rel="alternate" hreflang="en" href="https://ino-elektra.nl/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://ino-elektra.nl/"/></url>
   <url><loc>https://ino-elektra.nl/aardlekschakelaar-springt-eruit/</loc><lastmod>2026-11-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://ino-elektra.nl/aardpen-slaan/</loc><lastmod>2026-10-22</lastmod><priority>0.7</priority></url>
   <url><loc>https://ino-elektra.nl/afspraak/</loc><lastmod>2026-10-24</lastmod><priority>0.5</priority></url>
@@ -25,6 +25,7 @@
   <url><loc>https://ino-elektra.nl/elektricien-vleuten-de-meern/</loc><lastmod>2026-10-24</lastmod><priority>0.8</priority></url>
   <url><loc>https://ino-elektra.nl/elektricien-zeist/</loc><lastmod>2026-10-24</lastmod><priority>0.8</priority></url>
   <url><loc>https://ino-elektra.nl/elektricien-zuilen/</loc><lastmod>2026-10-24</lastmod><priority>0.8</priority></url>
+  <url><loc>https://ino-elektra.nl/en/</loc><lastmod>2026-11-06</lastmod><priority>0.8</priority><xhtml:link rel="alternate" hreflang="nl" href="https://ino-elektra.nl/"/><xhtml:link rel="alternate" hreflang="en" href="https://ino-elektra.nl/en/"/><xhtml:link rel="alternate" hreflang="x-default" href="https://ino-elektra.nl/"/></url>
   <url><loc>https://ino-elektra.nl/extra-groep-aanleggen/</loc><lastmod>2026-10-24</lastmod><priority>0.7</priority></url>
   <url><loc>https://ino-elektra.nl/faq/</loc><lastmod>2026-10-24</lastmod><priority>0.7</priority></url>
   <url><loc>https://ino-elektra.nl/frezen-stopcontacten-verleggen/</loc><lastmod>2026-10-16</lastmod><priority>0.7</priority></url>

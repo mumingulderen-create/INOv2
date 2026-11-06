@@ -17,9 +17,14 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "bouw"))
 
 from config import SITE_URL, BEDRIJF as B, TARIEVEN as T, TARIEF_ZIN, VOORRIJ_ZIN, AANRIJTIJD
+from config import TARIEF_ZIN_EN, VOORRIJ_ZIN_EN
 from wijken import WIJKEN, OVERIGE_UTRECHT, OVERIGE_REGIO
 from storingen import STORINGEN
-import layout, paginas, beelden
+from wijken_en import WIJKEN_EN
+from storingen_en import STORINGEN_EN
+import layout, paginas, beelden, taal, vertaling_js
+
+taal.registreer_wijken(WIJKEN)
 
 # Snelheidsbudget: de build meldt een aandachtspunt als iets hierboven komt.
 BUDGET_CSS_KB = 55      # style.css (op elke pagina)
@@ -54,6 +59,31 @@ PLACEHOLDERS = {
     **{k: str(v) for k, v in T.items()},
     **AANRIJTIJD,
 }
+
+# Engelse pagina's (/en/): dezelfde placeholders, maar zinnen in het Engels en
+# getallen met een punt (0.40 i.p.v. 0,40).
+PLACEHOLDERS_EN = dict(PLACEHOLDERS)
+PLACEHOLDERS_EN.update({k: taal.getal_en(v) for k, v in T.items()})
+PLACEHOLDERS_EN.update({
+    "tarief_zin": TARIEF_ZIN_EN,
+    "tarief_zin_klein": TARIEF_ZIN_EN[0].lower() + TARIEF_ZIN_EN[1:],
+    "voorrij_zin": VOORRIJ_ZIN_EN,
+    "google_score": taal.getal_en(B["google_score"]),
+})
+
+
+def wijken_in(t=None):
+    """Wijkdata in de gevraagde taal (Engels: alleen wijken met een vertaling in wijken_en.py)."""
+    if not taal.en(t):
+        return WIJKEN
+    return [dict(w, **WIJKEN_EN[w["slug"]]) for w in WIJKEN if w["slug"] in WIJKEN_EN]
+
+
+def storingen_in(t=None):
+    if not taal.en(t):
+        return STORINGEN
+    return [dict(s, **STORINGEN_EN[s["slug"]]) for s in STORINGEN if s["slug"] in STORINGEN_EN]
+
 
 BREADCRUMB_NAMEN = {
     "diensten": [("Diensten", None)],
@@ -108,13 +138,14 @@ def url_of(slug):
     return f"{SITE_URL}/{slug}/"
 
 def fill(text):
+    ph = PLACEHOLDERS_EN if taal.en() else PLACEHOLDERS
     # <!--ALS sleutel-->…<!--/ALS--> wordt alleen getoond als die sleutel in config gevuld is
     text = re.sub(r"<!--ALS\s+([A-Za-z0-9_]+)\s*-->(.*?)<!--/ALS-->",
-                  lambda m: m.group(2) if (B.get(m.group(1)) if m.group(1) in B else PLACEHOLDERS.get(m.group(1))) else "", text, flags=re.S)
+                  lambda m: m.group(2) if (B.get(m.group(1)) if m.group(1) in B else ph.get(m.group(1))) else "", text, flags=re.S)
     def r(m):
         k = m.group(1)
-        if k in PLACEHOLDERS:
-            return PLACEHOLDERS[k]
+        if k in ph:
+            return ph[k]
         if k in BLOKKEN:
             return BLOKKEN[k]()
         warn(f"onbekende placeholder {{{{{k}}}}}")
@@ -122,9 +153,9 @@ def fill(text):
     return re.sub(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}", r, text)
 
 BLOKKEN = {
-    "STORING_KAARTEN": lambda: paginas.blok_storing_kaarten(STORINGEN),
-    "WIJK_CHIPS": lambda: paginas.blok_wijk_chips(WIJKEN),
-    "WIJKEN_HUB": lambda: paginas.blok_wijken_hub(WIJKEN, OVERIGE_UTRECHT, OVERIGE_REGIO),
+    "STORING_KAARTEN": lambda: paginas.blok_storing_kaarten(storingen_in()),
+    "WIJK_CHIPS": lambda: paginas.blok_wijk_chips(wijken_in()),
+    "WIJKEN_HUB": lambda: paginas.blok_wijken_hub(wijken_in(), OVERIGE_UTRECHT, OVERIGE_REGIO),
     "TARIEF_KAARTEN": lambda: paginas.tarief_kaarten(),
     "CTA": lambda: paginas.cta_band(),
     "CALCULATOR": lambda: paginas.groepenkast_calculator(),
@@ -134,18 +165,33 @@ BLOKKEN = {
 }
 
 def lees_content():
+    """content/*.html (Nederlands) en content/en/*.html (Engels, zelfde bestandsnaam)."""
     pages = []
-    for path in sorted(glob.glob(os.path.join(ROOT, "content", "*.html"))):
-        raw = open(path, encoding="utf-8").read()
-        m = re.match(r"\s*<!--\s*(\{.*?\})\s*-->\s*(.*)$", raw, re.S)
-        if not m:
-            warn(f"{path}: geen front-matter gevonden, overgeslagen")
-            continue
-        fm = json.loads(m.group(1))
-        fm["body"] = m.group(2)
-        crumbs = BREADCRUMB_NAMEN.get(fm["slug"], [])
-        fm.setdefault("crumbs", crumbs)
-        pages.append(fm)
+    for t, map_ in (("nl", "content"), ("en", os.path.join("content", "en"))):
+        for path in sorted(glob.glob(os.path.join(ROOT, map_, "*.html"))):
+            raw = open(path, encoding="utf-8").read()
+            m = re.match(r"\s*<!--\s*(\{.*?\})\s*-->\s*(.*)$", raw, re.S)
+            if not m:
+                warn(f"{path}: geen front-matter gevonden, overgeslagen")
+                continue
+            fm = json.loads(m.group(1))
+            fm["body"] = m.group(2)
+            fm["taal"] = t
+            if t == "nl":
+                fm["nl_slug"] = fm["slug"]
+                fm.setdefault("crumbs", BREADCRUMB_NAMEN.get(fm["slug"], []))
+            else:
+                nl_slug = os.path.basename(path)[:-5]
+                nl_slug = "" if nl_slug == "index" else nl_slug
+                en_slug = taal.slug_in(nl_slug, "en")
+                if en_slug is None:
+                    warn(f"{path}: geen Engelse slug in bouw/taal.py (EN_SLUG), overgeslagen")
+                    continue
+                fm["slug"], fm["nl_slug"] = en_slug, nl_slug
+                fm.setdefault("nav", nl_slug)
+                fm.setdefault("crumbs", [(taal.CRUMB_EN.get(n, n), taal.pad(u, "en") if u else None)
+                                         for n, u in BREADCRUMB_NAMEN.get(nl_slug, [])])
+            pages.append(fm)
     return pages
 
 def faq_uit_body(body):
@@ -173,14 +219,15 @@ def doorverwijzing(p):
     from html import escape
     doel = "/" + p["slug"] + "/"
     t = escape(p["title"], quote=False)
-    return ('<!doctype html>\n<html lang="nl"><head><meta charset="utf-8">'
+    ga = "Go to" if p.get("taal") == "en" else "Ga naar"
+    return (f'<!doctype html>\n<html lang="{p.get("taal", "nl")}"><head><meta charset="utf-8">'
             f'<title>{t}</title>'
             f'<link rel="canonical" href="{p["url"]}">'
             f'<meta http-equiv="refresh" content="0; url={doel}">'
             f'<script>location.replace("{doel}"+location.search+location.hash)</script>'
-            f'</head><body><p><a href="{doel}">Ga naar {t}</a></p></body></html>\n')
+            f'</head><body><p><a href="{doel}">{ga} {t}</a></p></body></html>\n')
 
-INTERNE_LINK = re.compile(r'href="/([a-z0-9][a-z0-9-]*)([#?][^"]*)?"')
+INTERNE_LINK = re.compile(r'href="/((?:en/)?[a-z0-9][a-z0-9-]*)([#?][^"]*)?"')
 
 def normaliseer_links(html):
     """/offerte -> /offerte/ . Op GitHub Pages laadt /offerte eerst de doorverwijspagina
@@ -230,10 +277,14 @@ def main():
     if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
         warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
     js = js.replace("__REVIEWS_ENDPOINT__", REVIEWS_ENDPOINT).replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
-    js_v = hashlib.md5(js.encode()).hexdigest()[:8]
+    # Engelse variant (script-en.js) via de vertaaltabel in bouw/vertaling_js.py
+    js_en = vertaal_js("script.js", js)
+    js_v = {"nl": hashlib.md5(js.encode()).hexdigest()[:8], "en": hashlib.md5(js_en.encode()).hexdigest()[:8]}
     schrijf("script.js", js)
-    if len(js.encode()) > BUDGET_JS_KB * 1024:
-        warn(f"script.js is {len(js.encode())//1024} KB (budget {BUDGET_JS_KB} KB). Zet pagina-specifieke JS in assets/extra/.")
+    schrijf("script-en.js", js_en)
+    for naam, inhoud in (("script.js", js), ("script-en.js", js_en)):
+        if len(inhoud.encode()) > BUDGET_JS_KB * 1024:
+            warn(f"{naam} is {len(inhoud.encode())//1024} KB (budget {BUDGET_JS_KB} KB). Zet pagina-specifieke JS in assets/extra/.")
 
     # Extra css/js die alleen op bepaalde pagina's laadt (front-matter: "extra": ["wizard"])
     extra_v = {}
@@ -246,16 +297,40 @@ def main():
             inhoud = inhoud.replace("__WHATSAPP__", B["whatsapp"]).replace("__TURNSTILE_SITEKEY__", TURNSTILE_SITEKEY)
         extra_v[naam] = hashlib.md5(inhoud.encode()).hexdigest()[:8]
         schrijf(naam, inhoud)
+        if naam.endswith(".js") and naam in vertaling_js.JS_EN:
+            naam_en = naam[:-3] + "-en.js"
+            inhoud_en = vertaal_js(naam, inhoud)
+            extra_v[naam_en] = hashlib.md5(inhoud_en.encode()).hexdigest()[:8]
+            schrijf(naam_en, inhoud_en)
 
     print("3/6 Pagina's samenstellen…")
     pages = lees_content()
-    pages += [paginas.wijk_pagina(w, WIJKEN) for w in WIJKEN]
-    pages += [paginas.storing_pagina(s, STORINGEN) for s in STORINGEN]
+    for t in taal.TALEN:
+        taal.zet(t)
+        pages += [paginas.wijk_pagina(w, wijken_in()) for w in wijken_in()]
+        pages += [paginas.storing_pagina(s, storingen_in()) for s in storingen_in()]
+    taal.zet("nl")
+
+    # Taalparen: elke pagina kent zijn tegenhanger (hreflang + vlag-schakelaar)
+    paren = {}
+    for p in pages:
+        paren.setdefault(p["nl_slug"], {})[p["taal"]] = p
+    for nl_slug, paar in sorted(paren.items()):
+        if nl_slug != "404" and set(paar) != set(taal.TALEN):
+            mist = ", ".join(t for t in taal.TALEN if t not in paar)
+            warn(f"{nl_slug or 'index'}: geen {mist}-versie (vertaling ontbreekt)")
+    for p in pages:
+        paar = paren[p["nl_slug"]]
+        p["wissel"] = {t: (f"/{paar[t]['slug']}/" if paar[t]["slug"] else "/") if t in paar else ("/en/" if t == "en" else "/")
+                       for t in taal.TALEN}
+        if len(paar) > 1 and not p.get("noindex"):
+            p["alternates"] = [(t, url_of(paar[t]["slug"])) for t in taal.TALEN if t in paar]
 
     lastmod = json.load(open(LASTMOD_FILE)) if os.path.exists(LASTMOD_FILE) else {}
     rendered = {}
 
     for p in pages:
+        taal.zet(p["taal"])
         slug = p["slug"]
         p["url"] = url_of(slug)
         p["title"] = fill(p["title"])
@@ -272,8 +347,9 @@ def main():
         p["og_image_url"] = beelden.og_url(p.get("og_image", "hero-elektricien.jpg"), SITE_URL)
 
         # breadcrumbs
-        if slug:
-            p["breadcrumbs"] = [("Home", f"{SITE_URL}/")] + [
+        if p["nl_slug"]:
+            home = f"{SITE_URL}/en/" if taal.en() else f"{SITE_URL}/"
+            p["breadcrumbs"] = [("Home", home)] + [
                 (n, f"{SITE_URL}{u}" if u else p["url"]) for n, u in p.get("crumbs", [])]
         else:
             p["breadcrumbs"] = []
@@ -284,23 +360,25 @@ def main():
             lastmod[slug or "index"] = {"hash": h, "date": TODAY}
         p["lastmod"] = lastmod[slug or "index"]["date"]
 
-        variant = "spoed" if slug == "spoed-elektricien-utrecht" else "standaard"
+        variant = "spoed" if p["nl_slug"] == "spoed-elektricien-utrecht" else "standaard"
+        js_naam = "/script-en.js" if taal.en() else "/script.js"
         html = "\n".join([
             layout.head(p, WIJKEN, css_v),
             "<body>",
-            layout.header(p.get("nav", slug), WIJKEN, variant),
+            layout.header(p.get("nav", p["nl_slug"]), wijken_in(), variant, p["wissel"]),
             f'<main id="inhoud">',
-            layout.breadcrumbs_html(p["breadcrumbs"]) if slug else "",
+            layout.breadcrumbs_html(p["breadcrumbs"]) if p["nl_slug"] else "",
             body,
             "</main>",
-            layout.footer(WIJKEN, STORINGEN, variant).replace("{JS_V}", js_v),
+            layout.footer(wijken_in(), storingen_in(), variant, js_naam).replace("{JS_V}", js_v[p["taal"]]),
             "</body>", "</html>", ""
         ])
         for x in p.get("extra", []):
             if f"{x}.css" in extra_v:
                 html = html.replace("</head>", f'<link rel="stylesheet" href="/{x}.css?v={extra_v[x + ".css"]}">\n</head>', 1)
-            if f"{x}.js" in extra_v:
-                html = html.replace("</body>", f'<script src="/{x}.js?v={extra_v[x + ".js"]}" defer></script>\n</body>', 1)
+            xjs = f"{x}-en.js" if taal.en() and f"{x}-en.js" in extra_v else f"{x}.js"
+            if xjs in extra_v:
+                html = html.replace("</body>", f'<script src="/{xjs}?v={extra_v[xjs]}" defer></script>\n</body>', 1)
             if f"{x}.css" not in extra_v and f"{x}.js" not in extra_v:
                 warn(f"{slug}: extra '{x}' bestaat niet in assets/extra/")
         html, n_fix = normaliseer_links(html)
@@ -309,6 +387,7 @@ def main():
         if len(html.encode()) > BUDGET_HTML_KB * 1024:
             warn(f"{slug or 'index'}: pagina is {len(html.encode())//1024} KB (budget {BUDGET_HTML_KB} KB)")
         rendered[slug] = (p, html)
+    taal.zet("nl")
 
     print("4/6 Bestanden schrijven…")
     for slug, (p, html) in rendered.items():
@@ -329,11 +408,17 @@ def main():
     for slug, (p, _) in sorted(rendered.items(), key=lambda kv: (kv[0] != "", kv[0])):
         if p.get("noindex") or p.get("sitemap") is False:
             continue
-        pr = p.get("priority") or PRIORITY.get(slug, "0.7")
-        urls.append(f"  <url><loc>{p['url']}</loc><lastmod>{p['lastmod']}</lastmod><priority>{pr}</priority></url>")
+        pr = p.get("priority") or PRIORITY.get(p["nl_slug"], "0.7")
+        if p["taal"] == "en" and not p.get("priority"):
+            pr = f"{max(0.1, float(pr) - 0.2):.1f}"
+        alt = "".join(f'<xhtml:link rel="alternate" hreflang="{t}" href="{u}"/>' for t, u in p.get("alternates", []))
+        if alt:
+            alt += f'<xhtml:link rel="alternate" hreflang="x-default" href="{dict(p["alternates"])["nl"]}"/>'
+        urls.append(f"  <url><loc>{p['url']}</loc><lastmod>{p['lastmod']}</lastmod><priority>{pr}</priority>{alt}</url>")
 
     schrijf("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
-            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n")
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+            + "\n".join(urls) + "\n</urlset>\n")
     schrijf("robots.txt", "User-agent: *\nAllow: /\n\n"
             f"Sitemap: {SITE_URL}/sitemap.xml\n")
 
@@ -344,13 +429,26 @@ def main():
         for w in test_mobiel.draai(ROOT, [p["url"].replace(SITE_URL, "") for p, _ in rendered.values() if p["slug"] != "404"]):
             warn(w)
 
-    print(f"\nKlaar: {len(rendered)} pagina's, {len(urls)} in sitemap.")
+    n_en = sum(1 for p, _ in rendered.values() if p["taal"] == "en")
+    print(f"\nKlaar: {len(rendered)} pagina's ({len(rendered) - n_en} NL, {n_en} EN), {len(urls)} in sitemap.")
     if warnings:
         print(f"\n{len(warnings)} aandachtspunt(en):")
         for w in warnings:
             print("  -", w)
     else:
         print("Geen fouten gevonden.")
+
+
+def vertaal_js(naam, js):
+    """Maak de Engelse variant van een script met de tabel in bouw/vertaling_js.py.
+    Elke Nederlandse tekst moet precies voorkomen; anders een aandachtspunt (script is aangepast)."""
+    for nl, en_ in vertaling_js.JS_EN.get(naam, []):
+        if nl not in js:
+            warn(f"vertaling_js: tekst niet gevonden in {naam}: {nl[:50]!r}")
+            continue
+        js = js.replace(nl, en_)
+    return js
+
 
 def controleer(rendered):
     bestaand = set(rendered.keys())
@@ -389,10 +487,17 @@ def controleer(rendered):
             except Exception as e:
                 warn(f"{naam}: structured data ongeldig: {e}")
 
-        # Check broken internal links
-        for h in re.findall(r'<a\b[^>]*href="([^"]*)"', html):
+        # Check broken internal links + taal: Engelse pagina's linken naar /en/, Nederlandse niet
+        # (uitzondering: de vlag-schakelaar, die heeft hreflang)
+        for tag, h in re.findall(r'(<a\b[^>]*href="([^"]*)"[^>]*>)', html):
             if h.startswith("/") and not h.startswith("//"):
                 path = h.split("?")[0].split("#")[0].strip("/")
+                if path and "hreflang=" not in tag and "." not in path.split("/")[-1]:
+                    is_en = path == "en" or path.startswith("en/")
+                    if p["taal"] == "en" and not is_en:
+                        warn(f"{naam}: Engelse pagina linkt naar Nederlandse pagina {h}")
+                    elif p["taal"] == "nl" and is_en:
+                        warn(f"{naam}: Nederlandse pagina linkt naar Engelse pagina {h}")
                 if path in bestaand or os.path.exists(os.path.join(ROOT, path)) and path:
                     continue
                 if path == "":

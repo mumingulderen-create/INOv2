@@ -103,6 +103,10 @@
   "date": "2026-10-24",
   "hash": "c207ec63bb5f47bbd559a47762eec037"
  },
+ "en": {
+  "date": "2026-11-06",
+  "hash": "3f5517f89b02786e9b397451e52d5d22"
+ },
  "extra-groep-aanleggen": {
   "date": "2026-10-24",
   "hash": "e543d59650bda6351ccaf47e35527fd1"
@@ -121,7 +125,7 @@
  },
  "index": {
   "date": "2026-11-06",
-  "hash": "1c9aa9405830f23c0686134896711dae"
+  "hash": "8d2e8079fce4446ae2887ac3f69c457a"
  },
  "inductiekookplaat-aansluiten": {
   "date": "2026-10-16",
@@ -169,7 +173,7 @@
  },
  "spoed-elektricien-utrecht": {
   "date": "2026-11-06",
-  "hash": "d1c5be2d511c71797ed93fac2766bd02"
+  "hash": "4c5b519fa5fde8aa873d7fb53a5baeae"
  },
  "stopcontact-werkt-niet": {
   "date": "2026-09-24",
@@ -177,7 +181,7 @@
  },
  "stroomstoring-utrecht": {
   "date": "2026-11-06",
-  "hash": "ad466e2f055584daa0a591d08a29bfb6"
+  "hash": "c0035b415774017e94307bda30563259"
  },
  "tarieven": {
   "date": "2026-10-24",
