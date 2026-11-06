@@ -29,7 +29,7 @@ BEDRIJF = {
     "google_review_url": "https://g.page/r/CRgHZOsrpMLTEBM/review",
     "google_score": "5,0",
     "google_aantal": "46",
-    "werkspot": "",                            # VUL_IN: volledige URL van je Werkspot-profiel
+    "werkspot": "https://www.werkspot.nl/profiel/ino-techniek-en-installatie",
     "actief_sinds": "2021",
     # Officiële vakdiploma's en certificeringen van de ondernemer
     "diplomas": [
