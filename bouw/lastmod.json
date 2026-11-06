@@ -115,6 +115,10 @@
   "date": "2026-11-06",
   "hash": "e6a6b31f1706ca2ffafe8edd01702fb2"
  },
+ "en/earth-rod-installation": {
+  "date": "2026-11-06",
+  "hash": "02b2db4ab3e09196a0b8454205ec5675"
+ },
  "en/emergency-electrician-utrecht": {
   "date": "2026-11-06",
   "hash": "40846215b5704148dac0d8e624f0c506"
@@ -146,6 +150,14 @@
  "en/how-we-work": {
   "date": "2026-11-06",
   "hash": "cd13b27ab1e2edb363e13fe57803e6e4"
+ },
+ "en/induction-hob-installation": {
+  "date": "2026-11-06",
+  "hash": "1361e438fcc214eb0ee0dd6e0c48fddb"
+ },
+ "en/locked-out-lock-cylinder": {
+  "date": "2026-11-06",
+  "hash": "e383ce1027b24251d208f362a782074a"
  },
  "en/moving-sockets-wall-chasing": {
   "date": "2026-11-06",
@@ -191,9 +203,25 @@
   "date": "2026-11-06",
   "hash": "f6eb91f9d50e53c73c111f4a3c4c976f"
  },
+ "en/smart-lock-installation": {
+  "date": "2026-11-06",
+  "hash": "15a9194f14a36a92bb7a20a99761c9c0"
+ },
  "en/three-phase-power": {
   "date": "2026-11-06",
   "hash": "4da2dbd800d07730a6bd47696baa8172"
+ },
+ "en/tv-wall-mounting": {
+  "date": "2026-11-06",
+  "hash": "b5a30fa116022e12401f7de6d1174035"
+ },
+ "en/ventilation-unit-replacement": {
+  "date": "2026-11-06",
+  "hash": "9233ee3b3aa4b660b40412e2ba6cba20"
+ },
+ "en/video-doorbell-installation": {
+  "date": "2026-11-06",
+  "hash": "71a5c5df6a50d284cac975d1237bc8c4"
  },
  "extra-groep-aanleggen": {
   "date": "2026-10-24",
