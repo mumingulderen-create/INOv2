@@ -54,3 +54,6 @@
 - Echte Google Reviews: 5,0 sterren op Google Bedrijfsprofiel.
 - https://ino-elektra.nl/tarieven/
 - https://ino-elektra.nl/review/
+
+## English version
+- The full website is also available in English: https://ino-elektra.nl/en/ (for example https://ino-elektra.nl/en/emergency-electrician-utrecht/ and https://ino-elektra.nl/en/fuse-box-replacement/).

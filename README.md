@@ -16,6 +16,7 @@ Regels en bevestigde feiten voor AI-assistenten: `CLAUDE.md`.
 | Storingspagina's (geen stroom, aardlek, …) | `bouw/storingen.py` |
 | Opmaak en scripts | `assets/style.css`, `assets/script.js`; alleen voor één pagina: `assets/extra/` |
 | Foto's | `assets/foto/` (de build maakt WebP-varianten in `img/`) |
+| Engelse versie van een pagina | `content/en/<zelfde naam>.html`; wijken `bouw/wijken_en.py`, storingen `bouw/storingen_en.py`; slugs `bouw/taal.py`; scripts `bouw/vertaling_js.py` |
 | Formulieren | frontend: `assets/script.js` (`wire`) en `assets/extra/formulier.js`; adres en Turnstile-sitekey: `bouw/config.py`; server: `worker/` (zie `worker/README.md`) |
 
 ## Bouwen
@@ -50,7 +51,7 @@ Bovenaan elk content-bestand staat een JSON-blok met `slug`, `title`, `descripti
 ```
 build.py        bouwt de site
 bouw/           instellingen (config.py), data (wijken, storingen) en sjablonen
-content/        pagina's (bron)
+content/        pagina's (bron); content/en/ = Engelse versies
 assets/         bron-CSS/JS, foto's, fonts, QR-bestanden
 worker/         formulier-backend (Cloudflare Worker)
 _config.yml     zorgt dat alleen de gegenereerde site online komt

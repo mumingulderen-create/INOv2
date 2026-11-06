@@ -34,6 +34,13 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Secrets (API-keys, wachtwoorden) in de repo, HTML of JavaScript.
 - Een beheer-/CRM-/inlogpagina op de publieke site zetten. Een login in client-side JavaScript is schijnbeveiliging (met één console-regel te omzeilen) en klantgegevens in localStorage zijn niet AVG-veilig. CRM hoort in een afgeschermd hulpmiddel (Brevo CRM, Moneybird). /beheer/ is om die reden uit v2 verwijderd (24 okt 2026); niet opnieuw toevoegen.
 
+## Twee talen (NL en EN, sinds 6 nov 2026)
+- Elke pagina bestaat in het Nederlands (`/pagina/`) en het Engels (`/en/page/`). Vlag-schakelaar NL | EN in de header; navigeren blijft in dezelfde taal.
+- Engelse bron: `content/en/<zelfde bestandsnaam als NL>.html`, `bouw/wijken_en.py`, `bouw/storingen_en.py`. Slugkoppeling en kruimelpadnamen: `bouw/taal.py`. Sjablonen: `L("nl", "en")` en `pad("/nl-pad/")`. Scripts: `bouw/vertaling_js.py` maakt `script-en.js` e.d.
+- Pas je een Nederlandse tekst aan, pas dan de Engelse tegenhanger ook aan. Nieuwe pagina: slug in `EN_SLUG` + Engels bestand. De build waarschuwt bij een ontbrekende vertaling, bij links naar de andere taal en bij JS-teksten die niet meer gevonden worden.
+- In het Engels dezelfde regels: alleen placeholders voor prijzen, geen nieuwe claims, Brits Engels, you-vorm. Reviews alleen origineel of als vertaling gemarkeerd ("translated from Dutch"). Nog niet claimen dat er Engels gesproken wordt (eigenaar nog niet bevestigd).
+- Formulieren op `/en/` sturen `taal=en`; de Worker geeft dan Engelse meldingen en een Engelse bevestiging (`worker/src/taal.js`), de mail aan info@ krijgt `[EN]`.
+
 ## SEO en tekst
 - Title ≤ 60 tekens, description 120–160, precies één H1 met zoekwoord.
 - Je/jij-vorm, zakelijk-vriendelijk, korte zinnen, duidelijke prijzen.
@@ -56,6 +63,7 @@ Dit is het enige regelbestand. Geef het mee aan elke AI die aan de site werkt. U
 - Live Google-reviews: `GET /api/reviews` in de Worker staat klaar (`worker/src/reviews.js`). Place ID staat in `wrangler.toml` (servicegebied-bedrijf: alleen vindbaar met `includePureServiceAreaBusinesses`). Eigenaar moet nog: secret `GOOGLE_PLACES_API_KEY` zetten en Worker deployen (`worker/README.md`). Score/aantal in HTML met `data-g="score"`/`data-g="aantal"`; vaste waarden in `config.py` blijven de terugval.
 - `BEDRIJF["werkspot"]` (URL; het Werkspot-blok blijft verborgen tot dit is ingevuld), eventueel `btw`.
 - Echte foto's (`assets/foto/`) en echte praktijkvoorbeelden per wijk.
+- Engelse site: Worker opnieuw deployen (`cd worker && npx wrangler deploy`) voor Engelse foutmeldingen en bevestigingsmail. Bevestigen of "English spoken" op de site mag.
 - Nog bevestigen door eigenaar (staat al op de site, niet uitgebreid): samenwerking met stratenmakers (/tuinverlichting-buitenelektra/), staffelkorting bij 3+ stopcontacten (/frezen-stopcontacten-verleggen/), "offerte doorgaans binnen 24 uur" (/tarieven/), betalen via betaalverzoek of factuur (/spoed/, /faq/).
 - Aanrijtijd 15–40 min geldt voor "buiten de gemeente Utrecht"; voor Amersfoort en Veenendaal niet noemen tot de eigenaar dat bevestigt.
 - Nieuwe dienstpagina's (15 okt 2026, v2-concept, eigenaar past later aan): /buitengesloten-cilinder-vervangen/, /slim-deurslot-installeren/, /videodeurbel-installeren/, /inductiekookplaat-aansluiten/, /tv-ophangen/, /mv-box-vervangen/. Nog geen vaste prijzen; ze rekenen op uurtarief (+ materiaal apart). Vaste prijzen alleen toevoegen in `config.py` na opgave eigenaar. Nog bevestigen: legitimatiecheck bij deur openen, SKG-cilinder als optie, buitensluiting ook 's avonds/weekend, plaat inbouwen op uurtarief, beugel door klant of in overleg.
