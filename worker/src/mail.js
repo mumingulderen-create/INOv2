@@ -31,14 +31,19 @@ function datumNL(iso) {
   return `${d}-${m}-${j}`;
 }
 
-export function onderwerp(formulier, d) {
+export function onderwerp(formulier, d, taal = "nl") {
+  const pre = taal === "en" ? "[EN] " : "";
+  return pre + onderwerpNL(formulier, d);
+}
+
+function onderwerpNL(formulier, d) {
   const naam = headerVeilig(d.naam, 60);
   if (formulier === "spoed") return `[SPOED] Terugbelverzoek – ${naam} – ${headerVeilig(d.telefoon, 20)}`;
   if (formulier === "afspraak") return `[Afspraak] ${datumNL(d.datum)} ${d.tijd} – ${naam}`;
   return `[Offerte] ${headerVeilig(d.klus || "Nieuwe aanvraag", 60)} – ${naam}`;
 }
 
-export function aanvraagMail(formulier, d, aantalFotos, ontvangen = new Date()) {
+export function aanvraagMail(formulier, d, aantalFotos, ontvangen = new Date(), taal = "nl") {
   const s = SOORT[formulier];
   const tijd = new Intl.DateTimeFormat("nl-NL", { timeZone: "Europe/Amsterdam", dateStyle: "full", timeStyle: "short" }).format(ontvangen);
   const rijen = LABELS.filter(([k]) => d[k]).map(([k, l]) => {
@@ -48,6 +53,8 @@ export function aanvraagMail(formulier, d, aantalFotos, ontvangen = new Date()) 
     if (k === "email") html = `<a href="mailto:${escHtml(d[k])}">${html}</a>`;
     return { l, w, html };
   });
+  // Aanvraag via de Engelse site: de klant spreekt (waarschijnlijk) Engels.
+  if (taal === "en") rijen.unshift({ l: "Taal", w: "Engels (via de Engelse site)", html: "<span style=\"color:#b42318\">Engels</span> (via de Engelse site)" });
   if (formulier === "offerte") rijen.push({ l: "Toestemming contact", w: "Ja", html: "Ja" });
   if (aantalFotos) rijen.push({ l: "Foto's", w: `${aantalFotos} als bijlage`, html: `${aantalFotos} als bijlage` });
 
@@ -73,31 +80,60 @@ ${d.bericht ? `<tr><td style="padding:4px 24px 20px"><div style="font-size:13px;
 
 // Vaste tekst zonder klantinvoer: zo kan het formulier niet misbruikt worden om
 // via ons domein berichten naar willekeurige adressen te sturen.
-export function bevestigingMail(formulier, bedrijf) {
-  const wat = { offerte: "offerteaanvraag", spoed: "aanvraag", afspraak: "afspraakaanvraag" }[formulier];
-  const vervolg = formulier === "afspraak"
-    ? "We nemen zo snel mogelijk contact met je op om de afspraak te bevestigen."
-    : "We nemen zo snel mogelijk contact met je op.";
-  const onderwerpRegel = `We hebben je ${wat} ontvangen – ${bedrijf.naam}`;
+const BEVESTIGING = {
+  nl: {
+    wat: { offerte: "offerteaanvraag", spoed: "aanvraag", afspraak: "afspraakaanvraag" },
+    vervolgAfspraak: "We nemen zo snel mogelijk contact met je op om de afspraak te bevestigen.",
+    vervolg: "We nemen zo snel mogelijk contact met je op.",
+    onderwerp: (wat, naam) => `We hebben je ${wat} ontvangen – ${naam}`,
+    hallo: "Hallo,",
+    bedankt: (wat, naam, vervolg) => `Bedankt voor je ${wat} bij ${naam}. We hebben je aanvraag goed ontvangen. ${vervolg}`,
+    dringend: "Is het dringend, bijvoorbeeld een stroomstoring? Bel ons dan direct:",
+    groet: "Met vriendelijke groet,",
+    auto: "Dit is een automatisch bericht. Je kunt op deze e-mail antwoorden als je nog iets wilt aanvullen.",
+    nietZelf: "Heb je deze aanvraag niet zelf gedaan? Dan kun je deze e-mail negeren.",
+    pad: "",
+  },
+  en: {
+    wat: { offerte: "quote request", spoed: "request", afspraak: "appointment request" },
+    vervolgAfspraak: "We will contact you as soon as possible to confirm the appointment.",
+    vervolg: "We will contact you as soon as possible.",
+    onderwerp: (wat, naam) => `We have received your ${wat} – ${naam}`,
+    hallo: "Hello,",
+    bedankt: (wat, naam, vervolg) => `Thank you for your ${wat} to ${naam}. We have received your request. ${vervolg}`,
+    dringend: "Is it urgent, for example a power cut? Then call us straight away:",
+    groet: "Kind regards,",
+    auto: "This is an automated message. You can reply to this email if you would like to add anything.",
+    nietZelf: "Didn't make this request yourself? Then you can ignore this email.",
+    pad: "/en/",
+  },
+};
+
+export function bevestigingMail(formulier, bedrijf, taal = "nl") {
+  const t = BEVESTIGING[taal === "en" ? "en" : "nl"];
+  const wat = t.wat[formulier];
+  const vervolg = formulier === "afspraak" ? t.vervolgAfspraak : t.vervolg;
+  const site = bedrijf.website.replace(/\/$/, "") + t.pad;
+  const onderwerpRegel = t.onderwerp(wat, bedrijf.naam);
   const tekst = [
-    "Hallo,", "",
-    `Bedankt voor je ${wat} bij ${bedrijf.naam}. We hebben je aanvraag goed ontvangen. ${vervolg}`, "",
-    `Is het dringend, bijvoorbeeld een stroomstoring? Bel ons dan direct: ${bedrijf.telefoon} (24/7).`, "",
-    "Met vriendelijke groet,", bedrijf.naam, bedrijf.website, "",
-    "Dit is een automatisch bericht. Je kunt op deze e-mail antwoorden als je nog iets wilt aanvullen.",
-    "Heb je deze aanvraag niet zelf gedaan? Dan kun je deze e-mail negeren.",
+    t.hallo, "",
+    t.bedankt(wat, bedrijf.naam, vervolg), "",
+    `${t.dringend} ${bedrijf.telefoon} (24/7).`, "",
+    t.groet, bedrijf.naam, site, "",
+    t.auto,
+    t.nietZelf,
   ].join("\n");
-  const html = `<!doctype html><html lang="nl"><body style="margin:0;background:#f4f7f2;font-family:Arial,Helvetica,sans-serif;color:#14201a">
+  const html = `<!doctype html><html lang="${taal === "en" ? "en" : "nl"}"><body style="margin:0;background:#f4f7f2;font-family:Arial,Helvetica,sans-serif;color:#14201a">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f2;padding:24px 12px"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border:1px solid #dde5da;border-radius:10px">
 <tr><td style="padding:24px 24px 8px;font-size:20px;font-weight:bold;color:#1f7a16">${escHtml(bedrijf.naam)}</td></tr>
 <tr><td style="padding:8px 24px;font-size:15px;line-height:1.6">
-<p style="margin:0 0 14px">Hallo,</p>
-<p style="margin:0 0 14px">Bedankt voor je ${wat} bij ${escHtml(bedrijf.naam)}. We hebben je aanvraag goed ontvangen. ${vervolg}</p>
-<p style="margin:0 0 14px">Is het dringend, bijvoorbeeld een stroomstoring? Bel ons dan direct: <a href="tel:${escHtml(bedrijf.telefoonE164)}" style="color:#1f7a16;font-weight:bold">${escHtml(bedrijf.telefoon)}</a> (24/7).</p>
-<p style="margin:0">Met vriendelijke groet,<br>${escHtml(bedrijf.naam)}<br><a href="${escHtml(bedrijf.website)}" style="color:#1f7a16">${escHtml(bedrijf.website.replace(/^https?:\/\//, ""))}</a></p>
+<p style="margin:0 0 14px">${t.hallo}</p>
+<p style="margin:0 0 14px">${escHtml(t.bedankt(wat, bedrijf.naam, vervolg))}</p>
+<p style="margin:0 0 14px">${t.dringend} <a href="tel:${escHtml(bedrijf.telefoonE164)}" style="color:#1f7a16;font-weight:bold">${escHtml(bedrijf.telefoon)}</a> (24/7).</p>
+<p style="margin:0">${t.groet}<br>${escHtml(bedrijf.naam)}<br><a href="${escHtml(site)}" style="color:#1f7a16">${escHtml(site.replace(/^https?:\/\//, ""))}</a></p>
 </td></tr>
-<tr><td style="padding:16px 24px 22px;font-size:12px;color:#56615a">Dit is een automatisch bericht. Je kunt op deze e-mail antwoorden als je nog iets wilt aanvullen. Heb je deze aanvraag niet zelf gedaan? Dan kun je deze e-mail negeren.</td></tr>
+<tr><td style="padding:16px 24px 22px;font-size:12px;color:#56615a">${t.auto} ${t.nietZelf}</td></tr>
 </table></td></tr></table></body></html>`;
   return { onderwerp: onderwerpRegel, html, tekst };
 }

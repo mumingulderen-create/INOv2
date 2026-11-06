@@ -13,6 +13,7 @@ import { valideer, FORMULIEREN } from "./validatie.js";
 import { verwerkFotos } from "./foto.js";
 import { reviews } from "./reviews.js";
 import { aanvraagMail, bevestigingMail, onderwerp, stuurBrevo, headerVeilig } from "./mail.js";
+import { taalVan, melding, meldingen } from "./taal.js";
 
 const MAX_BODY = 12 * 1024 * 1024;
 const SITEVERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -113,14 +114,15 @@ export default {
     // gaan zoeken naar een andere manier, maar er wordt niets verstuurd.
     if (String(fd.get("_honey") || "").trim()) { log("spam", { formulier, reden: "honeypot" }); return json(200, { ok: true }, cors); }
 
+    const taal = taalVan(fd); // "en" bij de Engelse site: Engelse meldingen en bevestiging
     const v = valideer(formulier, fd);
-    if (!v.ok) { log("validatie", { formulier, velden: Object.keys(v.velden) }); return json(422, { ok: false, fout: "validatie", velden: v.velden }, cors); }
+    if (!v.ok) { log("validatie", { formulier, velden: Object.keys(v.velden) }); return json(422, { ok: false, fout: "validatie", velden: meldingen(v.velden, taal) }, cors); }
     const d = v.data;
 
     let bijlagen = [];
     if (formulier === "offerte") {
       const f = await verwerkFotos(fd.getAll("photos"));
-      if (!f.ok) { log("validatie", { formulier, velden: ["photos"] }); return json(422, { ok: false, fout: "validatie", velden: { photos: f.fout } }, cors); }
+      if (!f.ok) { log("validatie", { formulier, velden: ["photos"] }); return json(422, { ok: false, fout: "validatie", velden: { photos: melding(f.fout, taal) } }, cors); }
       bijlagen = f.bijlagen;
     }
 
@@ -133,11 +135,11 @@ export default {
 
     const mailTo = env.MAIL_TO;
     const afzender = { name: headerVeilig(env.MAIL_FROM_NAME || "Website INO", 60), email: env.MAIL_FROM };
-    const { html, tekst } = aanvraagMail(formulier, d, bijlagen.length);
+    const { html, tekst } = aanvraagMail(formulier, d, bijlagen.length, new Date(), taal);
     const bericht = {
       sender: afzender,
       to: [{ email: mailTo, contactPixelTrackingConsent: false }],
-      subject: onderwerp(formulier, d),
+      subject: onderwerp(formulier, d, taal),
       htmlContent: html,
       textContent: tekst,
       tags: [`formulier-${formulier}`],
@@ -151,7 +153,7 @@ export default {
       log("fout", { formulier, reden: String(e.message || e).slice(0, 40) });
       return json(502, { ok: false, fout: "mail" }, cors);
     }
-    log("verstuurd", { formulier, fotos: bijlagen.length });
+    log("verstuurd", { formulier, fotos: bijlagen.length, taal });
 
     // Bevestiging aan de klant pas nadat de aanvraag bij INO is afgeleverd.
     if (d.email && env.BEVESTIGING_KLANT === "true") {
@@ -160,7 +162,7 @@ export default {
         telefoon: env.BEDRIJF_TELEFOON || "06 28 76 37 75",
         telefoonE164: env.BEDRIJF_TELEFOON_E164 || "+31628763775",
         website: env.BEDRIJF_WEBSITE || "https://ino-elektra.nl",
-      });
+      }, taal);
       b.naamAfzender = env.BEDRIJF_NAAM || "INO Techniek en Installatie";
       ctx.waitUntil(
         stuurBrevo(env, {

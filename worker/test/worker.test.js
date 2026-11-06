@@ -265,3 +265,39 @@ test("verwerkFotos: lege bestandsvelden worden genegeerd", async () => {
   const r = await verwerkFotos([new File([], ""), ""]);
   assert.deepEqual(r, { ok: true, bijlagen: [] });
 });
+
+// ---------------------------------------------------------------- Engelse site (taal=en)
+test("EN: offerte via Engelse site -> [EN] in onderwerp, taalregel in mail, Engelse bevestiging", async () => {
+  const [r, j] = await stuur(post(formulier("offerte", { ...OFFERTE, taal: "en" })));
+  assert.equal(r.status, 200); assert.deepEqual(j, { ok: true });
+  const [m, b] = verzonden;
+  assert.match(m.subject, /^\[EN\] \[Offerte\] Meterkast vernieuwen – Jan de Vries$/);
+  assert.match(m.htmlContent, /Engels<\/span> \(via de Engelse site\)/);
+  assert.match(b.subject, /^We have received your quote request – /);
+  assert.match(b.textContent, /^Hello,/); assert.match(b.htmlContent, /lang="en"/);
+  assert.match(b.textContent, /ino-elektra\.nl\/en\//);
+  assert.ok(!b.htmlContent.includes("Jan") && !b.htmlContent.includes("Groepenkast"), "bevestiging bevat geen klantinvoer");
+});
+
+test("EN: validatiefouten in het Engels; zonder taal blijft alles Nederlands", async () => {
+  const [r, j] = await stuur(post(formulier("offerte", { name: "", phone: "abc", email: "x", message: "", taal: "en" })));
+  assert.equal(r.status, 422);
+  assert.equal(j.velden.name, "This field is required.");
+  assert.equal(j.velden.phone, "Please enter a valid phone number.");
+  assert.equal(j.velden.email, "Please enter a valid email address.");
+  assert.equal(j.velden.akkoord, "Please give permission for us to contact you.");
+  const [, n] = await stuur(post(formulier("offerte", { name: "", phone: "abc", email: "x", message: "" })));
+  assert.equal(n.velden.name, "Dit veld is verplicht.");
+  const [, k] = await stuur(post(formulier("spoed", { ...SPOED, message: "x".repeat(2001), taal: "en" })));
+  assert.equal(k.velden.message, "Maximum 2000 characters.");
+});
+
+test("EN: onbekende taalwaarde -> Nederlands; afspraak EN -> Engelse bevestiging", async () => {
+  await stuur(post(formulier("afspraak", { ...AFSPRAAK(), taal: "<script>" })));
+  assert.match(verzonden[0].subject, /^\[Afspraak\]/);
+  assert.match(verzonden[1].subject, /^We hebben je afspraakaanvraag ontvangen/);
+  verzonden = [];
+  await stuur(post(formulier("afspraak", { ...AFSPRAAK(), taal: "en" })));
+  assert.match(verzonden[0].subject, /^\[EN\] \[Afspraak\]/);
+  assert.match(verzonden[1].textContent, /confirm the appointment/);
+});

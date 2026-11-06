@@ -45,6 +45,16 @@ De website blijft op GitHub Pages. Alleen het versturen van formulieren gaat via
 
 Logs bevatten alleen formuliertype, uitkomst en foutcode. Nooit naam, telefoon, e-mail, IP of bericht.
 
+### Engelse site (`/en/`)
+
+De Engelse formulieren sturen een extra veld `taal=en` mee (gezet door `script-en.js`). Dan:
+- komen foutmeldingen in het Engels terug (`src/taal.js`);
+- krijgt de klant een Engelse bevestigingsmail met een link naar `ino-elektra.nl/en/`;
+- staat in de mail aan info@ `[EN]` voor het onderwerp en een regel "Taal: Engels". Antwoord de klant dan in het Engels.
+
+Elke andere waarde (of geen veld) betekent Nederlands. Na een wijziging hieraan: `npm test` en `npx wrangler deploy`.
+Is de Worker nog niet opnieuw gedeployed, dan werken de Engelse formulieren gewoon, maar zijn meldingen en bevestiging nog Nederlands.
+
 ## Secrets en instellingen
 
 | | Naam | Waar |
