@@ -543,7 +543,7 @@ def wijk_pagina(w, alle):
       <a class="btn btn-whatsapp" href="{wa}" target="_blank" rel="noopener" data-track="whatsapp">{ICON_WA} {L("WhatsApp een foto", "WhatsApp a photo")}</a>
       <a class="btn btn-secondary" href="{pad('/offerte/')}?wijk={w['slug']}">{L("Offerte aanvragen", "Request a quote")}</a>
     </div>
-    <div class="meta-row"><span>{L("24/7 bij storingen", "24/7 for power faults")}</span>{aanrij}<span>{voorrij}</span><span>{T['garantie_maanden']} {L("mnd garantie", "month guarantee")}</span></div>
+    <div class="meta-row"><span>{L("24/7 bij storingen", "24/7 for power faults")}</span>{aanrij}<span>{voorrij}</span><span>{T['garantie_maanden']} {L("mnd garantie", "month guarantee")}</span>{L("", "<span>English spoken</span>")}</div>
   </div>
 </section>
 
@@ -689,7 +689,7 @@ def storing_pagina(s, alle):
       <a class="btn btn-whatsapp" href="{wa}" target="_blank" rel="noopener" data-track="whatsapp">{ICON_WA} {L("Stuur foto via WhatsApp", "Send a photo via WhatsApp")}</a>
     </div>"""
         hero_meta_html = L("""<div class="meta-row"><span>Direct de monteur aan de lijn</span><span>Vaste prijs vóór we beginnen</span><span>Geen voorrijkosten in Utrecht</span></div>""",
-                           """<div class="meta-row"><span>Speak directly to the electrician</span><span>Fixed price before we start</span><span>No call-out charge in Utrecht</span></div>""")
+                           """<div class="meta-row"><span>Speak directly to the electrician</span><span>Fixed price before we start</span><span>No call-out charge in Utrecht</span><span>English spoken</span></div>""")
         stedin_blok = ""
 
     hero_pad = ' style="padding-bottom:12px"' if is_stroomstoring else ""

@@ -1,7 +1,7 @@
 <!--
 {
-  "title": "Electrician Utrecht | 24/7 emergency & fixed price | INO",
-  "description": "Need an electrician in Utrecht? Available 24/7 for power faults, fixed price upfront, no call-out charge in Utrecht. Rated {{google_score}} from {{google_aantal}} Google reviews.",
+  "title": "English-speaking electrician Utrecht | 24/7 | INO",
+  "description": "English-speaking electrician in Utrecht. Available 24/7 for power faults, fixed price upfront, no call-out charge in Utrecht. Rated {{google_score}} on Google.",
   "og_image": "hero-elektricien.jpg",
   "nav": "index"
 }
@@ -9,14 +9,15 @@
 <section class="hero">
   <div class="container hero-grid-2col">
     <div>
-      <h1>Electrician in Utrecht, <span>also for 24/7 emergencies</span></h1>
-      <p class="lead"><a class="mini-link" href="/en/power-outage-utrecht/">No power</a>, an <a class="mini-link" href="/en/rcd-keeps-tripping/">RCD that keeps tripping</a> or time for a new fuse box? You call the electrician directly, get a fixed price upfront and pay no call-out charge within the municipality of Utrecht. We also work in Nieuwegein, Maarssen, Vianen, Breukelen and the surrounding area.</p>
+      <h1>English-speaking electrician in Utrecht, <span>also for 24/7 emergencies</span></h1>
+      <p class="lead"><a class="mini-link" href="/en/power-outage-utrecht/">No power</a>, an <a class="mini-link" href="/en/rcd-keeps-tripping/">RCD that keeps tripping</a> or time for a new fuse box? You call the electrician directly (in English or Dutch), get a fixed price upfront and pay no call-out charge within the municipality of Utrecht. We also work in Nieuwegein, Maarssen, Vianen, Breukelen and the surrounding area.</p>
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="tel:{{tel_e164}}" data-track="bellen">Call now {{tel}}</a>
         <a class="btn btn-whatsapp" href="https://wa.me/{{whatsapp}}?text=Hello%20INO%2C%20I%20have%20a%20question%20about%20an%20electrical%20job.%20Here%20is%20a%20photo." target="_blank" rel="noopener" data-track="whatsapp">WhatsApp a photo</a>
         <a class="btn btn-secondary" href="/en/quote/">Request a quote</a>
       </div>
       <div class="trust-row">
+        <span>✓ English spoken</span>
         <span>✓ SBB accredited training company</span>
         <span>✓ Qualified and certified electrician</span>
         <span>✓ Fixed price upfront</span>
@@ -48,7 +49,7 @@
       <div class="step-card">
         <div class="step-number">2</div>
         <h3>A clear fixed price upfront</h3>
-        <p>You know exactly where you stand before we start. No hidden costs, no unexpected extras afterwards and <strong>€ 0 call-out charge</strong> within the municipality of Utrecht.</p>
+        <p>You know exactly where you stand before we start. No hidden costs, no unexpected extras afterwards and <strong>€ {{voorrijkosten_utrecht}} call-out charge</strong> within the municipality of Utrecht.</p>
       </div>
       <div class="step-card">
         <div class="step-number">3</div>
@@ -64,7 +65,7 @@
   <div class="container">
     <div class="section-heading" style="margin-bottom:12px;">
       <h2>Clear rates, fixed price upfront</h2>
-      <p>No hidden costs or surprises afterwards. € 0 call-out charge within the municipality of Utrecht.</p>
+      <p>No hidden costs or surprises afterwards. € {{voorrijkosten_utrecht}} call-out charge within the municipality of Utrecht.</p>
     </div>
     <div class="pricing-grid-3">
       <div class="price-card">
@@ -74,7 +75,7 @@
         <ul class="price-features">
           <li><span>⚡</span> <strong>Evening fault (Mon–Fri 18:00–22:00):</strong> € {{uur_avond}} (1st hour)</li>
           <li><span>⚡</span> <strong>Night &amp; weekend fault:</strong> € {{uur_nacht}} (1st hour)</li>
-          <li><span>✓</span> <strong>€ 0 call-out charge</strong> within the municipality of Utrecht</li>
+          <li><span>✓</span> <strong>€ {{voorrijkosten_utrecht}} call-out charge</strong> within the municipality of Utrecht</li>
           <li><span>✓</span> Professional fault diagnosis by a NEN 3140-certified electrician</li>
         </ul>
         <a href="/en/prices/" class="price-cta btn-secondary">See all hourly rates &rarr;</a>
@@ -227,6 +228,8 @@
   <div class="container narrow">
     <div class="section-heading"><h2>Frequently asked questions</h2></div>
     <div class="faq">
+      <button class="faq-q" type="button">Do you speak English?<span aria-hidden="true">+</span></button>
+      <div class="faq-a">Yes. You can call, WhatsApp or email us in English, and we explain the work and the price in English too.</div>
       <button class="faq-q" type="button">Do you charge a call-out fee in Utrecht?<span aria-hidden="true">+</span></button>
       <div class="faq-a">{{voorrij_zin}}</div>
       <button class="faq-q" type="button">What does an electrician cost per hour?<span aria-hidden="true">+</span></button>

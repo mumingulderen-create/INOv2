@@ -259,7 +259,7 @@ WIJKEN_EN = {
         "intro": "Need a reliable electrician in IJsselstein? INO Elektra is ready for you in Zenderpark, Achterveld and the historic town centre. Fuse box replacement, connecting a cooking circuit or urgently fixing a fault. Always a fixed price upfront, premium-brand materials and a 12-month guarantee.",
         "woningen": "IJsselstein has an attractive historic centre and spacious residential areas such as Achterveld and Zenderpark. Many households are switching to electric cooking or buying an electric car. We take care of safe meter cupboard extensions, running Perilex cables and installing EV chargers.",
         "klussen": [
-            ["Fuse box replacement", "Fitting complete single-phase or three-phase units with a 5-year manufacturer's warranty."],
+            ["Fuse box replacement", "Fitting complete single-phase or three-phase units with a 2-year manufacturer's warranty."],
             ["Fitting a Perilex cooking circuit", "Neatly hidden cabling to the hob."],
             ["EV charger at home", "Safe installation with dynamic load balancing on the driveway."],
             ["24/7 emergency service", "Fast repair when the power goes off."],

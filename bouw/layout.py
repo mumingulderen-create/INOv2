@@ -91,6 +91,7 @@ def business_node(wijken):
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "SBB Erkend Leerbedrijf (Relatienummer: 100850431)"},
         ],
         "award": L("SBB Erkend Leerbedrijf – Wij leiden vakmensen op", "SBB Accredited Training Company – we train future electricians"),
+        "knowsLanguage": ["nl", "en"],
         "sameAs": same,
     }
     if B["kvk"]:
@@ -197,7 +198,7 @@ def header(nav_key, wijken, variant="standaard", wissel=None):
     topbar = (
         f'<div class="topbar"><div class="container topbar-inner">'
         + L('<span>Storing? <strong>24/7 bereikbaar</strong> · geen voorrijkosten in Utrecht</span>',
-            '<span>Power fault? <strong>Available 24/7</strong> · no call-out charge in Utrecht</span>')
+            '<span>Power fault? <strong>Available 24/7</strong> · English spoken · no call-out charge in Utrecht</span>')
         + f'<a href="tel:{B["telefoon_e164"]}" data-track="bellen">{ICON_TEL} {B["telefoon_tonen"]}</a>'
         f'</div></div>'
     )

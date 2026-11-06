@@ -102,6 +102,9 @@ TARIEVEN = {
     "stopcontact_verleggen": 120,
     "frezen_per_meter": 10,
     "garantie_maanden": 12,
+    # Thuisbatterij aansluiten (richtprijs, stond al op /thuisbatterij-installeren/)
+    "thuisbatterij_min": 350,
+    "thuisbatterij_max": 750,
     # Extra groep (pagina /extra-groep-aanleggen)
     "extra_groep_leiding": 165,        # aparte groep + leiding trekken (richtprijs vanaf)
     "extra_groep_leiding_max": 220,    # meestal tussen .._leiding en dit bedrag

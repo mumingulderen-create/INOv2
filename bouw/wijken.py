@@ -747,7 +747,7 @@ WIJKEN = [
         "klussen": [
             [
                 "Groepenkast vervangen",
-                "Montage van complete 1-fase of 3-fase kasten met 5 jaar fabrieksgarantie."
+                "Montage van complete 1-fase of 3-fase kasten met 2 jaar fabrieksgarantie."
             ],
             [
                 "Perilex kookgroep monteren",
