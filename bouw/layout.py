@@ -171,6 +171,7 @@ def head(page, wijken, css_v, font_url=None):
 <meta name="description" content="{d}">
 {canon}
 <meta name="robots" content="{robots}">
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#278a1d">
 <meta name="format-detection" content="telephone=yes">
 <meta property="og:locale" content="{L("nl_NL", "en_GB")}">{alts}

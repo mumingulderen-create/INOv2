@@ -22,7 +22,7 @@ from wijken import WIJKEN, OVERIGE_UTRECHT, OVERIGE_REGIO
 from storingen import STORINGEN
 from wijken_en import WIJKEN_EN
 from storingen_en import STORINGEN_EN
-import layout, paginas, beelden, taal, vertaling_js
+import layout, paginas, beelden, taal, vertaling_js, donker
 
 taal.registreer_wijken(WIJKEN)
 
@@ -303,6 +303,15 @@ def main():
             extra_v[naam_en] = hashlib.md5(inhoud_en.encode()).hexdigest()[:8]
             schrijf(naam_en, inhoud_en)
 
+    # Donkere weergave (volgt de instelling van het toestel): afgeleid uit de stylesheets, zie bouw/donker.py
+    extra_css = [minify_css(open(f, encoding="utf-8").read()) for f in sorted(glob.glob(os.path.join(ROOT, "assets", "extra", "*.css")))]
+    inline_bron = [open(f, encoding="utf-8").read() for f in
+                   sorted(glob.glob(os.path.join(ROOT, "content", "**", "*.html"), recursive=True)) +
+                   sorted(glob.glob(os.path.join(ROOT, "bouw", "*.py")))]
+    donker_css = donker.maak([css_min] + extra_css, inline_bron)
+    donker_v = hashlib.md5(donker_css.encode()).hexdigest()[:8]
+    schrijf("donker.css", donker_css)
+
     print("3/6 Pagina's samenstellen…")
     pages = lees_content()
     for t in taal.TALEN:
@@ -381,6 +390,7 @@ def main():
                 html = html.replace("</body>", f'<script src="/{xjs}?v={extra_v[xjs]}" defer></script>\n</body>', 1)
             if f"{x}.css" not in extra_v and f"{x}.js" not in extra_v:
                 warn(f"{slug}: extra '{x}' bestaat niet in assets/extra/")
+        html = html.replace("</head>", f'<link rel="stylesheet" href="/donker.css?v={donker_v}" media="(prefers-color-scheme: dark)">\n</head>', 1)
         html, n_fix = normaliseer_links(html)
         if n_fix:
             warn(f"{slug or 'index'}: {n_fix} interne link(s) zonder slash automatisch verbeterd; pas de bron aan naar /pagina/")
