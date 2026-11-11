@@ -131,7 +131,7 @@ window.addEventListener('error', function (e) {
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
-          if (window.inoAds) track("conversion", { send_to: window.inoAds });
+          if (window.inoAds) track("conversion_event_contact"); // conversieactie CONTACT in Google Ads
           toon(result, "form-result", "<strong>Je aanvraag is succesvol verzonden.</strong><br>Bedankt " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
           if (list) list.textContent = "";
@@ -366,7 +366,7 @@ window.addEventListener('error', function (e) {
     if (isTel) {
       track("klik_bellen", { pagina: location.pathname });
       track("contact", { method: "phone", pagina: location.pathname });
-      if (window.inoAds) track("conversion", { send_to: window.inoAds });
+      if (window.inoAds) track("conversion_event_contact"); // conversieactie CONTACT in Google Ads
     } else if (isWa) {
       track("klik_whatsapp", { pagina: location.pathname });
       track("contact", { method: "whatsapp", pagina: location.pathname });
