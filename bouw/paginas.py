@@ -43,7 +43,7 @@ def cta_band(titel=None, tekst=None, wijk=""):
     tekst = tekst or L("Bel, app een foto van je meterkast of vraag een offerte aan. Je hoort altijd vooraf wat het kost.",
                        "Call, WhatsApp a photo of your meter cupboard or request a quote. You always know the price upfront.")
     q = f"?wijk={wijk}" if wijk else ""
-    return f"""<section class="contact-cta">
+    return f"""<section class="contact-cta" id="contact">
   <div class="container">
     <h2>{titel}</h2>
     <p>{tekst}</p>

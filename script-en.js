@@ -131,6 +131,7 @@ window.addEventListener('error', function (e) {
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
+          if (window.inoAds) track("conversion", { send_to: window.inoAds });
           toon(result, "form-result", "<strong>Your request has been sent.</strong><br>Thank you " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
           if (list) list.textContent = "";
@@ -365,6 +366,7 @@ window.addEventListener('error', function (e) {
     if (isTel) {
       track("klik_bellen", { pagina: location.pathname });
       track("contact", { method: "phone", pagina: location.pathname });
+      if (window.inoAds) track("conversion", { send_to: window.inoAds });
     } else if (isWa) {
       track("klik_whatsapp", { pagina: location.pathname });
       track("contact", { method: "whatsapp", pagina: location.pathname });
@@ -442,7 +444,7 @@ window.addEventListener('error', function (e) {
         '<div class="consent-details" hidden>' +
           '<div class="consent-rij"><div><strong>Necessary</strong><span>Remembers your cookie choice and protects forms against spam. Always on.</span></div>' +
             '<label class="consent-schakel is-vast"><input type="checkbox" checked disabled><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Necessary, always on</span></label></div>' +
-          '<div class="consent-rij"><div><strong>Statistics</strong><span>Google Analytics: which pages are viewed. Anonymised, not used for advertising.</span></div>' +
+          '<div class="consent-rij"><div><strong>Statistics and ad measurement</strong><span>Google Analytics: which pages are viewed. Google Ads: whether an advert leads to a call or request.</span></div>' +
             '<label class="consent-schakel"><input type="checkbox" data-consent-stat><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Allow statistics</span></label></div>' +
         '</div>' +
         '<div class="consent-knoppen">' +
