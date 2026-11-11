@@ -1145,3 +1145,4 @@ body{overflow-x:hidden;overflow-x:clip}
 .lang-switch b{font-weight:800}.nav-dd-toggle{white-space:nowrap}
 @media(min-width:1025px) and (max-width:1199px){.site-header nav{gap:12px}.lang-switch{margin-left:10px}.lang-switch b{display:none}}
 @media(max-width:1024px){.lang-switch{margin:0 8px 0 auto}}
+.thema{margin-left:6px!important}.thema button{border:0;background:none;cursor:pointer}.thema svg{width:16px;height:16px;box-shadow:none}

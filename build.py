@@ -390,7 +390,8 @@ def main():
                 html = html.replace("</body>", f'<script src="/{xjs}?v={extra_v[xjs]}" defer></script>\n</body>', 1)
             if f"{x}.css" not in extra_v and f"{x}.js" not in extra_v:
                 warn(f"{slug}: extra '{x}' bestaat niet in assets/extra/")
-        html = html.replace("</head>", f'<link rel="stylesheet" href="/donker.css?v={donker_v}" media="(prefers-color-scheme: dark)">\n</head>', 1)
+        html = html.replace("</head>", f'<link rel="stylesheet" href="/donker.css?v={donker_v}" media="(prefers-color-scheme: dark)" id="donkerCss">\n'
+                            '<script>try{var t=localStorage.getItem("ino_thema");if(t)document.getElementById("donkerCss").media=t==="donker"?"all":"not all"}catch(e){}</script>\n</head>', 1)
         html, n_fix = normaliseer_links(html)
         if n_fix:
             warn(f"{slug or 'index'}: {n_fix} interne link(s) zonder slash automatisch verbeterd; pas de bron aan naar /pagina/")

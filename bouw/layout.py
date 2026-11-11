@@ -31,7 +31,8 @@ def taalwissel(wissel):
         return f'<a href="{wissel[t]}" hreflang="{t}" lang="{t}" aria-label="{label}" title="{label}">{vlag}<b>{code}</b></a>'
     return ('<div class="lang-switch" role="group" aria-label="Taal / Language">'
             + optie("nl", FLAG_NL, "NL", "Nederlandse versie")
-            + optie("en", FLAG_EN, "EN", "English version") + '</div>')
+            + optie("en", FLAG_EN, "EN", "English version") + '</div>'
+            + f'<div class="lang-switch thema"><button type="button" data-thema aria-label="{L("Wissel tussen lichte en donkere weergave", "Switch between light and dark mode")}" title="{L("Licht / donker", "Light / dark")}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button></div>')
 
 
 def wa_url(tekst="Hallo INO, ik heb een vraag."):
@@ -171,7 +172,6 @@ def head(page, wijken, css_v, font_url=None):
 <meta name="description" content="{d}">
 {canon}
 <meta name="robots" content="{robots}">
-<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#278a1d">
 <meta name="format-detection" content="telephone=yes">
 <meta property="og:locale" content="{L("nl_NL", "en_GB")}">{alts}

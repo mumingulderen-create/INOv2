@@ -544,3 +544,14 @@ window.addEventListener('error', function (e) {
       .catch(function () {});
   } catch (err) {}
 })();
+
+/* Themaknop: wisselt licht/donker en onthoudt de keuze; zonder keuze volgt de site het toestel. */
+(function () {
+  var k = document.querySelector("[data-thema]"), l = document.getElementById("donkerCss");
+  if (!k || !l) return;
+  k.addEventListener("click", function () {
+    var donker = l.media === "all" || (l.media !== "not all" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+    l.media = donker ? "not all" : "all";
+    try { localStorage.setItem("ino_thema", donker ? "licht" : "donker"); } catch (e) {}
+  });
+})();
