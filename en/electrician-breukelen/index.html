@@ -6,16 +6,34 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  window.inoGA4 = function () {
-    if (window.inoGA4geladen) return; window.inoGA4geladen = true;
-    var s = document.createElement('script'); s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HR6L1S8V7P';
-    document.head.appendChild(s);
-    gtag('js', new Date());
-    gtag('config', 'G-HR6L1S8V7P', { anonymize_ip: true });
-    window.inoAds = 'AW-7124503256'; gtag('config', 'AW-7124503256');
+  gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+  window.inoKeuze = function () {
+    try {
+      var r = localStorage.getItem('ino_cookies'), d = parseInt(localStorage.getItem('ino_cookies_datum') || '0', 10);
+      if (!r) return null;
+      var k = r === 'nee' ? { stat: false, ads: false } : r.charAt(0) === '{' ? JSON.parse(r) : null;
+      if (!k || !d || Date.now() - d > 365 * 864e5) { localStorage.removeItem('ino_cookies'); localStorage.removeItem('ino_cookies_datum'); return null; }
+      return { stat: !!k.stat, ads: !!k.ads };
+    } catch (e) { return null; }
   };
-  try { var host = location.hostname || ''; if (host === 'ino-elektra.nl' || host === 'www.ino-elektra.nl') { if (localStorage.getItem('ino_cookies') === 'ja') window.inoGA4(); } } catch (e) {}
+  window.inoGA4 = function (k) {
+    var s = !!(k && k.stat && 'G-HR6L1S8V7P'), a = !!(k && k.ads && 'AW-7124503256');
+    gtag('consent', 'update', { analytics_storage: s ? 'granted' : 'denied', ad_storage: a ? 'granted' : 'denied', ad_user_data: a ? 'granted' : 'denied', ad_personalization: 'denied' });
+    if (!s && !a) return;
+    if (!window.inoGA4geladen) {
+      window.inoGA4geladen = true;
+      var t = document.createElement('script'); t.async = true;
+      t.src = 'https://www.googletagmanager.com/gtag/js?id=' + (s ? 'G-HR6L1S8V7P' : 'AW-7124503256');
+      document.head.appendChild(t);
+      gtag('js', new Date());
+    }
+    if (s && !window.inoStat) { window.inoStat = true; gtag('config', 'G-HR6L1S8V7P', { anonymize_ip: true }); }
+    if (a && !window.inoAds) { window.inoAds = 'AW-7124503256'; gtag('config', 'AW-7124503256'); }
+  };
+  (function () {
+    var h = location.hostname || '';
+    if (h === 'ino-elektra.nl' || h === 'www.ino-elektra.nl') { var k = window.inoKeuze(); if (k) window.inoGA4(k); }
+  })();
 </script>
 <title>Electrician Breukelen | 24/7 & fixed price | INO</title>
 <meta name="description" content="Need an electrician in Breukelen? Power faults, fuse boxes, Perilex. Fixed price upfront, available 24/7, fair mileage rate. Call 06 28 76 37 75.">
@@ -203,6 +221,6 @@
     </span>
   </span>
 </a>
-<script src="/script-en.js?v=e95b1f6b" defer></script>
+<script src="/script-en.js?v=9cfbc0b9" defer></script>
 </body>
 </html>

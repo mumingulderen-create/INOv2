@@ -2,7 +2,11 @@
 (function () {
   function esc(v) { return String(v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]; }); }
   function track(evt, params) {
-    try { if (window.inoGA4geladen && window.gtag) window.gtag("event", evt, params || {}); } catch (e) {}
+    try { if (window.inoStat && window.gtag) window.gtag("event", evt, params || {}); } catch (e) {}
+  }
+  // Conversie CONTACT in Google Ads, alleen met toestemming voor advertentiemeting (bouw/layout.py)
+  function trackAds() {
+    try { if (window.inoAds && window.gtag) window.gtag("event", "conversion_event_contact"); } catch (e) {}
   }
   function initKlusWizard() {
     var wizard = document.getElementById("quoteWizard");
@@ -223,6 +227,7 @@
     // Direct versturen via WhatsApp knop in Stap 3
     var btnSendWhatsApp = document.getElementById("btnSendWhatsApp");
     if (btnSendWhatsApp) {
+      var waGemeten = false; // nogmaals op de knop = dezelfde aanvraag, één keer meten
       btnSendWhatsApp.addEventListener("click", function (e) {
         e.preventDefault();
         var form = document.getElementById("quoteForm");
@@ -260,8 +265,12 @@
         lines.push("\nI will send photos of my situation.");
 
         var waUrl = "https://wa.me/31628763775?text=" + encodeURIComponent(lines.join("\n"));
-        track("formulier_verstuurd", { formulier: "quoteForm", method: "whatsapp_wizard" });
-        track("generate_lead", { formulier: "quoteForm", method: "whatsapp_wizard", currency: "EUR" });
+        if (!waGemeten) {
+          waGemeten = true;
+          track("formulier_verstuurd", { formulier: "quoteForm", method: "whatsapp_wizard" });
+          track("generate_lead", { formulier: "quoteForm", method: "whatsapp_wizard", currency: "EUR" });
+          trackAds();
+        }
         window.open(waUrl, "_blank", "noopener");
       });
     }

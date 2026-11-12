@@ -148,21 +148,44 @@ def head(page, wijken, css_v, font_url=None):
         href, srcset, sizes = page["lcp"]
         pre = (f'\n<link rel="preload" as="image" type="image/webp" href="{href}" imagesrcset="{srcset}"'
                f' imagesizes="{sizes}" fetchpriority="high" media="(min-width: 801px)">')
-    ads_config = f"\n    window.inoAds = '{GOOGLE_ADS_ID}'; gtag('config', '{GOOGLE_ADS_ID}');" if GOOGLE_ADS_ID else ""
-    # GA4 en Google Ads laden pas NA toestemming (cookiemelding in script.js). Zonder akkoord: geen cookies, geen verzoek naar Google.
+    # Google Analytics (statistieken) en Google Ads (conversiemeting) zijn twee aparte keuzes in de
+    # cookiemelding (assets/extra/cookies.js). Consent Mode v2 staat standaard op 'denied' en Google laadt
+    # pas NA een geldige keuze: zonder akkoord geen cookies en geen verzoek naar Google.
+    # Keuze in localStorage: ino_cookies = {"stat":bool,"ads":bool}, ino_cookies_datum = tijdstip (ms).
+    # Ouder dan 365 dagen of een 'ja' uit de oude melding (één schakelaar, tekst "geen advertenties") = opnieuw vragen.
+    # ad_personalization blijft altijd 'denied': geen gepersonaliseerde advertenties of remarketing.
     ga4_tag = f"""\n<script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){{dataLayer.push(arguments);}}
-  window.inoGA4 = function () {{
-    if (window.inoGA4geladen) return; window.inoGA4geladen = true;
-    var s = document.createElement('script'); s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}';
-    document.head.appendChild(s);
-    gtag('js', new Date());
-    gtag('config', '{GA4_MEASUREMENT_ID}', {{ anonymize_ip: true }});{ads_config}
+  gtag('consent', 'default', {{ analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }});
+  window.inoKeuze = function () {{
+    try {{
+      var r = localStorage.getItem('ino_cookies'), d = parseInt(localStorage.getItem('ino_cookies_datum') || '0', 10);
+      if (!r) return null;
+      var k = r === 'nee' ? {{ stat: false, ads: false }} : r.charAt(0) === '{{' ? JSON.parse(r) : null;
+      if (!k || !d || Date.now() - d > 365 * 864e5) {{ localStorage.removeItem('ino_cookies'); localStorage.removeItem('ino_cookies_datum'); return null; }}
+      return {{ stat: !!k.stat, ads: !!k.ads }};
+    }} catch (e) {{ return null; }}
   }};
-  try {{ var host = location.hostname || ''; if (host === 'ino-elektra.nl' || host === 'www.ino-elektra.nl') {{ if (localStorage.getItem('ino_cookies') === 'ja') window.inoGA4(); }} }} catch (e) {{}}
-</script>""" if GA4_MEASUREMENT_ID else ""
+  window.inoGA4 = function (k) {{
+    var s = !!(k && k.stat && '{GA4_MEASUREMENT_ID}'), a = !!(k && k.ads && '{GOOGLE_ADS_ID}');
+    gtag('consent', 'update', {{ analytics_storage: s ? 'granted' : 'denied', ad_storage: a ? 'granted' : 'denied', ad_user_data: a ? 'granted' : 'denied', ad_personalization: 'denied' }});
+    if (!s && !a) return;
+    if (!window.inoGA4geladen) {{
+      window.inoGA4geladen = true;
+      var t = document.createElement('script'); t.async = true;
+      t.src = 'https://www.googletagmanager.com/gtag/js?id=' + (s ? '{GA4_MEASUREMENT_ID}' : '{GOOGLE_ADS_ID}');
+      document.head.appendChild(t);
+      gtag('js', new Date());
+    }}
+    if (s && !window.inoStat) {{ window.inoStat = true; gtag('config', '{GA4_MEASUREMENT_ID}', {{ anonymize_ip: true }}); }}
+    if (a && !window.inoAds) {{ window.inoAds = '{GOOGLE_ADS_ID}'; gtag('config', '{GOOGLE_ADS_ID}'); }}
+  }};
+  (function () {{
+    var h = location.hostname || '';
+    if (h === 'ino-elektra.nl' || h === 'www.ino-elektra.nl') {{ var k = window.inoKeuze(); if (k) window.inoGA4(k); }}
+  }})();
+</script>""" if (GA4_MEASUREMENT_ID or GOOGLE_ADS_ID) else ""
     return f"""<!doctype html>
 <html lang="{taal.TAAL}">
 <head>
@@ -330,7 +353,7 @@ def footer(wijken, storingen, variant="standaard", js="/script.js"):
         ("/afspraak/", "Afspraak of schouw", "Appointment or site visit"),
     ]
     diensten_html = "".join(f'<a href="{pad(u)}">{L(n, e)}</a>' for u, n, e in diensten)
-    cookie = (f' · <a href="#cookies" data-cookie-instellingen>{L("Cookie-instellingen", "Cookie settings")}</a>' if GA4_MEASUREMENT_ID else '')
+    cookie = (f' · <a href="#cookies" data-cookie-instellingen>{L("Cookie-instellingen", "Cookie settings")}</a>' if (GA4_MEASUREMENT_ID or GOOGLE_ADS_ID) else '')
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div>

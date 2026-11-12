@@ -272,20 +272,7 @@ def main():
     if len(css_min.encode()) > BUDGET_CSS_KB * 1024:
         warn(f"style.css is {len(css_min.encode())//1024} KB (budget {BUDGET_CSS_KB} KB). Zet pagina-specifieke CSS in assets/extra/.")
 
-    js = open(os.path.join(ROOT, "assets", "script.js"), encoding="utf-8").read()
     from config import FORM_ENDPOINT, TURNSTILE_SITEKEY, REVIEWS_ENDPOINT
-    if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
-        warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
-    js = js.replace("__REVIEWS_ENDPOINT__", REVIEWS_ENDPOINT).replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
-    # Engelse variant (script-en.js) via de vertaaltabel in bouw/vertaling_js.py
-    js_en = vertaal_js("script.js", js)
-    js_v = {"nl": hashlib.md5(js.encode()).hexdigest()[:8], "en": hashlib.md5(js_en.encode()).hexdigest()[:8]}
-    schrijf("script.js", js)
-    schrijf("script-en.js", js_en)
-    for naam, inhoud in (("script.js", js), ("script-en.js", js_en)):
-        if len(inhoud.encode()) > BUDGET_JS_KB * 1024:
-            warn(f"{naam} is {len(inhoud.encode())//1024} KB (budget {BUDGET_JS_KB} KB). Zet pagina-specifieke JS in assets/extra/.")
-
     # Extra css/js die alleen op bepaalde pagina's laadt (front-matter: "extra": ["wizard"])
     extra_v = {}
     for pad in sorted(glob.glob(os.path.join(ROOT, "assets", "extra", "*.*"))):
@@ -302,6 +289,22 @@ def main():
             inhoud_en = vertaal_js(naam, inhoud)
             extra_v[naam_en] = hashlib.md5(inhoud_en.encode()).hexdigest()[:8]
             schrijf(naam_en, inhoud_en)
+
+    js = open(os.path.join(ROOT, "assets", "script.js"), encoding="utf-8").read()
+    if not FORM_ENDPOINT or not TURNSTILE_SITEKEY:
+        warn("FORM_ENDPOINT en/of TURNSTILE_SITEKEY in bouw/config.py zijn leeg: formulieren versturen niets (zie worker/README.md)")
+    js = js.replace("__REVIEWS_ENDPOINT__", REVIEWS_ENDPOINT).replace("__FORM_ENDPOINT__", FORM_ENDPOINT).replace("__TEL__", B["telefoon_tonen"]).replace("__TEL_E164__", B["telefoon_e164"])
+    # Engelse variant (script-en.js) via de vertaaltabel in bouw/vertaling_js.py
+    js_en = vertaal_js("script.js", js)
+    # De cookiemelding (assets/extra/cookies.js) laadt script.js zelf, alleen als dat nodig is
+    js = js.replace("__COOKIES_JS__", f"/cookies.js?v={extra_v['cookies.js']}")
+    js_en = js_en.replace("__COOKIES_JS__", f"/cookies-en.js?v={extra_v['cookies-en.js']}")
+    js_v = {"nl": hashlib.md5(js.encode()).hexdigest()[:8], "en": hashlib.md5(js_en.encode()).hexdigest()[:8]}
+    schrijf("script.js", js)
+    schrijf("script-en.js", js_en)
+    for naam, inhoud in (("script.js", js), ("script-en.js", js_en)):
+        if len(inhoud.encode()) > BUDGET_JS_KB * 1024:
+            warn(f"{naam} is {len(inhoud.encode())//1024} KB (budget {BUDGET_JS_KB} KB). Zet pagina-specifieke JS in assets/extra/.")
 
     # Donkere weergave (volgt de instelling van het toestel): afgeleid uit de stylesheets, zie bouw/donker.py
     extra_css = [minify_css(open(f, encoding="utf-8").read()) for f in sorted(glob.glob(os.path.join(ROOT, "assets", "extra", "*.css")))]
@@ -438,6 +441,9 @@ def main():
     if "--test" in sys.argv:
         import test_mobiel
         for w in test_mobiel.draai(ROOT, [p["url"].replace(SITE_URL, "") for p, _ in rendered.values() if p["slug"] != "404"]):
+            warn(w)
+        import test_cookies  # cookiemelding, Consent Mode en conversies (Google nagebootst, geen echte meting)
+        for w in test_cookies.draai(ROOT):
             warn(w)
 
     n_en = sum(1 for p, _ in rendered.values() if p["taal"] == "en")

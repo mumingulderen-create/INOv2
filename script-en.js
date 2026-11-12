@@ -131,7 +131,7 @@ window.addEventListener('error', function (e) {
         .then(function () {
           track("formulier_verstuurd", { formulier: form.id || "form" });
           track("generate_lead", { formulier: form.id || "form", currency: "EUR" });
-          if (window.inoAds) track("conversion_event_contact"); // conversieactie CONTACT in Google Ads
+          trackAds();
           toon(result, "form-result", "<strong>Your request has been sent.</strong><br>Thank you " + esc(data.get("name") || "") + ", " + okMsg);
           form.reset();
           if (list) list.textContent = "";
@@ -348,13 +348,13 @@ window.addEventListener('error', function (e) {
   initCalculator();
 
 
-  // Klik- en conversiemeting (bellen / WhatsApp / formulieren).
-  // Werkt automatisch en naadloos met Google Analytics 4 (GA4) en Google Ads.
+  // Klik- en conversiemeting (bellen / WhatsApp / formulieren), alleen met toestemming (bouw/layout.py):
+  // track() = Google Analytics (keuze "statistieken"), trackAds() = conversie CONTACT in Google Ads (keuze "advertentiemeting").
   function track(evt, params) {
-    try {
-      if (!window.inoGA4geladen) return; // geen toestemming = niets meten
-      if (window.gtag) window.gtag("event", evt, params || {});
-    } catch (e) {}
+    try { if (window.inoStat && window.gtag) window.gtag("event", evt, params || {}); } catch (e) {}
+  }
+  function trackAds() {
+    try { if (window.inoAds && window.gtag) window.gtag("event", "conversion_event_contact"); } catch (e) {}
   }
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("a");
@@ -362,15 +362,13 @@ window.addEventListener('error', function (e) {
     var href = a.getAttribute("href") || "";
     var isTel = href.indexOf("tel:") === 0 || a.getAttribute("data-track") === "bellen";
     var isWa = href.indexOf("wa.me") !== -1 || a.getAttribute("data-track") === "whatsapp";
-
-    if (isTel) {
-      track("klik_bellen", { pagina: location.pathname });
-      track("contact", { method: "phone", pagina: location.pathname });
-      if (window.inoAds) track("conversion_event_contact"); // conversieactie CONTACT in Google Ads
-    } else if (isWa) {
-      track("klik_whatsapp", { pagina: location.pathname });
-      track("contact", { method: "whatsapp", pagina: location.pathname });
-    }
+    if (!isTel && !isWa) return;
+    var nu = Date.now();
+    if (a._inoT && nu - a._inoT < 2000) return; // dubbel tikken = één contact
+    a._inoT = nu;
+    track(isTel ? "klik_bellen" : "klik_whatsapp", { pagina: location.pathname });
+    track("contact", { method: isTel ? "phone" : "whatsapp", pagina: location.pathname });
+    trackAds();
   });
 
   // Slimme, pagina-specifieke WhatsApp links (voor-ingevulde berichten)
@@ -414,76 +412,23 @@ window.addEventListener('error', function (e) {
     });
   }
   initSmartWhatsApp();
-  // Cookiemelding: Google Analytics alleen na akkoord (AVG / Telecommunicatiewet).
+  // Cookiemelding (assets/extra/cookies.js) laadt alleen als er nog geen geldige keuze is
+  // of na een klik op "Cookie-instellingen". Keuze, verlopen en Consent Mode: bouw/layout.py.
   function initCookies() {
-    if (typeof window.inoGA4 !== "function") return;
-    var KEY = "ino_cookies", KEY_DATUM = "ino_cookies_datum", GELDIG_DAGEN = 365;
-    function lees() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
-    function datum() { try { return parseInt(localStorage.getItem(KEY_DATUM) || "0", 10); } catch (e) { return 0; } }
-    function bewaar(v) { try { localStorage.setItem(KEY, v); localStorage.setItem(KEY_DATUM, String(Date.now())); } catch (e) {} }
-    var box, stat, details, vorigeFocus;
-    function sluit() { box.hidden = true; if (vorigeFocus && vorigeFocus !== document.body && vorigeFocus.focus) vorigeFocus.focus({ preventScroll: true }); }
-    function kies(v) {
-      var oud = lees();
-      bewaar(v);
-      sluit();
-      if (v === "ja") { var h = location.hostname || ""; if (h.indexOf("ino-elektra.nl") !== -1 && typeof window.inoGA4 === "function") window.inoGA4(); }
-      else if (oud === "ja") location.reload(); // intrekken: pagina zonder GA opnieuw laden
+    if (typeof window.inoKeuze !== "function") return;
+    var bezig = false, wens = [false, false];
+    function toon(details, focus) {
+      wens = [details, focus];
+      if (window.inoCookieMelding) { window.inoCookieMelding(details, focus); return; }
+      if (bezig) return;
+      bezig = true;
+      var s = document.createElement("script");
+      s.src = "/cookies-en.js?v=ed85a211";
+      s.onload = function () { if (window.inoCookieMelding) window.inoCookieMelding(wens[0], wens[1]); };
+      s.onerror = function () { bezig = false; };
+      document.head.appendChild(s);
     }
-    function bouw() {
-      box = document.createElement("div");
-      box.className = "consent";
-      box.setAttribute("role", "dialog");
-      box.setAttribute("aria-modal", "false");
-      box.setAttribute("aria-labelledby", "consentTitel");
-      box.setAttribute("aria-describedby", "consentTekst");
-      box.innerHTML =
-        '<div class="consent-kop"><span class="consent-icoon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>' +
-        '<h2 id="consentTitel">Your privacy</h2></div>' +
-        '<p id="consentTekst">We only use what is needed to make the site work. With your consent we also measure how the site is used, so we can improve it. No advertising, no selling of data. <a href="/en/privacy/">Privacy statement</a></p>' +
-        '<div class="consent-details" hidden>' +
-          '<div class="consent-rij"><div><strong>Necessary</strong><span>Remembers your cookie choice and protects forms against spam. Always on.</span></div>' +
-            '<label class="consent-schakel is-vast"><input type="checkbox" checked disabled><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Necessary, always on</span></label></div>' +
-          '<div class="consent-rij"><div><strong>Statistics and ad measurement</strong><span>Google Analytics: which pages are viewed. Google Ads: whether an advert leads to a call or request.</span></div>' +
-            '<label class="consent-schakel"><input type="checkbox" data-consent-stat><span class="consent-slider" aria-hidden="true"></span><span class="sr-only">Allow statistics</span></label></div>' +
-        '</div>' +
-        '<div class="consent-knoppen">' +
-          '<button type="button" class="consent-btn consent-btn-link" data-consent="voorkeuren" aria-expanded="false">Preferences</button>' +
-          '<button type="button" class="consent-btn consent-btn-link" data-consent="opslaan" hidden>Save choice</button>' +
-          '<button type="button" class="consent-btn consent-btn-sec" data-consent="nee">Necessary only</button>' +
-          '<button type="button" class="consent-btn consent-btn-pri" data-consent="ja">Accept all</button>' +
-        '</div>';
-      stat = box.querySelector("[data-consent-stat]");
-      details = box.querySelector(".consent-details");
-      box.addEventListener("click", function (e) {
-        var b = e.target.closest && e.target.closest("[data-consent]");
-        if (!b) return;
-        var actie = b.getAttribute("data-consent");
-        if (actie === "voorkeuren") { toonDetails(true); stat.focus(); return; }
-        if (actie === "opslaan") { kies(stat.checked ? "ja" : "nee"); return; }
-        kies(actie);
-      });
-      document.body.appendChild(box);
-    }
-    function toonDetails(aan) {
-      details.hidden = !aan;
-      box.classList.toggle("is-open", aan);
-      box.querySelector('[data-consent="voorkeuren"]').hidden = aan;
-      box.querySelector('[data-consent="voorkeuren"]').setAttribute("aria-expanded", aan ? "true" : "false");
-      box.querySelector('[data-consent="opslaan"]').hidden = !aan;
-    }
-    function toon(metDetails, focus) {
-      vorigeFocus = document.activeElement;
-      if (!box) bouw();
-      stat.checked = lees() === "ja";
-      toonDetails(!!metDetails);
-      box.hidden = false;
-      var eerste = box.querySelector(metDetails ? "[data-consent-stat]" : '[data-consent="ja"]');
-      if (focus && eerste) setTimeout(function () { eerste.focus({ preventScroll: true }); }, 50);
-    }
-    var keuze = lees();
-    var verlopen = keuze && datum() && (Date.now() - datum() > GELDIG_DAGEN * 864e5);
-    if (!keuze || verlopen) toon(false);
+    if (!window.inoKeuze()) toon(false, false);
     document.addEventListener("click", function (e) {
       var a = e.target.closest && e.target.closest("[data-cookie-instellingen]");
       if (a) { e.preventDefault(); toon(true, true); }
