@@ -423,7 +423,7 @@ window.addEventListener('error', function (e) {
       if (bezig) return;
       bezig = true;
       var s = document.createElement("script");
-      s.src = "/cookies-en.js?v=ed85a211";
+      s.src = "/cookies-en.js?v=3450d8ff";
       s.onload = function () { if (window.inoCookieMelding) window.inoCookieMelding(wens[0], wens[1]); };
       s.onerror = function () { bezig = false; };
       document.head.appendChild(s);

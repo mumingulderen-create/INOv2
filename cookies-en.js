@@ -58,18 +58,18 @@
     box.setAttribute("aria-describedby", "consentTekst");
     box.innerHTML =
       '<div class="consent-kop"><span class="consent-icoon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>' +
-      '<h2 id="consentTitel">Your privacy</h2></div>' +
-      '<p id="consentTekst">We only use what is needed to make the site work. With your consent we also use Google Analytics (statistics) and Google Ads (measuring whether an advert leads to a call, WhatsApp message or request). Under Preferences you choose them separately. No personalised advertising, no selling of data. <a href="/en/privacy/">Privacy statement</a></p>' +
+      '<h2 id="consentTitel">Can you help us out?</h2></div>' +
+      '<p id="consentTekst">We are a small electrical business in Utrecht. With your consent, Google shows us which pages and adverts work, so we do not waste money. No personalised advertising, no selling of data. <a href="/en/privacy/">More info</a></p>' +
       '<div class="consent-details" hidden>' +
         rij("Necessary", "Remembers your cookie choice and display mode and protects forms against spam. Always on.", "", "Necessary, always on") +
         rij("Statistics (Google Analytics)", "Which pages are viewed and how often call, WhatsApp or form buttons are used.", "data-consent-stat", "Allow statistics") +
         rij("Ad measurement (Google Ads)", "Whether a click on our Google advert leads to a call, WhatsApp message or request. For this, Google receives data about your visit and the ad click. No personalised advertising.", "data-consent-ads", "Allow ad measurement") +
       '</div>' +
       '<div class="consent-knoppen">' +
-        '<button type="button" class="consent-btn consent-btn-link" data-consent="voorkeuren" aria-expanded="false">Preferences</button>' +
+        '<button type="button" class="consent-btn consent-btn-link" data-consent="voorkeuren" aria-expanded="false">Let me choose</button>' +
         '<button type="button" class="consent-btn consent-btn-link" data-consent="opslaan" hidden>Save choice</button>' +
         '<button type="button" class="consent-btn consent-btn-sec" data-consent="nee">Necessary only</button>' +
-        '<button type="button" class="consent-btn consent-btn-pri" data-consent="ja">Accept all</button>' +
+        '<button type="button" class="consent-btn consent-btn-pri" data-consent="ja">I agree</button>' +
       '</div>';
     stat = box.querySelector("[data-consent-stat]");
     ads = box.querySelector("[data-consent-ads]");
@@ -92,6 +92,7 @@
     v.hidden = aan;
     v.setAttribute("aria-expanded", aan ? "true" : "false");
     box.querySelector('[data-consent="opslaan"]').hidden = !aan;
+    box.querySelector('[data-consent="ja"]').textContent = aan ? "Accept all" : "I agree";
   }
 
   function sluit() {

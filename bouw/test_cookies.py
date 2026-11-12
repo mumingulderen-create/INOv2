@@ -146,13 +146,18 @@ def draai(root):
                 page.goto(SITE + "/", wait_until="load")
                 melding(page)
                 tekst = page.inner_text(".consent")
-                check("Google Ads" in tekst and "Google Analytics" in tekst, "melding noemt Google Analytics en Google Ads niet")
+                check("Help je ons even?" in tekst and "Google" in tekst, "eerste laag mist de kop of de vermelding van Google")
                 check("Geen advertenties" not in tekst, "melding zegt nog 'Geen advertenties'")
+                check(page.inner_text('.consent [data-consent="ja"]') == "Akkoord", "accepteerknop heet geen 'Akkoord'")
                 check(page.is_visible('.consent [data-consent="nee"]') and page.is_visible('.consent [data-consent="ja"]'),
                       "weigeren en accepteren staan niet allebei in de eerste laag")
                 page.click('.consent [data-consent="voorkeuren"]')
                 check(not page.is_checked(".consent [data-consent-stat]") and not page.is_checked(".consent [data-consent-ads]"),
                       "optionele keuzes staan vooraf aan")
+                details = page.inner_text(".consent")
+                check("Statistieken (Google Analytics)" in details and "Advertentiemeting (Google Ads)" in details,
+                      "Zelf kiezen toont Google Analytics en Google Ads niet apart")
+                check(page.inner_text('.consent [data-consent="ja"]') == "Alles accepteren", "met schakelaars open heet de knop geen 'Alles accepteren'")
                 c = consent(page)
                 check(c and c[0][0] == "default" and all(v == "denied" for k, v in c[0][1].items() if k != "wait_for_update"),
                       f"Consent Mode-standaard is niet alles 'denied': {c}")
@@ -279,7 +284,7 @@ def draai(root):
                 melding(page)
                 page.click('.consent [data-consent="voorkeuren"]')
                 tekst = page.inner_text(".consent")
-                for nl in ("Jouw privacy", "Voorkeuren", "Alleen noodzakelijk", "Noodzakelijk", "Statistieken", "Advertentiemeting"):
+                for nl in ("Help je ons", "Zelf kiezen", "Akkoord", "Alleen noodzakelijk", "Noodzakelijk", "Statistieken", "Advertentiemeting"):
                     check(nl not in tekst, f"Engelse melding bevat nog '{nl}'")
                 check("Ad measurement (Google Ads)" in tekst and page.get_attribute(".consent #consentTekst a", "href") == "/en/privacy/",
                       "Engelse melding mist Google Ads of de link naar /en/privacy/")
