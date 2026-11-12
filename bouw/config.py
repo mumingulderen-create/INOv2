@@ -66,7 +66,7 @@ GOOGLE_SITE_VERIFICATION = "xHeZ_iY8KLYVB6SQZzxa5C9qnocjO7YkzjrELzLSXWw"
 # Google Analytics 4 (GA4) Meet-ID (bijv. "G-XXXXXXXXXX" of leeg laten)
 GA4_MEASUREMENT_ID = "G-HR6L1S8V7P"
 # Google Ads-tag (laadt net als GA4 pas na akkoord in de cookiemelding; leeg = uit)
-GOOGLE_ADS_ID = "AW-7124503256"
+GOOGLE_ADS_ID = "AW-18443669404"   # bestemming van de Google-tag (container GTM-KB8W4CM4); NIET het accountnummer 712-450-3256
 
 # Formulieren: website -> eigen Cloudflare Worker (map worker/) -> Brevo -> info@ino-elektra.nl
 # Beide waarden zijn OPENBAAR (ze staan ook in de pagina). Geheimen (Turnstile secret key,

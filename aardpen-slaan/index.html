@@ -17,18 +17,18 @@
     } catch (e) { return null; }
   };
   window.inoGA4 = function (k) {
-    var s = !!(k && k.stat && 'G-HR6L1S8V7P'), a = !!(k && k.ads && 'AW-7124503256');
+    var s = !!(k && k.stat && 'G-HR6L1S8V7P'), a = !!(k && k.ads && 'AW-18443669404');
     gtag('consent', 'update', { analytics_storage: s ? 'granted' : 'denied', ad_storage: a ? 'granted' : 'denied', ad_user_data: a ? 'granted' : 'denied', ad_personalization: 'denied' });
     if (!s && !a) return;
     if (!window.inoGA4geladen) {
       window.inoGA4geladen = true;
       var t = document.createElement('script'); t.async = true;
-      t.src = 'https://www.googletagmanager.com/gtag/js?id=' + (s ? 'G-HR6L1S8V7P' : 'AW-7124503256');
+      t.src = 'https://www.googletagmanager.com/gtag/js?id=' + (s ? 'G-HR6L1S8V7P' : 'AW-18443669404');
       document.head.appendChild(t);
       gtag('js', new Date());
     }
     if (s && !window.inoStat) { window.inoStat = true; gtag('config', 'G-HR6L1S8V7P', { anonymize_ip: true }); }
-    if (a && !window.inoAds) { window.inoAds = 'AW-7124503256'; gtag('config', 'AW-7124503256'); }
+    if (a && !window.inoAds) { window.inoAds = 'AW-18443669404'; gtag('config', 'AW-18443669404'); }
   };
   (function () {
     var h = location.hostname || '';
