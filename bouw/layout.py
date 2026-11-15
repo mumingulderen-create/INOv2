@@ -5,7 +5,7 @@ mobiele belbalk en de structured data (JSON-LD) voor Google.
 import json, datetime
 from html import escape
 from config import SITE_URL, BEDRIJF as B, NAV, NAV_GROEP, GOOGLE_SITE_VERIFICATION, GA4_MEASUREMENT_ID, GOOGLE_ADS_ID, TARIEVEN as T
-import taal
+import taal, beelden
 from taal import L, pad
 
 JAAR = datetime.date.today().year
@@ -264,12 +264,13 @@ def header(nav_key, wijken, variant="standaard", wissel=None):
             items.append(f'<a href="{href}" class="{cls_active.strip()}"{active}>{lab(it)}</a>'.replace(' class=""', ""))
     nav = "\n      ".join(items)
     wissel_html = taalwissel(wissel) if wissel else ""
+    logo = beelden.logo_img(B["naam"] + " – " + L("elektricien Utrecht", "electrician Utrecht"))
     return f"""<a class="skip-link" href="#inhoud">{L("Naar de inhoud", "Skip to content")}</a>
 {topbar}
 <header class="site-header">
   <div class="container nav-wrap">
     <a class="brand" href="{pad("/")}" aria-label="{B['naam']} – {L("elektricien Utrecht, naar de homepage", "electrician Utrecht, go to the homepage")}">
-      <img src="/img/logo-390.png" alt="{B['naam']} – {L("elektricien Utrecht", "electrician Utrecht")}" width="130" height="54" decoding="async">
+      {logo}
     </a>
     <nav id="nav" aria-label="{L("Hoofdmenu", "Main menu")}">
       {nav}
@@ -357,7 +358,7 @@ def footer(wijken, storingen, variant="standaard", js="/script.js"):
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <img src="/img/logo-390.png" alt="{B['naam']} logo" class="footer-logo" width="130" height="54" loading="lazy" decoding="async">
+      {beelden.logo_img(B["naam"] + " logo", "footer-logo", lui=True)}
       <p>{L("Elektricien in Utrecht en omstreken. Vaste prijs vooraf en 24/7 bereikbaar bij storingen.", "Electrician in Utrecht and the surrounding area. Fixed price upfront and available 24/7 for power faults.")}</p>
       <p><a href="tel:{B['telefoon_e164']}" data-track="bellen"><strong>{B['telefoon_tonen']}</strong></a><br>
       <a href="mailto:{B['email']}">{B['email']}</a></p>

@@ -21,6 +21,9 @@ body{background:%s}
 .nav-cta{color:#111827}
 .floating-wa-text strong{color:#0b2e17}
 .floating-wa-text small{color:rgba(11,46,23,.85)}
+.logo-licht{display:none!important}
+.logo-donker{display:block!important}
+.logo-plaat{background:#fff;border-radius:10px;padding:4px 6px;box-sizing:content-box}
 """ % PAGINA
 
 HEX = re.compile(r"#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![0-9a-fA-F])")

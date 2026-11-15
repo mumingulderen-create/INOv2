@@ -38,21 +38,52 @@ LOGO_UIT = os.path.join(OUT, "logo-390.png")
 LOGO_BREEDTE = 390
 LOGO_KLEUREN = 128
 
+# Donkere weergave: het gewone logo heeft zwarte lijnen, witte vlakken en grijze
+# tekst en valt op de donkere header weg. assets/logo-donker.png is dezelfde
+# afbeelding met lichte lijnen en tekst, doorzichtige vlakken en hetzelfde groen
+# (afgeleid van logo.png, 15 nov 2026). Vervangt de ontwerper hem, zet dan het
+# nieuwe bestand op dezelfde plek (410x170, PNG met transparantie).
+# Ontbreekt hij, dan zet donker.css het gewone logo op een witte plaat.
+LOGO_DONKER_BRON = os.path.join(ROOT, "assets", "logo-donker.png")
+LOGO_DONKER_UIT = os.path.join(OUT, "logo-donker-390.png")
 
-def verwerk_logo():
-    if not os.path.exists(LOGO_BRON):
+
+def _verklein_logo(bron, uit):
+    if not os.path.exists(bron):
+        if os.path.exists(uit):
+            os.remove(uit)
         return
-    if os.path.exists(LOGO_UIT) and os.path.getmtime(LOGO_UIT) >= os.path.getmtime(LOGO_BRON):
+    if os.path.exists(uit) and os.path.getmtime(uit) >= os.path.getmtime(bron):
         return
     try:
         from PIL import Image
     except ImportError:
         return
-    im = Image.open(LOGO_BRON).convert("RGBA")
+    im = Image.open(bron).convert("RGBA")
     h = round(im.height * LOGO_BREEDTE / im.width)
     klein = im.resize((LOGO_BREEDTE, h), Image.LANCZOS)
     os.makedirs(OUT, exist_ok=True)
-    klein.quantize(colors=LOGO_KLEUREN, method=Image.FASTOCTREE).save(LOGO_UIT, "PNG", optimize=True)
+    klein.quantize(colors=LOGO_KLEUREN, method=Image.FASTOCTREE).save(uit, "PNG", optimize=True)
+
+
+def verwerk_logo():
+    _verklein_logo(LOGO_BRON, LOGO_UIT)
+    _verklein_logo(LOGO_DONKER_BRON, LOGO_DONKER_UIT)
+
+
+def logo_img(alt, klasse="", lui=False):
+    """Het logo in header en footer (130x54). Met een donker logo staan er twee
+    <img>'s en toont donker.css de juiste (.logo-licht / .logo-donker); zonder
+    krijgt het ene logo in donker een witte plaat (.logo-plaat)."""
+    k = f"{klasse} " if klasse else ""
+    laden = ' loading="lazy"' if lui else ""
+    licht = f'<img src="/img/logo-390.png" alt="{alt}" class="{k}%s" width="130" height="54"{laden} decoding="async">'
+    if not os.path.exists(LOGO_DONKER_UIT):
+        return licht % "logo-plaat"
+    # Het donkere logo in de header niet 'lazy': lazy laadt pas na de opmaak en
+    # dan knippert het logo bij elke pagina even.
+    return (licht % "logo-licht"
+            + f'<img src="/img/logo-donker-390.png" alt="{alt}" class="{k}logo-donker" width="130" height="54"{laden} decoding="async">')
 
 
 def verwerk():
@@ -99,7 +130,7 @@ def verwerk():
     # Varianten van foto's die niet meer in assets/foto/ staan opruimen
     bronnen = {os.path.splitext(fn)[0] for fn in os.listdir(SRC)}
     for fn in os.listdir(OUT):
-        if fn == os.path.basename(LOGO_UIT):
+        if fn in (os.path.basename(LOGO_UIT), os.path.basename(LOGO_DONKER_UIT)):
             continue
         stem = re.sub(r"(-\d+)?\.(webp|jpg|png|svg)$", "", fn[3:] if fn.startswith("og-") else fn)
         if stem not in bronnen:

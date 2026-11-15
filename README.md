@@ -16,6 +16,7 @@ Regels en bevestigde feiten voor AI-assistenten: `CLAUDE.md`.
 | Storingspagina's (geen stroom, aardlek, …) | `bouw/storingen.py` |
 | Opmaak en scripts | `assets/style.css`, `assets/script.js`; alleen voor één pagina: `assets/extra/` |
 | Foto's | `assets/foto/` (de build maakt WebP-varianten in `img/`) |
+| Logo | `logo.png` (root, ook voor Google) en `assets/logo-donker.png` (donkere weergave); de build maakt `img/logo-390.png` en `img/logo-donker-390.png` |
 | Engelse versie van een pagina | `content/en/<zelfde naam>.html`; wijken `bouw/wijken_en.py`, storingen `bouw/storingen_en.py`; slugs `bouw/taal.py`; scripts `bouw/vertaling_js.py` |
 | Formulieren | frontend: `assets/script.js` (`wire`) en `assets/extra/formulier.js`; adres en Turnstile-sitekey: `bouw/config.py`; server: `worker/` (zie `worker/README.md`) |
 
