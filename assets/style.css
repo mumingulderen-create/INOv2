@@ -358,6 +358,8 @@ p a:not(.btn),li a:not(.btn){text-decoration:underline;text-underline-offset:2px
 
 /* Header */
 .brand img{height:54px;width:auto}
+/* Logo voor de donkere weergave: verborgen; donker.css (HANDMATIG in bouw/donker.py) wisselt het om */
+.brand .logo-donker,.site-footer .logo-donker{display:none}
 .menu-btn{color:var(--ink);padding:8px;border-radius:10px;cursor:pointer;line-height:0}
 .menu-btn:hover{background:var(--soft)}
 .site-header nav a[aria-current="page"]{color:var(--green-dark)}

@@ -33,16 +33,90 @@ def _save(im, path, fmt, **kw):
 # en de footer. Dat is op élke pagina boven de vouw. Een 390px brede versie met
 # een palet van 128 kleuren is visueel identiek en ~11 kB. Het origineel
 # /logo.png blijft staan: dat is de logo-URL in de structured data.
+# Voor de donkere weergave maakt de build er zelf een donkere variant van
+# (logo-390-donker.png); layout.py zet beide in de pagina, donker.css wisselt ze.
 LOGO_BRON = os.path.join(ROOT, "logo.png")
 LOGO_UIT = os.path.join(OUT, "logo-390.png")
+LOGO_DONKER_UIT = os.path.join(OUT, "logo-390-donker.png")
 LOGO_BREEDTE = 390
 LOGO_KLEUREN = 128
+
+# Lijnkleur in het donker: groenig lichtgrijs, dezelfde tint als --ink in donker.css
+LOGO_INKT_TINT, LOGO_INKT_SAT = 0.375, 0.1
+
+
+def _logo_wit(p):
+    return min(p[:3]) >= 238
+
+
+def _logo_groen(r, g, b):
+    import colorsys
+    hue = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)[0]
+    return 0.17 < hue < 0.47 and max(r, g, b) - min(r, g, b) > 40
+
+
+def donker_logo(im):
+    """Donkere variant van het logo, voor op een donkere achtergrond.
+
+    - Witte vulling (binnenin de O, de lamp en het hoofd) wordt doorzichtig.
+    - Pixels op de rand met dat wit worden 'ontmengd': de kleur van de lijn
+      ernaast met gedeeltelijke doorzichtigheid, zodat er geen witte rand blijft.
+    - Zwarte lijnen en grijze tekst worden licht (lichtheid omgedraaid).
+    - Het groene INO blijft precies zoals het is.
+    """
+    import colorsys
+    from PIL import Image
+    im = im.convert("RGBA")
+    w, h = im.size
+    src = im.load()
+    uit = Image.new("RGBA", (w, h))
+    dst = uit.load()
+    rand = set()
+    for y in range(h):
+        for x in range(w):
+            if src[x, y][3] and _logo_wit(src[x, y]):
+                for yy in range(max(0, y - 2), min(h, y + 3)):
+                    for xx in range(max(0, x - 2), min(w, x + 3)):
+                        if not _logo_wit(src[xx, yy]):
+                            rand.add((xx, yy))
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = src[x, y]
+            if a == 0 or _logo_wit((r, g, b)):
+                dst[x, y] = (0, 0, 0, 0)
+                continue
+            if (x, y) in rand:
+                # Buurkleur die het verst van wit ligt = de echte lijnkleur
+                lijn, verst = (r, g, b), -1
+                for yy in range(max(0, y - 3), min(h, y + 4)):
+                    for xx in range(max(0, x - 3), min(w, x + 4)):
+                        q = src[xx, yy]
+                        d = sum((255 - c) ** 2 for c in q[:3])
+                        if q[3] >= 250 and d > verst:
+                            lijn, verst = q[:3], d
+                t = sum((255 - p) * (255 - c) for p, c in zip((r, g, b), lijn)) / (verst if verst > 0 else 1)
+                r, g, b = lijn
+                a = round(a * max(0.0, min(1.0, t)))
+                if a == 0:
+                    dst[x, y] = (0, 0, 0, 0)
+                    continue
+            if _logo_groen(r, g, b):
+                dst[x, y] = (r, g, b, a)
+                continue
+            l = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)[1]
+            nr, ng, nb = colorsys.hls_to_rgb(LOGO_INKT_TINT, 0.95 - 0.7 * l, LOGO_INKT_SAT)
+            dst[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
+    return uit
+
+
+def _actueel(uit, *bronnen):
+    return os.path.exists(uit) and all(os.path.getmtime(uit) >= os.path.getmtime(b) for b in bronnen)
 
 
 def verwerk_logo():
     if not os.path.exists(LOGO_BRON):
         return
-    if os.path.exists(LOGO_UIT) and os.path.getmtime(LOGO_UIT) >= os.path.getmtime(LOGO_BRON):
+    if _actueel(LOGO_UIT, LOGO_BRON) and _actueel(LOGO_DONKER_UIT, LOGO_BRON, __file__):
         return
     try:
         from PIL import Image
@@ -50,9 +124,10 @@ def verwerk_logo():
         return
     im = Image.open(LOGO_BRON).convert("RGBA")
     h = round(im.height * LOGO_BREEDTE / im.width)
-    klein = im.resize((LOGO_BREEDTE, h), Image.LANCZOS)
     os.makedirs(OUT, exist_ok=True)
-    klein.quantize(colors=LOGO_KLEUREN, method=Image.FASTOCTREE).save(LOGO_UIT, "PNG", optimize=True)
+    for beeld, uit in ((im, LOGO_UIT), (donker_logo(im), LOGO_DONKER_UIT)):
+        klein = beeld.resize((LOGO_BREEDTE, h), Image.LANCZOS)
+        klein.quantize(colors=LOGO_KLEUREN, method=Image.FASTOCTREE).save(uit, "PNG", optimize=True)
 
 
 def verwerk():
@@ -99,7 +174,7 @@ def verwerk():
     # Varianten van foto's die niet meer in assets/foto/ staan opruimen
     bronnen = {os.path.splitext(fn)[0] for fn in os.listdir(SRC)}
     for fn in os.listdir(OUT):
-        if fn == os.path.basename(LOGO_UIT):
+        if fn in (os.path.basename(LOGO_UIT), os.path.basename(LOGO_DONKER_UIT)):
             continue
         stem = re.sub(r"(-\d+)?\.(webp|jpg|png|svg)$", "", fn[3:] if fn.startswith("og-") else fn)
         if stem not in bronnen:

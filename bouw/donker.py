@@ -21,6 +21,8 @@ body{background:%s}
 .nav-cta{color:#111827}
 .floating-wa-text strong{color:#0b2e17}
 .floating-wa-text small{color:rgba(11,46,23,.85)}
+.brand .logo-licht,.site-footer .logo-licht{display:none}
+.brand .logo-donker,.site-footer .logo-donker{display:block}
 """ % PAGINA
 
 HEX = re.compile(r"#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![0-9a-fA-F])")

@@ -269,7 +269,8 @@ def header(nav_key, wijken, variant="standaard", wissel=None):
 <header class="site-header">
   <div class="container nav-wrap">
     <a class="brand" href="{pad("/")}" aria-label="{B['naam']} – {L("elektricien Utrecht, naar de homepage", "electrician Utrecht, go to the homepage")}">
-      <img src="/img/logo-390.png" alt="{B['naam']} – {L("elektricien Utrecht", "electrician Utrecht")}" width="130" height="54" decoding="async">
+      <img src="/img/logo-390.png" alt="{B['naam']} – {L("elektricien Utrecht", "electrician Utrecht")}" class="logo-licht" width="130" height="54" decoding="async">
+      <img src="/img/logo-390-donker.png" alt="{B['naam']} – {L("elektricien Utrecht", "electrician Utrecht")}" class="logo-donker" width="130" height="54" loading="lazy" decoding="async">
     </a>
     <nav id="nav" aria-label="{L("Hoofdmenu", "Main menu")}">
       {nav}
@@ -357,7 +358,8 @@ def footer(wijken, storingen, variant="standaard", js="/script.js"):
     return f"""<footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <img src="/img/logo-390.png" alt="{B['naam']} logo" class="footer-logo" width="130" height="54" loading="lazy" decoding="async">
+      <img src="/img/logo-390.png" alt="{B['naam']} logo" class="footer-logo logo-licht" width="130" height="54" loading="lazy" decoding="async">
+      <img src="/img/logo-390-donker.png" alt="{B['naam']} logo" class="footer-logo logo-donker" width="130" height="54" loading="lazy" decoding="async">
       <p>{L("Elektricien in Utrecht en omstreken. Vaste prijs vooraf en 24/7 bereikbaar bij storingen.", "Electrician in Utrecht and the surrounding area. Fixed price upfront and available 24/7 for power faults.")}</p>
       <p><a href="tel:{B['telefoon_e164']}" data-track="bellen"><strong>{B['telefoon_tonen']}</strong></a><br>
       <a href="mailto:{B['email']}">{B['email']}</a></p>

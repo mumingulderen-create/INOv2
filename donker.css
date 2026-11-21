@@ -9,3 +9,5 @@ body{background:#0e1410}
 .nav-cta{color:#111827}
 .floating-wa-text strong{color:#0b2e17}
 .floating-wa-text small{color:rgba(11,46,23,.85)}
+.brand .logo-licht,.site-footer .logo-licht{display:none}
+.brand .logo-donker,.site-footer .logo-donker{display:block}
